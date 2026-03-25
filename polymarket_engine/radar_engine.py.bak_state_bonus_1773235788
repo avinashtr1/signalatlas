@@ -1,0 +1,185 @@
+import time
+import json
+from pathlib import Path
+from datetime import datetime, timezone
+
+LEADERBOARD = Path("analytics/alpha_leaderboard.json")
+RADAR_OUT = Path("analytics/radar_live.json")
+VACUUM_V2_PLUS = Path("analytics/liquidity_vacuum_v2_plus.json")
+REGIME_WEIGHTS = Path("analytics/regime_adaptive_weights.json")
+
+SCAN_INTERVAL = 60
+
+def load_leaderboard():
+    if not LEADERBOARD.exists():
+        return []
+    data = json.loads(LEADERBOARD.read_text())
+    return data.get("leaderboard", [])
+
+
+def passes_signal_gate(r):
+    edge = float(r.get("expected_net_edge_pct",0))
+    vacuum = float(r.get("vacuum_score",0))
+    micro = float(r.get("microstructure_score",0))
+    stale = float(r.get("stale_repricing_score",0))
+    quality = float(r.get("quality_score",0))
+    fill = float(r.get("expected_fill_probability",0))
+    v2_score = float(r.get("vacuum_v2_score",0))
+
+    confirmations = 0
+    if vacuum > 0.15:
+        confirmations += 1
+    if micro > 0.04:
+        confirmations += 1
+    if stale > 0.6:
+        confirmations += 1
+
+    return (
+        edge >= 8
+        and quality >= 0.7
+        and fill >= 0.9
+        and confirmations >= 2
+        and v2_score >= 0.60
+    )
+
+
+
+def load_vacuum_v2_plus():
+    if not VACUUM_V2_PLUS.exists():
+        return {}
+    data = json.loads(VACUUM_V2_PLUS.read_text())
+    out = {}
+    for r in data.get("vacuum_v2_signals", []):
+        name = r.get("market_name")
+        if name:
+            out[name] = r
+    return out
+
+
+def load_regime_weights():
+    if not REGIME_WEIGHTS.exists():
+        return {}
+    data = json.loads(REGIME_WEIGHTS.read_text())
+    return data.get("adaptive_weights", {})
+
+
+
+def get_regime_thresholds():
+    weights_doc = {}
+    if REGIME_WEIGHTS.exists():
+        weights_doc = json.loads(REGIME_WEIGHTS.read_text())
+    active = weights_doc.get("active_regime", "calm")
+
+    table = {
+        "calm": {"A": 0.65, "B": 0.50, "C": 0.35},
+        "volatile": {"A": 0.58, "B": 0.45, "C": 0.32},
+        "thin_liquidity": {"A": 0.62, "B": 0.48, "C": 0.34},
+        "resolution_phase": {"A": 0.55, "B": 0.43, "C": 0.30},
+        "event_spike": {"A": 0.57, "B": 0.44, "C": 0.31},
+    }
+    return active, table.get(active, table["calm"])
+
+def radar_tier(score, thresholds=None):
+    thresholds = thresholds or {"A": 0.65, "B": 0.50, "C": 0.35}
+    if score >= thresholds["A"]:
+        return "A"
+    if score >= thresholds["B"]:
+        return "B"
+    if score >= thresholds["C"]:
+        return "C"
+    return "D"
+
+def load_regime_weights():
+    if not REGIME_WEIGHTS.exists():
+        return {}
+    data = json.loads(REGIME_WEIGHTS.read_text())
+    return data.get("adaptive_weights", {})
+
+
+def radar_tier(score):
+    if score >= 0.70:
+        return "A"
+    if score >= 0.55:
+        return "B"
+    if score >= 0.40:
+        return "C"
+    return "D"
+
+def build_radar(rows):
+    deploy = []
+    watch = []
+    vmap = load_vacuum_v2_plus()
+    weights = load_regime_weights()
+    active_regime, thresholds = get_regime_thresholds()
+
+    for r in rows:
+        edge = float(r.get("expected_net_edge_pct", 0) or 0)
+        item = dict(r)
+        if not item.get("slug"):
+            item["slug"] = r.get("slug")
+
+        v2 = vmap.get(item.get("market_name"), {})
+        item["vacuum_v2_score"] = float(v2.get("vacuum_v2_score", 0.0) or 0.0)
+        item["vacuum_v2_tier"] = v2.get("confidence_tier", "D")
+        item["severity_score"] = float(v2.get("severity_score", 0.0) or 0.0)
+        item["fill_quality_score"] = float(v2.get("fill_quality_score", 0.0) or 0.0)
+
+        vacuum = float(item.get("vacuum_v2_score", 0.0) or 0.0)
+        micro = float(item.get("microstructure_score", 0.0) or 0.0)
+        stale = float(item.get("stale_repricing_score", 0.0) or 0.0)
+        resarb = float(item.get("resolution_arb_v2_score", 0.0) or 0.0)
+        collapse = float(item.get("collapse_v2_score", 0.0) or 0.0)
+        shock = float(item.get("shock_score", 0.0) or 0.0)
+
+        fused = (
+            float(weights.get("vacuum", 0.25)) * vacuum +
+            float(weights.get("microstructure", 0.20)) * micro +
+            float(weights.get("stale_repricing", 0.20)) * stale +
+            float(weights.get("resolution_arb", 0.20)) * resarb +
+            float(weights.get("liquidity_collapse", 0.10)) * collapse +
+            float(weights.get("shock", 0.05)) * shock
+        )
+
+        # normalize into usable radar scale
+        edge_boost = min(edge / 15.0, 1.0)
+        fused = 0.75 * fused + 0.25 * edge_boost
+
+        item["adaptive_radar_score"] = round(fused, 6)
+        item["radar_tier"] = radar_tier(item["adaptive_radar_score"], thresholds)
+        item["active_regime"] = active_regime
+
+        if passes_signal_gate(item) and item["vacuum_v2_tier"] in {"A", "B"} and item["adaptive_radar_score"] >= thresholds["B"]:
+            deploy.append(item)
+        elif edge >= 7 or item["adaptive_radar_score"] >= thresholds["C"] or item["vacuum_v2_tier"] in {"A", "B", "C"}:
+            watch.append(item)
+
+    deploy.sort(key=lambda x: (x.get("adaptive_radar_score", 0), x.get("expected_net_edge_pct", 0)), reverse=True)
+    watch.sort(key=lambda x: (x.get("adaptive_radar_score", 0), x.get("expected_net_edge_pct", 0)), reverse=True)
+
+    return {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "deploy_now": deploy[:5],
+        "watchlist": watch[:10],
+        "count": len(rows)
+    }
+
+def main():
+    print("SIGNALATLAS RADAR ENGINE STARTED")
+
+    while True:
+        rows = load_leaderboard()
+
+        radar = build_radar(rows)
+
+        RADAR_OUT.write_text(json.dumps(radar,indent=2))
+
+        print(
+            f"{datetime.utcnow().isoformat()} | "
+            f"deploy={len(radar['deploy_now'])} "
+            f"watch={len(radar['watchlist'])}"
+        )
+
+        time.sleep(SCAN_INTERVAL)
+
+if __name__ == "__main__":
+    main()

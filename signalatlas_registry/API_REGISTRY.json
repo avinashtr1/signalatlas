@@ -1,0 +1,30 @@
+{
+  "timestamp": "2026-03-12T19:03:16.667807+00:00",
+  "api_file": "polymarket_engine/api_server.py",
+  "routes_count": 23,
+  "routes": [
+    "@app.get(\"/api/health\")",
+    "@app.get(\"/api/regime\")",
+    "@app.get(\"/api/opportunities\")",
+    "@app.get(\"/api/tiers\")",
+    "@app.get(\"/api/alpha\")",
+    "@app.get(\"/api/mispricing\")",
+    "@app.get(\"/api/repricing\")",
+    "@app.get(\"/api/leadlag\")",
+    "@app.get(\"/api/shocks\")",
+    "@app.get(\"/api/signal-memory\")",
+    "@app.get(\"/api/edge-decay\")",
+    "@app.get(\"/api/report\", response_class=PlainTextResponse)",
+    "@app.get(\"/api/feed-v2\", response_class=PlainTextResponse)",
+    "@app.get(\"/api/signal-stats\")",
+    "@app.get(\"/api/outcomes\")",
+    "@app.get(\"/api/profit\")",
+    "@app.get(\"/api/market-graph\")",
+    "@app.get(\"/api/cross-market\")",
+    "@app.get(\"/api/universe\")",
+    "@app.get(\"/api/probability-velocity\")",
+    "@app.get(\"/api/universe-clean\")",
+    "@app.get(\"/api/clusters\")",
+    "@app.get(\"/api/mispricing-live\")"
+  ]
+}

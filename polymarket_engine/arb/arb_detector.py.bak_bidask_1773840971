@@ -1,0 +1,179 @@
+import json
+import re
+from pathlib import Path
+
+POLY_FILE = "analytics/polymarket_snapshot.json"
+KALSHI_FILE = "analytics/kalshi_manual_snapshot.json"
+
+POLY_FEE = 0.02
+KALSHI_FEE = 0.02
+SLIPPAGE = 0.02
+
+TEST_SIZES = [10, 50, 100]
+
+def load(path):
+    if not Path(path).exists():
+        return []
+    return json.loads(Path(path).read_text())
+
+def normalize(name):
+    n = name.lower()
+    n = re.sub(r"[^a-z0-9 ]", " ", n)
+
+    party = None
+    if "republican" in n:
+        party = "republican"
+    elif "democrat" in n:
+        party = "democrat"
+
+    chamber = "senate" if "senate" in n else None
+    year = "2026" if "2026" in n else None
+
+    if chamber and party:
+        return f"{chamber}_{party}_{year}"
+
+    return None
+
+def extract_features(name):
+    n = name.lower()
+
+    return {
+        "senate": "senate" in n,
+        "year_2026": "2026" in n,
+        "republican": "republican" in n,
+        "democrat": "democrat" in n,
+        "control": "control" in n or "win" in n
+    }
+
+def parity_check(poly_name, kalshi_name):
+    p = extract_features(poly_name)
+    k = extract_features(kalshi_name)
+
+    # must both refer to senate
+    if not (p["senate"] and k["senate"]):
+        return "LOW"
+
+    # must both refer to same year
+    if p["year_2026"] != k["year_2026"]:
+        return "LOW"
+
+    # must both refer to control/win
+    if p["control"] != k["control"]:
+        return "MEDIUM"
+
+    # must match same party
+    if p["republican"] != k["republican"]:
+        return "LOW"
+
+    if p["democrat"] != k["democrat"]:
+        return "LOW"
+
+    return "HIGH"
+
+def base_key(side_key):
+    parts = side_key.split("_")
+    return f"{parts[0]}_{parts[2]}" if len(parts) == 3 else None
+
+def party_from_key(side_key):
+    parts = side_key.split("_")
+    return parts[1] if len(parts) == 3 else None
+
+def build_maps(rows):
+    out = {}
+    for r in rows:
+        key = normalize(r.get("market_name", ""))
+        if not key:
+            continue
+        out[key] = {
+            "market_name": r.get("market_name"),
+            "yes_price": float(r.get("yes_price")),
+        }
+    return out
+
+def simulate_edge(poly_price, kalshi_price):
+    results = []
+
+    for size in TEST_SIZES:
+        buy_price = kalshi_price * (1 + SLIPPAGE)
+        sell_price = poly_price * (1 - SLIPPAGE)
+
+        gross = sell_price - buy_price
+        net = gross - (POLY_FEE + KALSHI_FEE)
+
+        pnl = net * size
+
+        results.append({
+            "size": size,
+            "net_edge": round(net, 4),
+            "pnl": round(pnl, 2)
+        })
+
+    return results
+
+def run():
+    poly_rows = load(POLY_FILE)
+    kalshi_rows = load(KALSHI_FILE)
+
+    print(f"Loaded {len(poly_rows)} poly | {len(kalshi_rows)} kalshi")
+
+    poly = build_maps(poly_rows)
+    kalshi = build_maps(kalshi_rows)
+
+    paired = {}
+
+    for key in set(poly.keys()) & set(kalshi.keys()):
+        bkey = base_key(key)
+        party = party_from_key(key)
+        if not bkey or not party:
+            continue
+
+        paired.setdefault(bkey, {})
+        paired[bkey][party] = {
+            "poly": poly[key],
+            "kalshi": kalshi[key],
+        }
+
+    found = False
+
+    for bkey, sides in paired.items():
+        chosen_party = "democrat" if "democrat" in sides else next(iter(sides.keys()))
+        s = sides[chosen_party]
+
+        poly_name = s["poly"]["market_name"]
+        kalshi_name = s["kalshi"]["market_name"]
+
+        parity = parity_check(poly_name, kalshi_name)
+
+        if parity == "LOW":
+            continue
+
+        poly_price = s["poly"]["yes_price"]
+        kalshi_price = s["kalshi"]["yes_price"]
+
+        raw_edge = poly_price - kalshi_price
+
+        if abs(raw_edge) < 0.05:
+            continue
+
+        sims = simulate_edge(poly_price, kalshi_price)
+
+        found = True
+
+        print("\n🚨 PARITY-VALIDATED ARB")
+        print("Market:", bkey)
+        print("Parity:", parity)
+        print("Side:", chosen_party)
+        print("Poly:", poly_price)
+        print("Kalshi:", kalshi_price)
+
+        for r in sims:
+            print(f"Size ${r['size']} → Edge: {r['net_edge']} | PnL: ${r['pnl']}")
+
+        print("Poly Market:", poly_name)
+        print("Kalshi Market:", kalshi_name)
+
+    if not found:
+        print("No safe arb")
+
+if __name__ == "__main__":
+    run()

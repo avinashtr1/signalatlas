@@ -1,0 +1,269 @@
+from collections import defaultdict
+from datetime import datetime, timezone, timedelta
+MAX_ACTIVE_POSITIONS = 30
+MAX_LOCKED_CAPITAL_PCT = 1.00
+
+# execution-mode branch caps
+ACTIVE_MAX_POSITIONS = 30
+PASSIVE_MAX_POSITIONS = 12
+
+# new basket risk controls
+MAX_ACTIVE_BASKETS = 16
+ACTIVE_MAX_BASKETS = 20
+PASSIVE_MAX_BASKETS = 8
+MAX_LEGS_PER_BASKET = 4
+MAX_BASKET_CAPITAL = 500.0
+REENTRY_COOLDOWN_HOURS = 3.0
+
+
+class CapitalAllocator:
+    def __init__(self, inventory, paper_executor, config):
+        self.inventory = inventory
+        self.paper_executor = paper_executor
+        self.config = config
+
+    def _score_candidate(self, result):
+        analysis = result["analysis"]
+        return (
+            (analysis.get("structural_edge", 0.0) * 100.0 * 1.5)
+            + (analysis.get("microstructure_score", 0.0) * 100.0 * 1.0)
+            + (analysis.get("expected_net_edge_pct", 0.0) * 1.0)
+            + (analysis.get("expected_fill_probability", 0.0) * 100.0 * 0.10)
+        )
+
+    def _determine_trade_size(self, score, free_capital):
+        risk_pct = self.config.get("DS_BASE_RISK_PCT", 0.005)
+        score_sensitivity = self.config.get("DS_SCORE_SENSITIVITY", 0.100)
+
+        base_risk_amount = free_capital * risk_pct
+        score_for_sizing = max(0, score)
+        sensitivity_impact = score_for_sizing * score_sensitivity * 100
+        calculated_trade_size = base_risk_amount + sensitivity_impact
+
+        max_trade_pct = 0.03
+        trade_size = min(free_capital * max_trade_pct, 100.0, calculated_trade_size)
+        trade_size = max(1.0, trade_size)
+        return trade_size
+
+    def _bucket_id(self, result):
+        d = result["candidate"].signal_details or {}
+        return d.get("bucket_group_id")
+
+    def _execution_mode(self, result):
+        a = result.get("analysis") or {}
+        return str(a.get("execution_mode") or "PASSIVE").upper()
+
+    def _open_bucket_stats(self):
+        stats = {}
+        for p in self.paper_executor.get_open_positions():
+            bgid = p.get("bucket_group_id")
+            if not bgid:
+                continue
+            k = str(bgid)
+            if k not in stats:
+                stats[k] = {"legs": 0, "capital": 0.0}
+            stats[k]["legs"] += 1
+            stats[k]["capital"] += float(p.get("allocated_capital", 0.0) or 0.0)
+        return stats
+
+    def _open_market_ids(self):
+        ids = {}
+        for p in self.paper_executor.get_open_positions():
+            mid = p.get("market_id")
+            ts = p.get("ts") or p.get("opened_at") or p.get("open_ts")
+            if mid is None or not ts:
+                continue
+            try:
+                dt = datetime.fromisoformat(str(ts).replace("Z", "+00:00"))
+            except Exception:
+                continue
+            k = str(mid)
+            prev = ids.get(k)
+            if prev is None or dt > prev:
+                ids[k] = dt
+        return ids
+
+    def _recently_closed_markets(self):
+        recent = set()
+        now = datetime.now(timezone.utc)
+        cutoff = now - timedelta(hours=REENTRY_COOLDOWN_HOURS)
+
+        for p in self.paper_executor.positions.values():
+            if p.get("status") != "CLOSED":
+                continue
+            ts = p.get("closed_at") or p.get("close_ts") or p.get("ts")
+            mid = p.get("market_id")
+            if not ts or mid is None:
+                continue
+            try:
+                dt = datetime.fromisoformat(str(ts).replace("Z", "+00:00"))
+            except Exception:
+                continue
+            if dt >= cutoff:
+                recent.add(str(mid))
+        return recent
+
+    def allocate(self, acceptable_candidates):
+        report = defaultdict(list)
+
+        if not acceptable_candidates:
+            return report
+
+        scored = [(self._score_candidate(r), r) for r in acceptable_candidates]
+        scored.sort(reverse=True, key=lambda x: x[0])
+        report["candidates_ranked"] = min(len(scored), 8)
+        report["candidates_considered_total"] = len(scored)
+
+        open_positions = self.paper_executor.get_open_positions()
+        if len(open_positions) >= MAX_ACTIVE_POSITIONS:
+            report["skipped_max_positions"] = [r["candidate"].candidate_id for _, r in scored]
+            return report
+
+        bucket_stats = self._open_bucket_stats()
+        active_baskets = set(bucket_stats.keys())
+        already_open_bucket_ids = set(active_baskets)
+        open_market_ids = self._open_market_ids()
+        recently_closed_market_ids = self._recently_closed_markets()
+
+        active_positions_ct = 0
+        passive_positions_ct = 0
+        active_basket_ids = set()
+        passive_basket_ids = set()
+
+        for pos in open_positions:
+            mode = str(pos.get("execution_mode") or "PASSIVE").upper()
+            bgid = pos.get("bucket_group_id")
+            if mode == "ACTIVE":
+                active_positions_ct += 1
+                if bgid is not None:
+                    active_basket_ids.add(str(bgid))
+            else:
+                passive_positions_ct += 1
+                if bgid is not None:
+                    passive_basket_ids.add(str(bgid))
+
+        funded_count_this_cycle = 0
+        funded_group_counts = {}
+        baskets_opened_this_cycle = set()
+
+        for score, result in scored:
+            candidate = result["candidate"]
+            group = getattr(candidate.market_state, "event_group", None)
+            mode = self._execution_mode(result)
+            bgid = self._bucket_id(result)
+            bgid_str = str(bgid) if bgid is not None else None
+            market_id_str = str(getattr(candidate.market_state, "market_id", ""))
+
+            if group is not None and funded_group_counts.get(group, 0) >= 1:
+                report["skipped_concentration"].append(candidate.candidate_id)
+                continue
+
+            if market_id_str in open_market_ids:
+                last_open_dt = open_market_ids.get(market_id_str)
+                now_dt = datetime.now(timezone.utc)
+                if last_open_dt is not None and (now_dt - last_open_dt) < timedelta(minutes=15):
+                    report["skipped_same_market_open"].append(candidate.candidate_id)
+                    continue
+
+            if market_id_str in recently_closed_market_ids:
+                report["skipped_market_cooldown"].append(candidate.candidate_id)
+                continue
+
+            if funded_count_this_cycle >= 8:
+                break
+
+            current_open_positions = self.paper_executor.get_open_positions()
+            if len(current_open_positions) >= MAX_ACTIVE_POSITIONS:
+                report["skipped_max_positions"].append(candidate.candidate_id)
+                continue
+
+            if mode == "ACTIVE":
+                if active_positions_ct >= ACTIVE_MAX_POSITIONS:
+                    report["skipped_max_active_positions"].append(candidate.candidate_id)
+                    continue
+            else:
+                if passive_positions_ct >= PASSIVE_MAX_POSITIONS:
+                    report["skipped_max_passive_positions"].append(candidate.candidate_id)
+                    continue
+
+            free_capital = self.inventory.free_capital
+
+            if bgid_str and bgid_str in already_open_bucket_ids:
+                report["skipped_duplicate"].append(candidate.candidate_id)
+                continue
+
+            if mode == "ACTIVE":
+                if bgid_str and bgid_str not in active_basket_ids and len(active_basket_ids) >= ACTIVE_MAX_BASKETS:
+                    report["skipped_max_active_baskets"].append(candidate.candidate_id)
+                    continue
+            else:
+                if bgid_str and bgid_str not in passive_basket_ids and len(passive_basket_ids) >= PASSIVE_MAX_BASKETS:
+                    report["skipped_max_passive_baskets"].append(candidate.candidate_id)
+                    continue
+
+            existing = bucket_stats.get(bgid_str, {"legs": 0, "capital": 0.0}) if bgid_str else {"legs": 0, "capital": 0.0}
+
+            # Lock A: only one live position per bucket
+            if bgid_str and existing["legs"] >= 2:
+                report["skipped_bucket_leg_limit"].append(candidate.candidate_id)
+                continue
+
+            trade_size = self._determine_trade_size(score, free_capital)
+            if mode == "ACTIVE":
+                trade_size = min(150.0, trade_size * 1.5)
+
+            trade_side = (result.get("analysis") or {}).get("trade_side", "LONG")
+            px = float(candidate.market_state.current_price)
+
+            if trade_side == "SHORT":
+                est_alloc = trade_size * (1.0 - px)
+            else:
+                est_alloc = trade_size * px
+
+            if bgid_str and (existing["capital"] + est_alloc) > MAX_BASKET_CAPITAL:
+                report["skipped_bucket_cap_limit"].append(candidate.candidate_id)
+                continue
+
+            if not self.inventory.can_lock_capital(trade_size):
+                report["skipped_capital"].append(candidate.candidate_id)
+                continue
+
+            trade_id = candidate.candidate_id
+            locked = self.inventory.lock_capital_for_fill(trade_id, candidate, trade_size)
+            if not locked:
+                report["skipped_capital"].append(trade_id)
+                continue
+
+            opened_position = self.paper_executor.execute_trade(result, trade_size)
+            if opened_position is not None:
+                opened_position["execution_mode"] = mode
+
+            self.inventory.finalize_lock_after_fill(trade_id, opened_position)
+            report["funded"].append(trade_id)
+
+            if mode == "ACTIVE":
+                active_positions_ct += 1
+                if bgid_str:
+                    active_basket_ids.add(bgid_str)
+            else:
+                passive_positions_ct += 1
+                if bgid_str:
+                    passive_basket_ids.add(bgid_str)
+
+            if group is not None:
+                funded_group_counts[group] = funded_group_counts.get(group, 0) + 1
+
+            if bgid_str:
+                if bgid_str not in bucket_stats:
+                    bucket_stats[bgid_str] = {"legs": 0, "capital": 0.0}
+                bucket_stats[bgid_str]["legs"] += 1
+                bucket_stats[bgid_str]["capital"] += float(opened_position.get("allocated_capital", 0.0) or 0.0)
+
+                if bgid_str not in active_baskets:
+                    active_baskets.add(bgid_str)
+                    baskets_opened_this_cycle.add(bgid_str)
+
+            funded_count_this_cycle += 1
+
+        report["funded_baskets"] = len(baskets_opened_this_cycle)
+        return report

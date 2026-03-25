@@ -1,0 +1,10 @@
+# HEARTBEAT.md
+
+# BinanceBot monitoring
+- Check /opt/binance-agent-bot/signals_log.csv for new signals/decisions
+- Check /opt/binance-agent-bot/bot/storage/paper_portfolio.json for open positions
+- Send hourly report to user via Telegram if there are updates
+
+# Polymarket Scanner (Mock Mode)
+- Check /root/.openclaw/workspace/polymarket_arb/arb_scanner.log for new opportunities
+- Report any "APPROVED" opportunities found in the mock data

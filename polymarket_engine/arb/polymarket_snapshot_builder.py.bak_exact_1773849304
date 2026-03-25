@@ -1,0 +1,77 @@
+import json
+from pathlib import Path
+from polymarket_engine.data_adapters.polymarket_adapter import PolymarketAdapter
+
+OUT = Path("analytics/polymarket_snapshot.json")
+
+def is_valid_market(name):
+    n = name.lower()
+
+    # reject garbage patterns
+    if "gta" in n or "album" in n or "celebrity" in n:
+        return False
+
+    # ACCEPT ONLY structured macro markets
+    if "bitcoin" in n and ("2025" in n or "2026" in n):
+        return True
+
+    if "senate" in n and "2026" in n:
+        return True
+
+    if "recession" in n and "2025" in n:
+        return True
+
+    if "fed" in n and "2025" in n:
+        return True
+
+    if "trump" in n and "2028" in n:
+        return True
+
+    return False
+
+def safe_yes_price(m):
+    try:
+        raw = m.get("outcomePrices")
+        if not raw:
+            return None
+        prices = json.loads(raw)
+        if not prices:
+            return None
+        return float(prices[0])
+    except:
+        return None
+
+def main():
+    adapter = PolymarketAdapter()
+    markets = adapter._fetch_active_markets(limit=500)
+
+    rows = []
+
+    for m in markets:
+        try:
+            name = m.get("question")
+            if not name or not is_valid_market(name):
+                continue
+
+            yes_price = safe_yes_price(m)
+            if yes_price is None:
+                continue
+
+            rows.append({
+                "market_id": str(m.get("id")),
+                "market_name": str(name),
+                "yes_price": float(yes_price),
+            })
+
+        except:
+            continue
+
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    OUT.write_text(json.dumps(rows, indent=2), encoding="utf-8")
+
+    print("STRICT rows:", len(rows))
+    if rows:
+        print("Sample:", rows[0])
+
+if __name__ == "__main__":
+    main()

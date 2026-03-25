@@ -1,0 +1,79 @@
+import json
+import re
+from pathlib import Path
+
+POLY_FILE = "analytics/polymarket_snapshot.json"
+KALSHI_FILE = "analytics/kalshi_manual_snapshot.json"
+
+def load(path):
+    if not Path(path).exists():
+        return []
+    return json.loads(Path(path).read_text())
+
+def normalize(name):
+    n = name.lower()
+
+    # remove noise
+    n = re.sub(r"[^a-z0-9 ]", " ", n)
+
+    # normalize party
+    if "republican" in n:
+        party = "republican"
+    elif "democrat" in n:
+        party = "democrat"
+    else:
+        party = None
+
+    # normalize senate
+    if "senate" in n:
+        chamber = "senate"
+    else:
+        chamber = None
+
+    # normalize year
+    year = None
+    if "2026" in n:
+        year = "2026"
+
+    if chamber and party:
+        return f"{chamber}_{party}_{year}"
+
+    return None
+
+def run():
+    poly = load(POLY_FILE)
+    kalshi = load(KALSHI_FILE)
+
+    print(f"Loaded {len(poly)} poly | {len(kalshi)} kalshi")
+
+    for p in poly:
+        p_key = normalize(p.get("market_name",""))
+        if not p_key:
+            continue
+
+        for k in kalshi:
+            k_key = normalize(k.get("market_name",""))
+
+            if not k_key:
+                continue
+
+            if p_key == k_key:
+                poly_price = p.get("yes_price")
+                kalshi_price = k.get("yes_price")
+
+                if poly_price is None or kalshi_price is None:
+                    continue
+
+                edge = round(poly_price - kalshi_price, 4)
+
+                if abs(edge) >= 0.05:
+                    print("\n🚨 ARB FOUND")
+                    print("Key:", p_key)
+                    print("Poly:", poly_price)
+                    print("Kalshi:", kalshi_price)
+                    print("Edge:", edge)
+                    print("Poly Market:", p["market_name"])
+                    print("Kalshi Market:", k["market_name"])
+
+if __name__ == "__main__":
+    run()

@@ -1,0 +1,2033 @@
+nohup: ignoring input
+POLY ENGINE SUMMARY
+Equity: 100000.00
+Realized PnL: 0.00
+Unrealized PnL: 0.00
+Open trades: 3
+Open capital: 438.30
+
+Top Buckets:
+- NBA Western Conference Champion  | legs=1 | cap=231.30 | uPnL=0.00 | edge=0.123
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+- Which party will win the House in 2026? | legs=1 | cap=46.50 | uPnL=0.00 | edge=0.070
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99998.65
+Realized PnL: 0.00
+Unrealized PnL: -1.35
+Open trades: 4
+Open capital: 861.30
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=2 | cap=469.50 | uPnL=-1.50 | edge=0.141
+- NBA Western Conference Champion  | legs=1 | cap=231.30 | uPnL=0.15 | edge=0.134
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100000.00
+Realized PnL: 0.00
+Unrealized PnL: 0.00
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=0.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=0.00 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100001.50
+Realized PnL: 0.00
+Unrealized PnL: 1.50
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=0.00 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100003.45
+Realized PnL: 0.00
+Unrealized PnL: 3.45
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=3.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=0.45 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100005.40
+Realized PnL: 0.00
+Unrealized PnL: 5.40
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=3.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=2.40 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100003.90
+Realized PnL: 0.00
+Unrealized PnL: 3.90
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=0.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=3.90 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100010.50
+Realized PnL: 0.00
+Unrealized PnL: 10.50
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=4.50 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100009.15
+Realized PnL: 0.00
+Unrealized PnL: 9.15
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=3.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=6.15 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100006.75
+Realized PnL: 0.00
+Unrealized PnL: 6.75
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=5.25 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100004.80
+Realized PnL: 0.00
+Unrealized PnL: 4.80
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=3.30 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100004.50
+Realized PnL: 0.00
+Unrealized PnL: 4.50
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=3.00 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100004.95
+Realized PnL: 0.00
+Unrealized PnL: 4.95
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=3.45 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100003.75
+Realized PnL: 0.00
+Unrealized PnL: 3.75
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=2.25 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100003.00
+Realized PnL: 0.00
+Unrealized PnL: 3.00
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=1.50 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100003.00
+Realized PnL: 0.00
+Unrealized PnL: 3.00
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=1.50 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100003.90
+Realized PnL: 0.00
+Unrealized PnL: 3.90
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=2.40 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100003.90
+Realized PnL: 0.00
+Unrealized PnL: 3.90
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=2.40 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100002.85
+Realized PnL: 0.00
+Unrealized PnL: 2.85
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=1.35 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100003.90
+Realized PnL: 0.00
+Unrealized PnL: 3.90
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=2.40 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100002.10
+Realized PnL: 0.00
+Unrealized PnL: 2.10
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=0.60 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100000.75
+Realized PnL: 0.00
+Unrealized PnL: 0.75
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-0.75 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100000.60
+Realized PnL: 0.00
+Unrealized PnL: 0.60
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-0.90 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100002.25
+Realized PnL: 0.00
+Unrealized PnL: 2.25
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=0.75 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100001.20
+Realized PnL: 0.00
+Unrealized PnL: 1.20
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-0.30 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100000.60
+Realized PnL: 0.00
+Unrealized PnL: 0.60
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-0.90 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100001.95
+Realized PnL: 0.00
+Unrealized PnL: 1.95
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=0.45 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100003.15
+Realized PnL: 0.00
+Unrealized PnL: 3.15
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=1.65 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100002.85
+Realized PnL: 0.00
+Unrealized PnL: 2.85
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=1.35 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100004.50
+Realized PnL: 0.00
+Unrealized PnL: 4.50
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=3.00 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100007.50
+Realized PnL: 0.00
+Unrealized PnL: 7.50
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=3.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=4.50 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100008.10
+Realized PnL: 0.00
+Unrealized PnL: 8.10
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=3.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=5.10 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100009.75
+Realized PnL: 0.00
+Unrealized PnL: 9.75
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=4.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=5.25 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100011.85
+Realized PnL: 0.00
+Unrealized PnL: 11.85
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=5.85 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100010.50
+Realized PnL: 0.00
+Unrealized PnL: 10.50
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=4.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=6.00 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100012.00
+Realized PnL: 0.00
+Unrealized PnL: 12.00
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=6.00 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100012.30
+Realized PnL: 0.00
+Unrealized PnL: 12.30
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=6.30 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100012.30
+Realized PnL: 0.00
+Unrealized PnL: 12.30
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=6.30 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100010.05
+Realized PnL: 0.00
+Unrealized PnL: 10.05
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=4.05 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100009.75
+Realized PnL: 0.00
+Unrealized PnL: 9.75
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=3.75 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100012.30
+Realized PnL: 0.00
+Unrealized PnL: 12.30
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=6.30 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100012.15
+Realized PnL: 0.00
+Unrealized PnL: 12.15
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=6.15 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100006.15
+Realized PnL: 0.00
+Unrealized PnL: 6.15
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=0.15 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100006.15
+Realized PnL: 0.00
+Unrealized PnL: 6.15
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=0.15 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100007.50
+Realized PnL: 0.00
+Unrealized PnL: 7.50
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=1.50 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100007.95
+Realized PnL: 0.00
+Unrealized PnL: 7.95
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=1.95 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100006.00
+Realized PnL: 0.00
+Unrealized PnL: 6.00
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=4.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=1.50 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100006.90
+Realized PnL: 0.00
+Unrealized PnL: 6.90
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=4.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=2.40 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100006.90
+Realized PnL: 0.00
+Unrealized PnL: 6.90
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=4.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=2.40 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100005.40
+Realized PnL: 0.00
+Unrealized PnL: 5.40
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=3.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=2.40 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100004.50
+Realized PnL: 0.00
+Unrealized PnL: 4.50
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=4.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=0.00 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100005.70
+Realized PnL: 0.00
+Unrealized PnL: 5.70
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=4.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=1.20 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100007.35
+Realized PnL: 0.00
+Unrealized PnL: 7.35
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=1.35 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100006.45
+Realized PnL: 0.00
+Unrealized PnL: 6.45
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=4.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=1.95 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100006.75
+Realized PnL: 0.00
+Unrealized PnL: 6.75
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=4.50 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=2.25 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99999.55
+Realized PnL: 0.00
+Unrealized PnL: -0.45
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=0.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-0.45 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99999.25
+Realized PnL: 0.00
+Unrealized PnL: -0.75
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=0.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-0.75 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99999.10
+Realized PnL: 0.00
+Unrealized PnL: -0.90
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=0.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-0.90 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99999.25
+Realized PnL: 0.00
+Unrealized PnL: -0.75
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=0.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-0.75 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99999.10
+Realized PnL: 0.00
+Unrealized PnL: -0.90
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=0.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-0.90 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100006.90
+Realized PnL: 0.00
+Unrealized PnL: 6.90
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=0.90 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100009.90
+Realized PnL: 0.00
+Unrealized PnL: 9.90
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=0.90 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100007.35
+Realized PnL: 0.00
+Unrealized PnL: 7.35
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-1.65 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100006.45
+Realized PnL: 0.00
+Unrealized PnL: 6.45
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-2.55 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100003.15
+Realized PnL: 0.00
+Unrealized PnL: 3.15
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-5.85 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100003.30
+Realized PnL: 0.00
+Unrealized PnL: 3.30
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-5.70 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100003.30
+Realized PnL: 0.00
+Unrealized PnL: 3.30
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-5.70 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100005.55
+Realized PnL: 0.00
+Unrealized PnL: 5.55
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-3.45 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100006.30
+Realized PnL: 0.00
+Unrealized PnL: 6.30
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-2.70 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100006.15
+Realized PnL: 0.00
+Unrealized PnL: 6.15
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-2.85 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100004.95
+Realized PnL: 0.00
+Unrealized PnL: 4.95
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-4.05 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100004.80
+Realized PnL: 0.00
+Unrealized PnL: 4.80
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-4.20 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100006.30
+Realized PnL: 0.00
+Unrealized PnL: 6.30
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-2.70 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100006.75
+Realized PnL: 0.00
+Unrealized PnL: 6.75
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-2.25 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100009.75
+Realized PnL: 0.00
+Unrealized PnL: 9.75
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=0.75 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100010.80
+Realized PnL: 0.00
+Unrealized PnL: 10.80
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=1.80 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100012.60
+Realized PnL: 0.00
+Unrealized PnL: 12.60
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=3.60 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100010.50
+Realized PnL: 0.00
+Unrealized PnL: 10.50
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=1.50 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100008.85
+Realized PnL: 0.00
+Unrealized PnL: 8.85
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-0.15 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100009.60
+Realized PnL: 0.00
+Unrealized PnL: 9.60
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=0.60 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100007.35
+Realized PnL: 0.00
+Unrealized PnL: 7.35
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-1.65 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100008.85
+Realized PnL: 0.00
+Unrealized PnL: 8.85
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-0.15 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100009.15
+Realized PnL: 0.00
+Unrealized PnL: 9.15
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=0.15 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100009.30
+Realized PnL: 0.00
+Unrealized PnL: 9.30
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=0.30 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100006.75
+Realized PnL: 0.00
+Unrealized PnL: 6.75
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=0.75 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100009.75
+Realized PnL: 0.00
+Unrealized PnL: 9.75
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=0.75 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100009.75
+Realized PnL: 0.00
+Unrealized PnL: 9.75
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=0.75 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100009.60
+Realized PnL: 0.00
+Unrealized PnL: 9.60
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=0.60 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100009.90
+Realized PnL: 0.00
+Unrealized PnL: 9.90
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=0.90 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100010.80
+Realized PnL: 0.00
+Unrealized PnL: 10.80
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=1.80 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100009.30
+Realized PnL: 0.00
+Unrealized PnL: 9.30
+Open trades: 3
+Open capital: 627.45
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=3.30 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=-3.00 | edge=0.110
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100005.40
+Realized PnL: 0.00
+Unrealized PnL: 5.40
+Open trades: 7
+Open capital: 870.30
+Risk status: HALTED
+Risk reason: KILL_SWITCH: max_open_positions reached (7)
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-0.60 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=-3.00 | edge=0.110
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=0.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=0.00 | edge=0.157
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100024.90
+Realized PnL: 0.00
+Unrealized PnL: 24.90
+Open trades: 7
+Open capital: 870.30
+Risk status: HALTED
+Risk reason: KILL_SWITCH: max_open_positions reached (7)
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=-0.60 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=-3.00 | edge=0.110
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=0.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=19.50 | edge=0.157
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99995.80
+Realized PnL: 0.00
+Unrealized PnL: -4.20
+Open trades: 7
+Open capital: 870.30
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- NBA Western Conference Champion  | legs=1 | cap=231.45 | uPnL=1.80 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=-4.50 | edge=0.110
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=0.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-10.50 | edge=0.157
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100635.10
+Realized PnL: 648.60
+Unrealized PnL: -13.50
+Open trades: 6
+Open capital: 638.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=9.00 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=-3.00 | edge=0.110
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=0.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-16.50 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-3.00 | edge=0.164
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99982.15
+Realized PnL: 1.65
+Unrealized PnL: -19.50
+Open trades: 6
+Open capital: 638.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=0.00 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=0.00 | edge=0.110
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=0.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-16.50 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-3.00 | edge=0.164
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99983.65
+Realized PnL: 1.65
+Unrealized PnL: -18.00
+Open trades: 6
+Open capital: 638.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=4.50 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=-3.00 | edge=0.110
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=0.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-16.50 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-3.00 | edge=0.164
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99980.65
+Realized PnL: 1.65
+Unrealized PnL: -21.00
+Open trades: 6
+Open capital: 638.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=4.50 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=-3.00 | edge=0.110
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=0.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-19.50 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-3.00 | edge=0.164
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99980.65
+Realized PnL: 1.65
+Unrealized PnL: -21.00
+Open trades: 6
+Open capital: 638.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=4.50 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=-3.00 | edge=0.110
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=0.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-19.50 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-3.00 | edge=0.164
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99980.65
+Realized PnL: 1.65
+Unrealized PnL: -21.00
+Open trades: 6
+Open capital: 638.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=4.50 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=-3.00 | edge=0.110
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=0.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-19.50 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-3.00 | edge=0.164
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99967.15
+Realized PnL: 1.65
+Unrealized PnL: -34.50
+Open trades: 6
+Open capital: 638.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=4.50 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=-3.00 | edge=0.110
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=0.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-33.00 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-3.00 | edge=0.164
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99967.15
+Realized PnL: 1.65
+Unrealized PnL: -34.50
+Open trades: 6
+Open capital: 638.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- Which party will win the Senate in 2026? | legs=1 | cap=160.50 | uPnL=-4.50 | edge=0.110
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=0.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-33.00 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-3.00 | edge=0.164
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99962.65
+Realized PnL: -2.85
+Unrealized PnL: -34.50
+Open trades: 5
+Open capital: 478.35
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=4.50 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=0.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-36.00 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-3.00 | edge=0.164
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=0.00 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99968.65
+Realized PnL: -2.85
+Unrealized PnL: -28.50
+Open trades: 5
+Open capital: 478.35
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=7.50 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-39.00 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-3.00 | edge=0.164
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=0.00 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99973.15
+Realized PnL: -2.85
+Unrealized PnL: -24.00
+Open trades: 5
+Open capital: 478.35
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=13.50 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-37.50 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-6.00 | edge=0.164
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=0.00 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99971.65
+Realized PnL: -2.85
+Unrealized PnL: -25.50
+Open trades: 5
+Open capital: 478.35
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=13.50 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-39.00 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-6.00 | edge=0.164
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=0.00 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99973.15
+Realized PnL: -2.85
+Unrealized PnL: -24.00
+Open trades: 5
+Open capital: 478.35
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=15.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-39.00 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-6.00 | edge=0.164
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=0.00 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99977.65
+Realized PnL: -2.85
+Unrealized PnL: -19.50
+Open trades: 5
+Open capital: 478.35
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=18.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-37.50 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-6.00 | edge=0.164
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=0.00 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99979.15
+Realized PnL: -2.85
+Unrealized PnL: -18.00
+Open trades: 5
+Open capital: 478.35
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=19.50 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-37.50 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-6.00 | edge=0.164
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=0.00 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99977.65
+Realized PnL: -2.85
+Unrealized PnL: -19.50
+Open trades: 5
+Open capital: 478.35
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=19.50 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-39.00 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-6.00 | edge=0.164
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=0.00 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99977.65
+Realized PnL: -2.85
+Unrealized PnL: -19.50
+Open trades: 5
+Open capital: 478.35
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=21.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-40.50 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-6.00 | edge=0.164
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=0.00 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99979.75
+Realized PnL: -2.85
+Unrealized PnL: -17.40
+Open trades: 5
+Open capital: 478.35
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=21.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-39.00 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-6.00 | edge=0.164
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=0.60 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99980.65
+Realized PnL: -2.85
+Unrealized PnL: -16.50
+Open trades: 5
+Open capital: 478.35
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=21.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-39.00 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-6.00 | edge=0.164
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=1.50 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99980.50
+Realized PnL: -2.85
+Unrealized PnL: -16.65
+Open trades: 5
+Open capital: 478.35
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=21.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-39.00 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-6.00 | edge=0.164
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=1.35 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99980.65
+Realized PnL: -2.85
+Unrealized PnL: -16.50
+Open trades: 5
+Open capital: 478.35
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=21.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-39.00 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-6.00 | edge=0.164
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=1.50 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99979.75
+Realized PnL: -2.85
+Unrealized PnL: -17.40
+Open trades: 5
+Open capital: 478.35
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=6.00 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=21.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-40.50 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-6.00 | edge=0.164
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=2.10 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99976.75
+Realized PnL: -2.85
+Unrealized PnL: -20.40
+Open trades: 5
+Open capital: 478.35
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=3.00 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=21.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-40.50 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-6.00 | edge=0.164
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=2.10 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99975.25
+Realized PnL: -2.85
+Unrealized PnL: -21.90
+Open trades: 5
+Open capital: 478.35
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=4.50 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=18.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-40.50 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-6.00 | edge=0.164
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=2.10 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99975.25
+Realized PnL: -2.85
+Unrealized PnL: -21.90
+Open trades: 5
+Open capital: 478.35
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=4.50 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=18.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-40.50 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-6.00 | edge=0.164
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=2.10 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99976.90
+Realized PnL: -2.85
+Unrealized PnL: -20.25
+Open trades: 5
+Open capital: 478.35
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=3.00 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=18.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-40.50 | edge=0.157
+- Serie A League Winner  | legs=1 | cap=37.50 | uPnL=-4.50 | edge=0.164
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=3.75 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99978.40
+Realized PnL: -7.35
+Unrealized PnL: -14.25
+Open trades: 4
+Open capital: 440.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=4.50 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=18.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-40.50 | edge=0.157
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=3.75 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99980.65
+Realized PnL: -7.35
+Unrealized PnL: -12.00
+Open trades: 4
+Open capital: 440.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=4.50 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=18.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-37.50 | edge=0.157
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=3.00 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99979.75
+Realized PnL: -7.35
+Unrealized PnL: -12.90
+Open trades: 4
+Open capital: 440.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=3.00 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=18.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-36.00 | edge=0.157
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=2.10 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99979.75
+Realized PnL: -7.35
+Unrealized PnL: -12.90
+Open trades: 4
+Open capital: 440.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=3.00 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=18.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-36.00 | edge=0.157
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=2.10 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99979.60
+Realized PnL: -7.35
+Unrealized PnL: -13.05
+Open trades: 4
+Open capital: 440.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=3.00 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=18.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-36.00 | edge=0.157
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=1.95 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99970.60
+Realized PnL: -7.35
+Unrealized PnL: -22.05
+Open trades: 4
+Open capital: 440.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=3.00 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=18.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-45.00 | edge=0.157
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=1.95 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99969.10
+Realized PnL: -7.35
+Unrealized PnL: -23.55
+Open trades: 4
+Open capital: 440.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=18.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-45.00 | edge=0.157
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=1.95 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99967.30
+Realized PnL: -7.35
+Unrealized PnL: -25.35
+Open trades: 4
+Open capital: 440.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=18.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-45.00 | edge=0.157
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=0.15 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99962.80
+Realized PnL: -7.35
+Unrealized PnL: -29.85
+Open trades: 4
+Open capital: 440.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=18.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-49.50 | edge=0.157
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=0.15 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99964.30
+Realized PnL: -7.35
+Unrealized PnL: -28.35
+Open trades: 4
+Open capital: 440.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=18.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-48.00 | edge=0.157
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=0.15 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99963.85
+Realized PnL: -7.35
+Unrealized PnL: -28.80
+Open trades: 4
+Open capital: 440.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=18.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-48.00 | edge=0.157
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=-0.30 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99964.75
+Realized PnL: -7.35
+Unrealized PnL: -27.90
+Open trades: 4
+Open capital: 440.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=18.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-48.00 | edge=0.157
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=0.60 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99967.75
+Realized PnL: -7.35
+Unrealized PnL: -24.90
+Open trades: 4
+Open capital: 440.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=18.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-48.00 | edge=0.157
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=3.60 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99967.90
+Realized PnL: -7.35
+Unrealized PnL: -24.75
+Open trades: 4
+Open capital: 440.85
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=18.00 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-48.00 | edge=0.157
+- NHL: Central Division Winner | legs=1 | cap=22.35 | uPnL=3.75 | edge=0.144
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99973.90
+Realized PnL: 3.90
+Unrealized PnL: -30.00
+Open trades: 3
+Open capital: 418.50
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=16.50 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-48.00 | edge=0.157
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99975.40
+Realized PnL: 3.90
+Unrealized PnL: -28.50
+Open trades: 3
+Open capital: 418.50
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=16.50 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-46.50 | edge=0.157
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 99987.40
+Realized PnL: 3.90
+Unrealized PnL: -16.50
+Open trades: 3
+Open capital: 418.50
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=16.50 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-34.50 | edge=0.157
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100003.90
+Realized PnL: 3.90
+Unrealized PnL: 0.00
+Open trades: 3
+Open capital: 418.50
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=16.50 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-18.00 | edge=0.157
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100003.90
+Realized PnL: 3.90
+Unrealized PnL: 0.00
+Open trades: 3
+Open capital: 418.50
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=16.50 | edge=0.230
+- Süper Lig Winner | legs=1 | cap=69.00 | uPnL=-18.00 | edge=0.157
+
+sent: True
+POLY ENGINE SUMMARY
+Equity: 100021.90
+Realized PnL: 3.90
+Unrealized PnL: 18.00
+Open trades: 2
+Open capital: 349.50
+Risk status: OK
+
+Top Buckets:
+- NBA Eastern Conference Champion  | legs=1 | cap=235.50 | uPnL=1.50 | edge=0.133
+- Texas Senate Election Winner | legs=1 | cap=114.00 | uPnL=16.50 | edge=0.230
+
+sent: True

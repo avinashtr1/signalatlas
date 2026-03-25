@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>SignalAtlas Execution</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<style>
+:root{--bg:#071018;--card:#0d1722;--border:#183245;--text:#d7ffe0;--muted:#9ec5aa;--accent:#8fffb5;--white:#ffffff;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;}
+.wrap{max-width:1200px;margin:auto;padding:18px}
+.top{font-size:30px;font-weight:800;color:var(--accent);margin-bottom:8px}
+.sub{color:var(--muted);margin-bottom:16px}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.pill{padding:5px 10px;border-radius:999px;background:#162636;font-size:12px;text-decoration:none;color:white}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.metric{background:#0a131d;border:1px solid #112737;border-radius:10px;padding:10px}
+.k{font-size:11px;color:#88a997;text-transform:uppercase}
+.v{margin-top:4px;font-size:20px;color:#fff;font-weight:700}
+.small{color:var(--muted);font-size:13px;line-height:1.5;white-space:pre-wrap}
+.row{padding:10px 0;border-bottom:1px solid #163043}
+.row:last-child{border-bottom:none}
+.name{font-weight:700;color:#fff}
+@media (max-width:860px){.grid{grid-template-columns:1fr}.top{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">SignalAtlas Execution</div>
+  <div class="sub">Paper execution stack and deployment visibility</div>
+
+  <div class="pills">
+    <a class="pill" href="/index.html">terminal</a>
+    <a class="pill" href="/history.html">history</a>
+    <a class="pill" href="/ops.html">ops</a>
+    <a class="pill" href="/heatmap.html">heatmap</a>
+    <a class="pill" href="/clusters.html">clusters</a>
+    <a class="pill" href="/execution.html">execution</a>
+  </div>
+
+  <div class="card">
+    <div class="grid">
+      <div class="metric"><div class="k">Signals Executed</div><div class="v" id="executed">-</div></div>
+      <div class="metric"><div class="k">Signals Resolved</div><div class="v" id="resolved">-</div></div>
+      <div class="metric"><div class="k">Success Rate</div><div class="v" id="pnl">-</div></div>
+      <div class="metric"><div class="k">Deploy Ready</div><div class="v" id="deploy">-</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="name">Execution Stack Registry</div>
+    <div id="registry" class="small">Loading...</div>
+  </div>
+
+  <div class="card">
+    <div class="name">Recent Opens</div>
+    <div id="recentOpens" class="small">Loading...</div>
+  </div>
+
+  <div class="card">
+    <div class="name">Recent Closes</div>
+    <div id="recentCloses" class="small">Loading...</div>
+  </div>
+
+  <div class="card">
+    <div class="name">Deployable Allocations</div>
+    <h3>Portfolio Summary</h3>
+  <div id="portfolioSummary" class="small">Loading...</div>
+
+  <div id="allocs" class="small">Loading...</div>
+  </div>
+</div>
+
+<script>
+const API = "http://187.77.83.169:8012/api";
+
+async function loadJSON(path){
+  const r = await fetch(API + path);
+  if(!r.ok) throw new Error(path);
+  return await r.json();
+}
+async function loadLocal(path){
+  const r = await fetch(path);
+  if(!r.ok) throw new Error(path);
+  return await r.json();
+}
+
+function fmt(x,n=2){
+  const v = Number(x);
+  return Number.isFinite(v) ? v.toFixed(n) : "n/a";
+}
+
+async function main(){
+
+  try{
+    const p = await loadJSON("http://187.77.83.169:8012/api/portfolio-summary");
+    document.getElementById("portfolioSummary").innerHTML = `
+      <div class="row">
+        <div class="name">Open Positions</div>
+        <div>${p.open_positions ?? 0}</div>
+      </div>
+      <div class="row">
+        <div class="name">Closed Positions</div>
+        <div>${p.closed_positions ?? 0}</div>
+      </div>
+      <div class="row">
+        <div class="name">Realized PnL</div>
+        <div>${fmt(p.realized_pnl,2)}</div>
+      </div>
+      <div class="row">
+        <div class="name">Capital Locked</div>
+        <div>${fmt(p.capital_locked,2)}</div>
+      </div>
+      <div class="row">
+        <div class="name">Latest Close</div>
+        <div>${p.latest_close?.market_name || "n/a"}</div>
+      </div>
+    `;
+  }catch{
+    document.getElementById("portfolioSummary").innerText = "Portfolio summary unavailable";
+  }
+  try{
+    const exec = await loadLocal("/EXECUTION_REGISTRY.json");
+    document.getElementById("registry").innerHTML = (exec.execution_modules || []).map(x => `
+      <div class="row">
+        <div class="name">${x.name}</div>
+        <div>${x.file}</div>
+      </div>
+    `).join("");
+  }catch{
+    document.getElementById("registry").innerText = "Execution registry unavailable";
+  }
+
+  try{
+    const out = await loadJSON("/outcomes");
+    document.getElementById("executed").innerText = out.validated ?? 0;
+    document.getElementById("resolved").innerText = out.watching ?? 0;
+    document.getElementById("pnl").innerText = ((out.success_rate || 0) * 100).toFixed(1) + "%";
+  }catch{}
+
+  try{
+    const alloc = await loadJSON("/opportunities");
+    const rows = (alloc.top_opportunities || []).slice(0,5);
+    document.getElementById("allocs").innerHTML = rows.map((r,i) => `
+      <div class="row">
+        <div class="name">${i+1}. ${r.market_name || "Unknown"}</div>
+        <div>opp=${Number(r.opportunity_score || 0).toFixed(3)} | alpha=${Number(r.alpha_score || 0).toFixed(3)}</div>
+      </div>
+    `).join("");
+  }catch{
+    document.getElementById("allocs").innerText = "Allocation view unavailable";
+  }
+
+  try{
+    const h = await loadJSON("/execution-history");
+    const opens = (h.open_trades || []).slice(-8).reverse();
+    const closes = (h.closed_trades || []).slice(-8).reverse();
+
+    document.getElementById("recentOpens").innerHTML = opens.length ? opens.map(r => `
+      <div class="row">
+        <div class="name">${r.market_name || r.market_id || "Unknown"}</div>
+        <div>OPEN | ${r.side || "n/a"} | entry=${fmt(r.entry_price,4)} | capital=${fmt(r.allocated_capital,2)}</div>
+        <div>${r.ts || ""}</div>
+      </div>
+    `).join("") : "No open history yet";
+
+    document.getElementById("recentCloses").innerHTML = closes.length ? closes.map(r => `
+      <div class="row">
+        <div class="name">${r.bucket_group_title || r.market_id || "Unknown"}</div>
+        <div>CLOSE | ${r.side || "n/a"} | pnl=${fmt(r.realized_pnl,4)} | entry=${fmt(r.entry_price,4)}</div>
+        <div>${r.ts || ""}</div>
+      </div>
+    `).join("") : "No close history yet";
+  }catch{
+    document.getElementById("recentOpens").innerText = "Execution history unavailable";
+    document.getElementById("recentCloses").innerText = "Execution history unavailable";
+  }
+}
+main();
+setInterval(main, 30000);
+</script>
+</body>
+</html>

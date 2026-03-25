@@ -1,0 +1,201 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>SignalAtlas Ops</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<style>
+:root{
+  --bg:#071018; --card:#0d1722; --border:#183245; --text:#d7ffe0; --muted:#9ec5aa;
+  --accent:#8fffb5; --white:#ffffff;
+}
+body{margin:0;background:var(--bg);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;}
+.wrap{max-width:1280px;margin:0 auto;padding:18px}
+.topbar{position:sticky;top:0;z-index:5;background:rgba(7,16,24,.92);backdrop-filter:blur(6px);border-bottom:1px solid #0f2433;margin:-18px -18px 18px -18px;padding:16px 18px}
+.title{font-size:30px;font-weight:800;color:var(--accent)}
+.sub{margin-top:6px;color:var(--muted);font-size:13px}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.pill{display:inline-block;padding:4px 9px;border-radius:999px;font-size:12px;background:#162636;color:var(--text);text-decoration:none}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.metric{background:#0a131d;border:1px solid #112737;border-radius:10px;padding:10px}
+.k{font-size:11px;color:#88a997;text-transform:uppercase;letter-spacing:.5px}
+.v{margin-top:4px;font-size:22px;color:var(--white);font-weight:700}
+.row{padding:10px 0;border-bottom:1px solid #163043}
+.row:last-child{border-bottom:none}
+.name{font-weight:700;color:var(--white)}
+.small{color:var(--muted);font-size:13px;line-height:1.5;white-space:pre-wrap}
+.ok{color:#8fffb5}.bad{color:#ff9cab}
+@media (max-width: 980px){ .grid{grid-template-columns:repeat(2,minmax(0,1fr));} .title{font-size:24px;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="title">SignalAtlas Ops</div>
+    <div class="sub">Unified operating dashboard · <span id="lastRefresh">refresh pending</span></div>
+    <div class="pills">
+      <a class="pill" href="/index.html">terminal</a>
+      <a class="pill" href="/history.html">history</a>
+      <a class="pill" href="/ops.html">ops</a>
+      <a class="pill" href="/heatmap.html">heatmap</a>
+      <a class="pill" href="/clusters.html">clusters</a>
+      <a class="pill" href="/execution.html">execution</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="grid">
+      <div class="metric"><div class="k">Public API</div><div class="v" id="publicApi">-</div></div>
+      <div class="metric"><div class="k">Intelligence Snapshot</div><div class="v" id="intelApi">-</div></div>
+      <div class="metric"><div class="k">Raw Universe</div><div class="v" id="rawUniverse">-</div></div>
+      <div class="metric"><div class="k">Clean Universe</div><div class="v" id="cleanUniverse">-</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="grid">
+      <div class="metric"><div class="k">Signals Detected</div><div class="v" id="signals_detected">-</div></div>
+      <div class="metric"><div class="k">Open Positions</div><div class="v" id="signals_executed">-</div></div>
+      <div class="metric"><div class="k">Closed Trades</div><div class="v" id="signals_resolved">-</div></div>
+      <div class="metric"><div class="k">Acceptable Now</div><div class="v" id="deploy_now">-</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="grid">
+      <div class="metric"><div class="k">Win Rate</div><div class="v" id="win_rate">-</div></div>
+      <div class="metric"><div class="k">Realized PnL</div><div class="v" id="realized_pnl">-</div></div>
+      <div class="metric"><div class="k">Execution Modules</div><div class="v" id="execModules">-</div></div>
+      <div class="metric"><div class="k">Status</div><div class="v" id="system_status">-</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="name">Top Opportunity</div>
+    <div id="top_opportunity" class="small">Loading...</div>
+  </div>
+
+  <div class="card">
+    <div class="name">Narrative Clusters</div>
+    <div id="clusters" class="small">Loading...</div>
+  </div>
+
+  <div class="card">
+    <div class="name">Execution Stack</div>
+    <div id="execStack" class="small">Loading...</div>
+  </div>
+</div>
+
+<script>
+const PUBLIC_API = "http://187.77.83.169:8012/api";
+
+function setRefreshClock(){
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  const ss = String(now.getSeconds()).padStart(2,'0');
+  document.getElementById("lastRefresh").textContent = `last refresh ${hh}:${mm}:${ss}`;
+}
+function fmt(x,n=2){
+  const v = Number(x);
+  return Number.isFinite(v) ? v.toFixed(n) : "n/a";
+}
+function setVal(id,v){
+  const el = document.getElementById(id);
+  if(el) el.innerText = v;
+}
+async function loadJSON(url){
+  const r = await fetch(url);
+  if(!r.ok) throw new Error(url);
+  return await r.json();
+}
+async function main(){
+  setRefreshClock();
+
+  try{
+    await fetch(PUBLIC_API + "/health");
+    document.getElementById("publicApi").innerHTML = '<span class="ok">online</span>';
+  }catch{
+    document.getElementById("publicApi").innerHTML = '<span class="bad">offline</span>';
+  }
+
+  try{
+    const snap = await loadJSON("/intel_snapshot.json");
+    const intel = snap.data || {};
+    document.getElementById("intelApi").innerHTML = '<span class="ok">ready</span>';
+    setVal("signals_detected", intel.signals_detected ?? "-");
+    setVal("system_status", intel.system_status || "-");
+
+    if(intel.top_opportunity){
+      const t = intel.top_opportunity;
+      document.getElementById("top_opportunity").innerText =
+        `${t.market_name || "Unknown"} | ${t.side || "n/a"} | edge=${fmt(t.expected_net_edge_pct,2)}% | capital=${fmt(t.allocated_capital,2)}`;
+    } else {
+      document.getElementById("top_opportunity").innerText = "No top opportunity";
+    }
+
+    try{
+      const p = await loadJSON(PUBLIC_API + "/portfolio-summary");
+      setVal("signals_executed", p.open_positions ?? "-");
+      setVal("signals_resolved", p.closed_positions ?? "-");
+      setVal("realized_pnl", fmt(p.realized_pnl, 2));
+    }catch{}
+
+    try{
+      const h = await loadJSON(PUBLIC_API + "/execution-history");
+      const closes = h.closed_trades || [];
+      const wins = closes.filter(x => Number(x.realized_pnl || 0) > 0).length;
+      const wr = closes.length ? (wins / closes.length) * 100 : null;
+      setVal("win_rate", wr == null ? "-" : wr.toFixed(1) + "%");
+    }catch{}
+
+    try{
+      const lines = await fetch("/opportunity_ledger.jsonl", {cache:"no-store"}).then(r => r.text());
+      const rows = lines.trim().split(/\n+/).filter(Boolean).slice(-1).map(x => JSON.parse(x));
+      const last = rows.length ? rows[0] : null;
+      setVal("deploy_now", last ? (last.acceptable_count ?? "-") : "-");
+      if(last && Number(last.acceptable_count || 0) === 0){
+        setVal("system_status", "HARVEST MODE");
+      }
+    }catch{}
+  }catch{
+    document.getElementById("intelApi").innerHTML = '<span class="bad">missing</span>';
+    document.getElementById("top_opportunity").innerText = "Snapshot unavailable";
+  }
+
+  try{
+    const u = await loadJSON(PUBLIC_API + "/universe");
+    setVal("rawUniverse", u.count ?? (u.markets || []).length ?? "-");
+  }catch{}
+
+  try{
+    const u = await loadJSON(PUBLIC_API + "/universe-clean");
+    setVal("cleanUniverse", u.count ?? (u.markets || []).length ?? "-");
+  }catch{}
+
+  try{
+    const exec = await loadJSON("/EXECUTION_REGISTRY.json");
+    setVal("execModules", exec.count ?? (exec.execution_modules || []).length ?? "-");
+    document.getElementById("execStack").innerHTML = (exec.execution_modules || []).map(x =>
+      `<div class="row"><div class="name">${x.name}</div><div>${x.file}</div></div>`
+    ).join("");
+  }catch{
+    document.getElementById("execStack").innerText = "Execution stack unavailable";
+  }
+
+  try{
+    const c = await loadJSON(PUBLIC_API + "/clusters");
+    const rows = (c.clusters || []).slice(0,10);
+    document.getElementById("clusters").innerHTML = rows.map(r =>
+      `<div class="row"><div class="name">${r.cluster}</div><div>${r.count} markets</div></div>`
+    ).join("");
+  }catch{
+    document.getElementById("clusters").innerText = "Cluster data unavailable";
+  }
+}
+main();
+setInterval(main, 30000);
+</script>
+</body>
+</html>

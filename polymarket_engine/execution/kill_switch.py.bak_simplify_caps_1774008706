@@ -1,0 +1,32 @@
+class KillSwitch:
+    def __init__(
+        self,
+        max_open_positions=25,
+        max_open_capital=2000.0,
+        max_realized_loss=-500.0,
+        max_unrealized_loss=-300.0,
+    ):
+        self.max_open_positions = max_open_positions
+        self.max_open_capital = max_open_capital
+        self.max_realized_loss = max_realized_loss
+        self.max_unrealized_loss = max_unrealized_loss
+
+    def check(self, inventory_summary):
+        pos = inventory_summary["position_state"]["open_positions_count"]
+        realized = float(inventory_summary["pnl_state"]["realized_pnl"])
+        unrealized = float(inventory_summary["pnl_state"]["unrealized_pnl"])
+        open_capital = float(inventory_summary["capital_state"]["locked_capital"])
+
+        if pos >= self.max_open_positions:
+            return False, f"KILL_SWITCH: max_open_positions reached ({pos})"
+
+        if open_capital >= self.max_open_capital:
+            return False, f"KILL_SWITCH: max_open_capital reached ({open_capital})"
+
+        if realized <= self.max_realized_loss:
+            return False, f"KILL_SWITCH: max_realized_loss reached ({realized})"
+
+        if unrealized <= self.max_unrealized_loss:
+            return False, f"KILL_SWITCH: max_unrealized_loss reached ({unrealized})"
+
+        return True, "OK"

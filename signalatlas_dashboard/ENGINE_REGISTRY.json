@@ -1,0 +1,676 @@
+{
+  "timestamp": "2026-03-12T19:03:16.663531+00:00",
+  "count": 134,
+  "engines": [
+    {
+      "name": "__init__",
+      "file": "polymarket_engine/__init__.py",
+      "status": "present"
+    },
+    {
+      "name": "adaptive_alpha_feed",
+      "file": "polymarket_engine/adaptive_alpha_feed.py",
+      "status": "present"
+    },
+    {
+      "name": "adaptive_composite_score",
+      "file": "polymarket_engine/adaptive_composite_score.py",
+      "status": "present"
+    },
+    {
+      "name": "adaptive_weight_trainer",
+      "file": "polymarket_engine/adaptive_weight_trainer.py",
+      "status": "present"
+    },
+    {
+      "name": "adaptive_weighting",
+      "file": "polymarket_engine/adaptive_weighting.py",
+      "status": "present"
+    },
+    {
+      "name": "agent_queries",
+      "file": "polymarket_engine/agent_queries.py",
+      "status": "present"
+    },
+    {
+      "name": "alert_router",
+      "file": "polymarket_engine/alert_router.py",
+      "status": "present"
+    },
+    {
+      "name": "alpha_alert_engine",
+      "file": "polymarket_engine/alpha_alert_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "alpha_feed_generator",
+      "file": "polymarket_engine/alpha_feed_generator.py",
+      "status": "present"
+    },
+    {
+      "name": "alpha_fusion_engine",
+      "file": "polymarket_engine/alpha_fusion_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "alpha_leaderboard",
+      "file": "polymarket_engine/alpha_leaderboard.py",
+      "status": "present"
+    },
+    {
+      "name": "alpha_quality_scoring",
+      "file": "polymarket_engine/alpha_quality_scoring.py",
+      "status": "present"
+    },
+    {
+      "name": "api_server",
+      "file": "polymarket_engine/api_server.py",
+      "status": "present"
+    },
+    {
+      "name": "archive_engine",
+      "file": "polymarket_engine/archive_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "auto_settlement_scanner",
+      "file": "polymarket_engine/auto_settlement_scanner.py",
+      "status": "present"
+    },
+    {
+      "name": "build_resolution_ledger",
+      "file": "polymarket_engine/build_resolution_ledger.py",
+      "status": "present"
+    },
+    {
+      "name": "calibration_runner",
+      "file": "polymarket_engine/calibration_runner.py",
+      "status": "present"
+    },
+    {
+      "name": "change_detector",
+      "file": "polymarket_engine/change_detector.py",
+      "status": "present"
+    },
+    {
+      "name": "cross_market_correlation",
+      "file": "polymarket_engine/cross_market_correlation.py",
+      "status": "present"
+    },
+    {
+      "name": "cross_market_engine",
+      "file": "polymarket_engine/cross_market_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "cross_market_lag_detector",
+      "file": "polymarket_engine/cross_market_lag_detector.py",
+      "status": "present"
+    },
+    {
+      "name": "cross_market_lead_lag_engine",
+      "file": "polymarket_engine/cross_market_lead_lag_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "daily_brief",
+      "file": "polymarket_engine/daily_brief.py",
+      "status": "present"
+    },
+    {
+      "name": "dashboard",
+      "file": "polymarket_engine/dashboard.py",
+      "status": "present"
+    },
+    {
+      "name": "desk_export",
+      "file": "polymarket_engine/desk_export.py",
+      "status": "present"
+    },
+    {
+      "name": "edge_decay_engine",
+      "file": "polymarket_engine/edge_decay_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "edge_decay_monitor",
+      "file": "polymarket_engine/edge_decay_monitor.py",
+      "status": "present"
+    },
+    {
+      "name": "ev_engine",
+      "file": "polymarket_engine/ev_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "execution_timing_engine",
+      "file": "polymarket_engine/execution_timing_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "executive_brief",
+      "file": "polymarket_engine/executive_brief.py",
+      "status": "present"
+    },
+    {
+      "name": "exit_engine",
+      "file": "polymarket_engine/exit_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "feed_cooldown_engine",
+      "file": "polymarket_engine/feed_cooldown_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "feed_engine",
+      "file": "polymarket_engine/feed_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "feed_v2_formatter",
+      "file": "polymarket_engine/feed_v2_formatter.py",
+      "status": "present"
+    },
+    {
+      "name": "hourly_summary",
+      "file": "polymarket_engine/hourly_summary.py",
+      "status": "present"
+    },
+    {
+      "name": "intelligence_api",
+      "file": "polymarket_engine/intelligence_api.py",
+      "status": "present"
+    },
+    {
+      "name": "intelligence_report_engine",
+      "file": "polymarket_engine/intelligence_report_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "learning_engine",
+      "file": "polymarket_engine/learning_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "liquidity_collapse_detector",
+      "file": "polymarket_engine/liquidity_collapse_detector.py",
+      "status": "present"
+    },
+    {
+      "name": "liquidity_collapse_engine",
+      "file": "polymarket_engine/liquidity_collapse_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "liquidity_collapse_v2",
+      "file": "polymarket_engine/liquidity_collapse_v2.py",
+      "status": "present"
+    },
+    {
+      "name": "liquidity_vacuum_engine",
+      "file": "polymarket_engine/liquidity_vacuum_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "liquidity_vacuum_proxy_engine",
+      "file": "polymarket_engine/liquidity_vacuum_proxy_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "liquidity_vacuum_v2",
+      "file": "polymarket_engine/liquidity_vacuum_v2.py",
+      "status": "present"
+    },
+    {
+      "name": "liquidity_vacuum_v2_alert_engine",
+      "file": "polymarket_engine/liquidity_vacuum_v2_alert_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "liquidity_vacuum_v2_engine",
+      "file": "polymarket_engine/liquidity_vacuum_v2_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "live_paper_loop",
+      "file": "polymarket_engine/live_paper_loop.py",
+      "status": "present"
+    },
+    {
+      "name": "mark_to_market",
+      "file": "polymarket_engine/mark_to_market.py",
+      "status": "present"
+    },
+    {
+      "name": "market_bucket_scoring",
+      "file": "polymarket_engine/market_bucket_scoring.py",
+      "status": "present"
+    },
+    {
+      "name": "market_quality_gate",
+      "file": "polymarket_engine/market_quality_gate.py",
+      "status": "present"
+    },
+    {
+      "name": "market_raw_collector",
+      "file": "polymarket_engine/market_raw_collector.py",
+      "status": "present"
+    },
+    {
+      "name": "market_regime_detector",
+      "file": "polymarket_engine/market_regime_detector.py",
+      "status": "present"
+    },
+    {
+      "name": "market_regime_engine",
+      "file": "polymarket_engine/market_regime_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "market_selector",
+      "file": "polymarket_engine/market_selector.py",
+      "status": "present"
+    },
+    {
+      "name": "market_snapshot_engine",
+      "file": "polymarket_engine/market_snapshot_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "market_state_cache",
+      "file": "polymarket_engine/market_state_cache.py",
+      "status": "present"
+    },
+    {
+      "name": "memory_engine",
+      "file": "polymarket_engine/memory_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "microstructure_engine",
+      "file": "polymarket_engine/microstructure_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "microstructure_intelligence",
+      "file": "polymarket_engine/microstructure_intelligence.py",
+      "status": "present"
+    },
+    {
+      "name": "mispricing_engine",
+      "file": "polymarket_engine/mispricing_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "module_scoring",
+      "file": "polymarket_engine/module_scoring.py",
+      "status": "present"
+    },
+    {
+      "name": "momentum_break_engine",
+      "file": "polymarket_engine/momentum_break_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "mtm_dashboard",
+      "file": "polymarket_engine/mtm_dashboard.py",
+      "status": "present"
+    },
+    {
+      "name": "narrative_cluster_engine",
+      "file": "polymarket_engine/narrative_cluster_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "opportunity_lifecycle",
+      "file": "polymarket_engine/opportunity_lifecycle.py",
+      "status": "present"
+    },
+    {
+      "name": "opportunity_radar",
+      "file": "polymarket_engine/opportunity_radar.py",
+      "status": "present"
+    },
+    {
+      "name": "opportunity_ranker",
+      "file": "polymarket_engine/opportunity_ranker.py",
+      "status": "present"
+    },
+    {
+      "name": "opportunity_score_engine",
+      "file": "polymarket_engine/opportunity_score_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "orderbook_collector",
+      "file": "polymarket_engine/orderbook_collector.py",
+      "status": "present"
+    },
+    {
+      "name": "orderbook_imbalance_engine",
+      "file": "polymarket_engine/orderbook_imbalance_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "outcome_engine",
+      "file": "polymarket_engine/outcome_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "outcome_entry",
+      "file": "polymarket_engine/outcome_entry.py",
+      "status": "present"
+    },
+    {
+      "name": "performance_analytics",
+      "file": "polymarket_engine/performance_analytics.py",
+      "status": "present"
+    },
+    {
+      "name": "performance_engine",
+      "file": "polymarket_engine/performance_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "portfolio_allocator",
+      "file": "polymarket_engine/portfolio_allocator.py",
+      "status": "present"
+    },
+    {
+      "name": "portfolio_allocator_v2",
+      "file": "polymarket_engine/portfolio_allocator_v2.py",
+      "status": "present"
+    },
+    {
+      "name": "premium_feed_formatter",
+      "file": "polymarket_engine/premium_feed_formatter.py",
+      "status": "present"
+    },
+    {
+      "name": "premium_signal_card",
+      "file": "polymarket_engine/premium_signal_card.py",
+      "status": "present"
+    },
+    {
+      "name": "probability_drift_engine",
+      "file": "polymarket_engine/probability_drift_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "probability_repricing_engine",
+      "file": "polymarket_engine/probability_repricing_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "probability_shock_detector",
+      "file": "polymarket_engine/probability_shock_detector.py",
+      "status": "present"
+    },
+    {
+      "name": "probability_velocity",
+      "file": "polymarket_engine/probability_velocity.py",
+      "status": "present"
+    },
+    {
+      "name": "profit_simulator",
+      "file": "polymarket_engine/profit_simulator.py",
+      "status": "present"
+    },
+    {
+      "name": "public_feed_formatter",
+      "file": "polymarket_engine/public_feed_formatter.py",
+      "status": "present"
+    },
+    {
+      "name": "public_teaser_feed",
+      "file": "polymarket_engine/public_teaser_feed.py",
+      "status": "present"
+    },
+    {
+      "name": "radar_alert_engine",
+      "file": "polymarket_engine/radar_alert_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "radar_engine",
+      "file": "polymarket_engine/radar_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "regime_adaptive_weights",
+      "file": "polymarket_engine/regime_adaptive_weights.py",
+      "status": "present"
+    },
+    {
+      "name": "regime_engine",
+      "file": "polymarket_engine/regime_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "repricing_alert_engine",
+      "file": "polymarket_engine/repricing_alert_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "repricing_engine",
+      "file": "polymarket_engine/repricing_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "reputation_engine",
+      "file": "polymarket_engine/reputation_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "reputation_export",
+      "file": "polymarket_engine/reputation_export.py",
+      "status": "present"
+    },
+    {
+      "name": "resolution_arbitrage_detector",
+      "file": "polymarket_engine/resolution_arbitrage_detector.py",
+      "status": "present"
+    },
+    {
+      "name": "resolution_arbitrage_engine",
+      "file": "polymarket_engine/resolution_arbitrage_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "resolution_arbitrage_v2",
+      "file": "polymarket_engine/resolution_arbitrage_v2.py",
+      "status": "present"
+    },
+    {
+      "name": "resolution_intelligence",
+      "file": "polymarket_engine/resolution_intelligence.py",
+      "status": "present"
+    },
+    {
+      "name": "resolution_risk_model",
+      "file": "polymarket_engine/resolution_risk_model.py",
+      "status": "present"
+    },
+    {
+      "name": "resolution_tracking",
+      "file": "polymarket_engine/resolution_tracking.py",
+      "status": "present"
+    },
+    {
+      "name": "send_alpha_feed",
+      "file": "polymarket_engine/send_alpha_feed.py",
+      "status": "present"
+    },
+    {
+      "name": "send_daily_brief",
+      "file": "polymarket_engine/send_daily_brief.py",
+      "status": "present"
+    },
+    {
+      "name": "send_intelligence_feed",
+      "file": "polymarket_engine/send_intelligence_feed.py",
+      "status": "present"
+    },
+    {
+      "name": "send_pro_feed",
+      "file": "polymarket_engine/send_pro_feed.py",
+      "status": "present"
+    },
+    {
+      "name": "send_pro_feed_v2",
+      "file": "polymarket_engine/send_pro_feed_v2.py",
+      "status": "present"
+    },
+    {
+      "name": "send_pro_feed_v2_if_changed",
+      "file": "polymarket_engine/send_pro_feed_v2_if_changed.py",
+      "status": "present"
+    },
+    {
+      "name": "send_public_feed",
+      "file": "polymarket_engine/send_public_feed.py",
+      "status": "present"
+    },
+    {
+      "name": "send_public_teaser",
+      "file": "polymarket_engine/send_public_teaser.py",
+      "status": "present"
+    },
+    {
+      "name": "send_shock_alerts",
+      "file": "polymarket_engine/send_shock_alerts.py",
+      "status": "present"
+    },
+    {
+      "name": "send_tom_brief",
+      "file": "polymarket_engine/send_tom_brief.py",
+      "status": "present"
+    },
+    {
+      "name": "send_tom_card",
+      "file": "polymarket_engine/send_tom_card.py",
+      "status": "present"
+    },
+    {
+      "name": "settlement_updater",
+      "file": "polymarket_engine/settlement_updater.py",
+      "status": "present"
+    },
+    {
+      "name": "shock_alert_engine",
+      "file": "polymarket_engine/shock_alert_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "shock_detector",
+      "file": "polymarket_engine/shock_detector.py",
+      "status": "present"
+    },
+    {
+      "name": "shock_detector_engine",
+      "file": "polymarket_engine/shock_detector_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "signal_confidence",
+      "file": "polymarket_engine/signal_confidence.py",
+      "status": "present"
+    },
+    {
+      "name": "signal_detection_logger",
+      "file": "polymarket_engine/signal_detection_logger.py",
+      "status": "present"
+    },
+    {
+      "name": "signal_interactions",
+      "file": "polymarket_engine/signal_interactions.py",
+      "status": "present"
+    },
+    {
+      "name": "signal_memory",
+      "file": "polymarket_engine/signal_memory.py",
+      "status": "present"
+    },
+    {
+      "name": "signal_memory_analytics",
+      "file": "polymarket_engine/signal_memory_analytics.py",
+      "status": "present"
+    },
+    {
+      "name": "signal_momentum",
+      "file": "polymarket_engine/signal_momentum.py",
+      "status": "present"
+    },
+    {
+      "name": "signal_reputation_full",
+      "file": "polymarket_engine/signal_reputation_full.py",
+      "status": "present"
+    },
+    {
+      "name": "signal_state_change",
+      "file": "polymarket_engine/signal_state_change.py",
+      "status": "present"
+    },
+    {
+      "name": "smoke_test",
+      "file": "polymarket_engine/smoke_test.py",
+      "status": "present"
+    },
+    {
+      "name": "spread_explosion_engine",
+      "file": "polymarket_engine/spread_explosion_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "stale_repricing_detector",
+      "file": "polymarket_engine/stale_repricing_detector.py",
+      "status": "present"
+    },
+    {
+      "name": "state_restore",
+      "file": "polymarket_engine/state_restore.py",
+      "status": "present"
+    },
+    {
+      "name": "system_monitor",
+      "file": "polymarket_engine/system_monitor.py",
+      "status": "present"
+    },
+    {
+      "name": "telegram_alpha_broadcaster",
+      "file": "polymarket_engine/telegram_alpha_broadcaster.py",
+      "status": "present"
+    },
+    {
+      "name": "tier_engine",
+      "file": "polymarket_engine/tier_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "top_opportunities_engine",
+      "file": "polymarket_engine/top_opportunities_engine.py",
+      "status": "present"
+    },
+    {
+      "name": "universe_cleaner",
+      "file": "polymarket_engine/universe_cleaner.py",
+      "status": "present"
+    },
+    {
+      "name": "universe_scanner",
+      "file": "polymarket_engine/universe_scanner.py",
+      "status": "present"
+    },
+    {
+      "name": "validation_runner",
+      "file": "polymarket_engine/validation_runner.py",
+      "status": "present"
+    },
+    {
+      "name": "weekly_brief",
+      "file": "polymarket_engine/weekly_brief.py",
+      "status": "present"
+    }
+  ]
+}

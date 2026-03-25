@@ -1,0 +1,89 @@
+import json
+import time
+import urllib.parse
+import urllib.request
+from pathlib import Path
+
+OUT = Path("analytics/kalshi_snapshot.json")
+BASE = "https://api.elections.kalshi.com/trade-api/v2/markets"
+
+def fetch_page(limit=50, cursor=None):
+    params = {"limit": limit}
+    if cursor:
+        params["cursor"] = cursor
+
+    url = BASE + "?" + urllib.parse.urlencode(params)
+
+    req = urllib.request.Request(
+        url,
+        headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"},
+        method="GET",
+    )
+
+    with urllib.request.urlopen(req, timeout=20) as resp:
+        return json.loads(resp.read().decode("utf-8"))
+
+def pick_yes_price(m):
+    try:
+        # Direct YES bid
+        yb = m.get("yes_bid_dollars")
+        if yb:
+            return float(yb)
+
+        # Fallback: invert NO ask
+        na = m.get("no_ask_dollars")
+        if na:
+            return 1.0 - float(na)
+
+    except:
+        pass
+
+    return None
+
+def main():
+    rows = []
+    cursor = None
+
+    for i in range(5):
+        data = fetch_page(limit=50, cursor=cursor)
+
+        markets = data.get("markets") or data.get("data") or []
+
+        for m in markets:
+            try:
+                market_id = m.get("market_ticker")
+                market_name = m.get("yes_sub_title") or m.get("event_ticker")
+
+                yes_price = pick_yes_price(m)
+
+                if not market_id or not market_name or yes_price is None:
+                    continue
+
+                rows.append({
+                    "market_id": str(market_id),
+                    "market_name": str(market_name),
+                    "yes_price": float(yes_price),
+                })
+
+            except:
+                continue
+
+        cursor = data.get("cursor")
+
+        print(f"page {i+1}: {len(rows)} collected")
+
+        if not cursor:
+            break
+
+        time.sleep(2)
+
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    OUT.write_text(json.dumps(rows, indent=2), encoding="utf-8")
+
+    print("wrote:", OUT)
+    print("rows:", len(rows))
+    if rows:
+        print("sample:", rows[0])
+
+if __name__ == "__main__":
+    main()

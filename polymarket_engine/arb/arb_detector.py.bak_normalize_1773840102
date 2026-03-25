@@ -1,0 +1,97 @@
+import json
+from pathlib import Path
+
+POLY_FILE = "analytics/polymarket_snapshot.json"
+KALSHI_FILE = "analytics/kalshi_manual_snapshot.json"
+
+def load(path):
+    if not Path(path).exists():
+        return []
+    return json.loads(Path(path).read_text())
+
+def extract_contract(name):
+    n = name.lower()
+
+    asset = None
+    if "bitcoin" in n or "btc" in n:
+        asset = "btc"
+    elif "eth" in n:
+        asset = "eth"
+
+    if "above" in n or "below" in n:
+        return {"type": "threshold", "asset": asset, "raw": n}
+
+    if "up or down" in n or "up/down" in n:
+        return {"type": "direction", "asset": asset, "raw": n}
+
+    if "senate" in n:
+        party = None
+        if "republican" in n or "republicans" in n or "gop" in n:
+            party = "republican"
+        elif "democrat" in n or "democrats" in n:
+            party = "democrat"
+        return {"type": "senate_party", "party": party, "raw": n}
+
+    if "win" in n or "control" in n:
+        return {"type": "event", "raw": n}
+
+    return {"type": "unknown", "asset": asset, "raw": n}
+
+def is_valid_market(name: str) -> bool:
+    n = name.lower()
+    bad_patterns = [
+        " at ", "today", "tonight", "this hour",
+        " by ", " before ", " after ",
+        "12:", "1:", "2:", "3:", "4:", "5:", "6:", "7:", "8:", "9:"
+    ]
+    for b in bad_patterns:
+        if b in n:
+            return False
+    if "bitcoin" in n and any(x in n for x in ["at", "minute", "hour"]):
+        return False
+    return True
+
+def match_market(poly_name, kalshi_name):
+    p = extract_contract(poly_name)
+    k = extract_contract(kalshi_name)
+
+    if p["type"] != k["type"]:
+        return False
+
+    if p["type"] == "senate_party":
+        return p.get("party") and p.get("party") == k.get("party")
+
+    if p.get("asset") and k.get("asset") and p["asset"] != k["asset"]:
+        return False
+
+    return False
+
+def run():
+    poly = load(POLY_FILE)
+    kalshi = load(KALSHI_FILE)
+
+    print(f"Loaded {len(poly)} poly | {len(kalshi)} kalshi")
+
+    for p in poly:
+        if not is_valid_market(p.get("market_name","")):
+            continue
+
+        for k in kalshi:
+            if match_market(p["market_name"], k["market_name"]):
+                poly_price = p.get("yes_price")
+                kalshi_price = k.get("yes_price")
+
+                if poly_price is None or kalshi_price is None:
+                    continue
+
+                edge = round(poly_price - kalshi_price, 4)
+
+                if abs(edge) >= 0.05:
+                    print("\n🚨 ARB FOUND")
+                    print("Market:", p["market_name"])
+                    print("Poly:", poly_price)
+                    print("Kalshi:", kalshi_price)
+                    print("Edge:", edge)
+
+if __name__ == "__main__":
+    run()

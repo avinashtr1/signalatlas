@@ -1,0 +1,40 @@
+import json
+from pathlib import Path
+
+from polymarket_engine.data_adapters.polymarket_adapter import PolymarketAdapter
+
+OUT = Path("analytics/polymarket_snapshot.json")
+
+def main():
+    adapter = PolymarketAdapter()
+
+    markets = adapter._fetch_active_markets(limit=500)
+
+    rows = []
+    for m in markets:
+        try:
+            market_id = m.get("market_id") or m.get("id")
+            market_name = m.get("name") or m.get("market_name") or m.get("question")
+            yes_price = m.get("current_price")
+
+            if market_id is None or not market_name or yes_price is None:
+                continue
+
+            rows.append({
+                "market_id": str(market_id),
+                "market_name": str(market_name),
+                "yes_price": float(yes_price),
+            })
+        except Exception:
+            continue
+
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    OUT.write_text(json.dumps(rows, indent=2), encoding="utf-8")
+
+    print("wrote:", OUT)
+    print("rows:", len(rows))
+    if rows:
+        print("sample:", rows[0])
+
+if __name__ == "__main__":
+    main()

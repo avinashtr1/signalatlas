@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SignalAtlas Execution</title>
+  <style>
+    body{
+      margin:0; padding:18px;
+      background:#06121c; color:#d7ffe8;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    .title{font-size:28px; font-weight:800; color:#9fffc4; margin-bottom:6px;}
+    .sub{font-size:14px; color:#9ab7a8; margin-bottom:18px;}
+    .nav{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px;}
+    .nav a{
+      color:#eafef1; text-decoration:none; padding:10px 14px; border-radius:999px;
+      background:#1b2a44;
+    }
+    .card{
+      background:#081927; border:1px solid #163149; border-radius:18px;
+      padding:18px; margin-bottom:18px;
+      box-shadow: inset 0 0 0 1px rgba(80,140,180,.08);
+    }
+    .card h3{
+      margin:0 0 14px 0; font-size:18px; color:#eafef1;
+    }
+    .kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px;}
+    .kpi{
+      background:#071521; border:1px solid #15314a; border-radius:14px; padding:14px;
+    }
+    .kpi .label{font-size:12px; color:#9ab7a8; margin-bottom:8px;}
+    .kpi .value{font-size:18px; font-weight:700; color:#ffffff;}
+    .rows{display:flex; flex-direction:column; gap:12px;}
+    .row{
+      background:#071521; border:1px solid #15314a; border-radius:14px; padding:12px;
+    }
+    .name{font-size:16px; font-weight:700; color:#ffffff; margin-bottom:6px;}
+    .meta{font-size:13px; color:#b7d6c4; line-height:1.45;}
+    .muted{font-size:12px; color:#8aa494; margin-top:4px;}
+  </style>
+</head>
+<body>
+  <div class="title">SignalAtlas Execution</div>
+  <div class="sub">Paper execution stack and deployment visibility</div>
+
+  <div class="nav">
+    <a href="/index.html">terminal</a>
+    <a href="/history.html">history</a>
+    <a href="/ops.html">ops</a>
+    <a href="/heatmap.html">heatmap</a>
+    <a href="/clusters.html">clusters</a>
+    <a href="/hub.html">hub</a>
+  </div>
+
+  <div class="card">
+    <h3>Portfolio Summary</h3>
+    <div class="kpis">
+      <div class="kpi"><div class="label">OPEN POSITIONS</div><div id="openPositions" class="value">...</div></div>
+      <div class="kpi"><div class="label">CLOSED POSITIONS</div><div id="closedPositions" class="value">...</div></div>
+      <div class="kpi"><div class="label">REALIZED PNL</div><div id="realizedPnl" class="value">...</div></div>
+      <div class="kpi"><div class="label">CAPITAL LOCKED</div><div id="capitalLocked" class="value">...</div></div>
+      <div class="kpi"><div class="label">LATEST CLOSE</div><div id="latestClose" class="value">...</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Alpha Monitor</h3>
+    <div class="kpis">
+      <div class="kpi"><div class="label">EXPECTED EDGE</div><div id="alphaExpected" class="value">...</div></div>
+      <div class="kpi"><div class="label">REALIZED EDGE</div><div id="alphaRealized" class="value">...</div></div>
+      <div class="kpi"><div class="label">EDGE CAPTURE</div><div id="alphaCapture" class="value">...</div></div>
+      <div class="kpi"><div class="label">LAST EXPECTED %</div><div id="alphaExpectedPct" class="value">...</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Trade Efficiency Monitor</h3>
+    <div class="kpis">
+      <div class="kpi"><div class="label">EXPECTED EDGE TOTAL</div><div id="effExpectedTotal" class="value">...</div></div>
+      <div class="kpi"><div class="label">REALIZED EDGE TOTAL</div><div id="effRealizedTotal" class="value">...</div></div>
+      <div class="kpi"><div class="label">EDGE LOST TOTAL</div><div id="effLostTotal" class="value">...</div></div>
+      <div class="kpi"><div class="label">EFFICIENCY %</div><div id="effPct" class="value">...</div></div>
+      <div class="kpi"><div class="label">LAST HOLDING TIME</div><div id="effLastHold" class="value">...</div></div>
+      <div class="kpi"><div class="label">AVG HOLDING TIME</div><div id="effAvgHold" class="value">...</div></div>
+      <div class="kpi"><div class="label">EDGE / HOUR</div><div id="effEdgeHour" class="value">...</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Recent Open Trades</h3>
+    <div id="recentOpens" class="rows">Loading...</div>
+  </div>
+
+  <div class="card">
+    <h3>Recent Closed Trades</h3>
+    <div id="recentCloses" class="rows">Loading...</div>
+  </div>
+
+  <div class="card">
+    <h3>Top Opportunities</h3>
+    <div id="allocs" class="rows">Loading...</div>
+  </div>
+
+  <div class="card">
+    <h3>Execution Stack Registry</h3>
+    <div id="registry" class="rows">Loading...</div>
+  </div>
+
+<script>
+const API_BASE = "http://187.77.83.169:8012/api";
+
+async function loadJSON(url){
+  const r = await fetch(url, {mode:"cors", cache:"no-store"});
+  if(!r.ok) throw new Error(url + " -> " + r.status);
+  return await r.json();
+}
+async function loadLocal(path){
+  const r = await fetch(path, {cache:"no-store"});
+  if(!r.ok) throw new Error(path + " -> " + r.status);
+  return await r.json();
+}
+function fmt(x,n=2){
+  const v = Number(x);
+  return Number.isFinite(v) ? v.toFixed(n) : "n/a";
+}
+
+async function main(){
+  try{
+    const p = await loadJSON(API_BASE + "/portfolio-summary");
+    document.getElementById("openPositions").innerText = p.open_positions ?? 0;
+    document.getElementById("closedPositions").innerText = p.closed_positions ?? 0;
+    document.getElementById("realizedPnl").innerText = fmt(p.realized_pnl,2);
+    document.getElementById("capitalLocked").innerText = fmt(p.capital_locked,2);
+    document.getElementById("latestClose").innerText = (p.latest_close && (p.latest_close.market_name || p.latest_close.market_id)) || "n/a";
+  }catch(e){
+    document.getElementById("openPositions").innerText = "unavailable";
+    document.getElementById("closedPositions").innerText = "unavailable";
+    document.getElementById("realizedPnl").innerText = "unavailable";
+    document.getElementById("capitalLocked").innerText = "unavailable";
+    document.getElementById("latestClose").innerText = "unavailable";
+  }
+
+  try{
+    const h = await loadJSON(API_BASE + "/execution-history");
+    const opens = (h.open_trades || []).slice(-8).reverse();
+    const closes = (h.closed_trades || []).slice(-8).reverse();
+
+    if(closes.length){
+      const last = closes[0];
+      document.getElementById("alphaExpected").innerText = fmt(last.expected_edge, 4);
+      document.getElementById("alphaRealized").innerText = fmt(last.realized_edge, 4);
+      document.getElementById("alphaCapture").innerText = last.edge_capture == null ? "n/a" : fmt(last.edge_capture * 100, 2) + "%";
+      document.getElementById("alphaExpectedPct").innerText = fmt(last.expected_edge_pct, 3) + "%";
+
+      const expectedTotal = closes.reduce((s, r) => s + Number(r.expected_edge || 0), 0);
+      const realizedTotal = closes.reduce((s, r) => s + Number(r.realized_edge || 0), 0);
+      const lostTotal = closes.reduce((s, r) => s + Number(r.edge_lost || 0), 0);
+      const effPct = expectedTotal !== 0 ? (realizedTotal / expectedTotal) * 100 : null;
+
+      const holdVals = closes.map(r => Number(r.holding_minutes)).filter(v => Number.isFinite(v));
+      const lastHold = holdVals.length ? holdVals[0] : null;
+      const avgHold = holdVals.length ? holdVals.reduce((a,b)=>a+b,0) / holdVals.length : null;
+      const edgeHour = avgHold && avgHold > 0 ? realizedTotal / (avgHold / 60.0) : null;
+
+      document.getElementById("effExpectedTotal").innerText = fmt(expectedTotal, 4);
+      document.getElementById("effRealizedTotal").innerText = fmt(realizedTotal, 4);
+      document.getElementById("effLostTotal").innerText = fmt(lostTotal, 4);
+      document.getElementById("effPct").innerText = effPct == null ? "n/a" : fmt(effPct, 2) + "%";
+      document.getElementById("effLastHold").innerText = lastHold == null ? "n/a" : fmt(lastHold, 2) + " min";
+      document.getElementById("effAvgHold").innerText = avgHold == null ? "n/a" : fmt(avgHold, 2) + " min";
+      document.getElementById("effEdgeHour").innerText = edgeHour == null ? "n/a" : fmt(edgeHour, 4);
+    }else{
+      document.getElementById("alphaExpected").innerText = "n/a";
+      document.getElementById("alphaRealized").innerText = "n/a";
+      document.getElementById("alphaCapture").innerText = "n/a";
+      document.getElementById("alphaExpectedPct").innerText = "n/a";
+
+      document.getElementById("effExpectedTotal").innerText = "n/a";
+      document.getElementById("effRealizedTotal").innerText = "n/a";
+      document.getElementById("effLostTotal").innerText = "n/a";
+      document.getElementById("effPct").innerText = "n/a";
+    }
+
+    document.getElementById("recentOpens").innerHTML = opens.length ? opens.map(r => `
+      <div class="row">
+        <div class="name">${r.market_name || r.market_id || "Unknown"}</div>
+        <div class="meta">OPEN | ${r.side || "n/a"} | entry=${fmt(r.entry_price,4)} | capital=${fmt(r.allocated_capital,2)}</div>
+        <div class="muted">${r.ts || ""}</div>
+      </div>
+    `).join("") : "No open history yet";
+
+    document.getElementById("recentCloses").innerHTML = closes.length ? closes.map(r => `
+      <div class="row">
+        <div class="name">${r.market_name || r.bucket_group_title || r.market_id || "Unknown"}</div>
+        <div class="meta">CLOSE | ${r.side || "n/a"} | pnl=${fmt(r.realized_pnl,4)} | entry=${fmt(r.entry_price,4)} | reason=${r.close_reason || "n/a"} | bucket_sum=${fmt(r.bucket_sum,3)}</div>
+        <div class="muted">${r.ts || ""}</div>
+      </div>
+    `).join("") : "No close history yet";
+  }catch(e){
+    document.getElementById("recentOpens").innerText = "Execution history unavailable";
+    document.getElementById("recentCloses").innerText = "Execution history unavailable";
+    document.getElementById("alphaExpected").innerText = "unavailable";
+    document.getElementById("alphaRealized").innerText = "unavailable";
+    document.getElementById("alphaCapture").innerText = "unavailable";
+    document.getElementById("alphaExpectedPct").innerText = "unavailable";
+    document.getElementById("effExpectedTotal").innerText = "unavailable";
+    document.getElementById("effRealizedTotal").innerText = "unavailable";
+    document.getElementById("effLostTotal").innerText = "unavailable";
+    document.getElementById("effPct").innerText = "unavailable";
+    document.getElementById("effLastHold").innerText = "unavailable";
+    document.getElementById("effAvgHold").innerText = "unavailable";
+    document.getElementById("effEdgeHour").innerText = "unavailable";
+  }
+
+  try{
+    const alloc = await loadJSON(API_BASE + "/opportunities");
+    const rows = (alloc.top_opportunities || []).slice(0,5);
+    document.getElementById("allocs").innerHTML = rows.length ? rows.map((r,i) => `
+      <div class="row">
+        <div class="name">${i+1}. ${r.market_name || "Unknown"}</div>
+        <div class="meta">opp=${fmt(r.opportunity_score,3)} | alpha=${fmt(r.alpha_score,3)}</div>
+      </div>
+    `).join("") : "No opportunities";
+  }catch(e){
+    document.getElementById("allocs").innerText = "Allocation view unavailable";
+  }
+
+  try{
+    const exec = await loadLocal("/EXECUTION_REGISTRY.json");
+    document.getElementById("registry").innerHTML = (exec.execution_modules || []).map(x => `
+      <div class="row">
+        <div class="name">${x.name}</div>
+        <div class="meta">${x.file}</div>
+      </div>
+    `).join("");
+  }catch(e){
+    document.getElementById("registry").innerText = "Execution registry unavailable";
+  }
+}
+
+main();
+setInterval(main, 30000);
+</script>
+</body>
+</html>

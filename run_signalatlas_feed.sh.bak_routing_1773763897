@@ -1,0 +1,47 @@
+python3 -m polymarket_engine.probability_velocity
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd /root/.openclaw/workspace
+
+export TG_PRO_CHAT_ID="-1003790844059"
+export TG_PUBLIC_CHAT_ID="-1003731136756"
+
+python3 -m polymarket_engine.universe_scanner
+python3 -m polymarket_engine.orderbook_collector
+python3 -m polymarket_engine.market_snapshot_engine
+python3 -m polymarket_engine.market_regime_engine
+python3 -m polymarket_engine.mispricing_engine
+python3 -m polymarket_engine.liquidity_collapse_engine
+python3 -m polymarket_engine.liquidity_vacuum_proxy_engine
+python3 -m polymarket_engine.liquidity_vacuum_v2_engine
+python3 -m polymarket_engine.liquidity_vacuum_v2_alert_engine
+python3 -m polymarket_engine.orderbook_imbalance_engine
+
+python3 -m polymarket_engine.spread_explosion_engine
+python3 -m polymarket_engine.resolution_arbitrage_engine
+python3 -m polymarket_engine.alpha_fusion_engine
+python3 -m polymarket_engine.momentum_break_engine
+python3 -m polymarket_engine.probability_repricing_engine
+python3 -m polymarket_engine.cross_market_lead_lag_engine
+python3 -m polymarket_engine.repricing_alert_engine
+python3 -m polymarket_engine.intelligence_report_engine
+python3 -m polymarket_engine.memory_engine
+
+if python3 -m polymarket_engine.change_detector | grep -q CHANGE; then
+    python3 -m polymarket_engine.premium_feed_formatter
+    python3 -m polymarket_engine.send_public_feed
+else
+    echo "NO_CHANGE_SKIP_PUBLIC_SEND"
+fi
+
+python3 -m polymarket_engine.opportunity_ranker
+python3 -m polymarket_engine.tier_engine
+python3 -m polymarket_engine.edge_decay_engine
+python3 -m polymarket_engine.feed_cooldown_engine
+python3 -m polymarket_engine.feed_v2_formatter
+python3 -m polymarket_engine.telegram_alpha_broadcaster
+python3 -m polymarket_engine.send_pro_feed_v2_if_changed
+python3 -m polymarket_engine.shock_alert_engine
+
+python3 -m polymarket_engine.send_shock_alerts

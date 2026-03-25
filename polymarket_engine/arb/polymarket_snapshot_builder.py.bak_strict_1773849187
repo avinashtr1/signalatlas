@@ -1,0 +1,68 @@
+import json
+from pathlib import Path
+from polymarket_engine.data_adapters.polymarket_adapter import PolymarketAdapter
+
+OUT = Path("analytics/polymarket_snapshot.json")
+
+KEYWORDS = [
+    "bitcoin", "btc",
+    "recession",
+    "fed",
+    "interest rate",
+    "senate",
+    "democrat",
+    "republican",
+    "trump",
+    "election"
+]
+
+def is_relevant(name):
+    n = name.lower()
+    return any(k in n for k in KEYWORDS)
+
+def safe_yes_price(m):
+    try:
+        raw = m.get("outcomePrices")
+        if not raw:
+            return None
+        prices = json.loads(raw)
+        if not prices:
+            return None
+        return float(prices[0])
+    except:
+        return None
+
+def main():
+    adapter = PolymarketAdapter()
+    markets = adapter._fetch_active_markets(limit=500)
+
+    rows = []
+
+    for m in markets:
+        try:
+            name = m.get("question")
+            if not name or not is_relevant(name):
+                continue
+
+            yes_price = safe_yes_price(m)
+            if yes_price is None:
+                continue
+
+            rows.append({
+                "market_id": str(m.get("id")),
+                "market_name": str(name),
+                "yes_price": float(yes_price),
+            })
+
+        except:
+            continue
+
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    OUT.write_text(json.dumps(rows, indent=2), encoding="utf-8")
+
+    print("Filtered rows:", len(rows))
+    if rows:
+        print("Sample:", rows[0])
+
+if __name__ == "__main__":
+    main()

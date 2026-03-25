@@ -1,0 +1,92 @@
+import json
+import time
+import urllib.parse
+import urllib.request
+from pathlib import Path
+
+OUT = Path("analytics/kalshi_snapshot.json")
+BASE = "https://api.elections.kalshi.com/trade-api/v2/markets"
+
+def fetch_page(limit=100, cursor=None, status="open"):
+    params = {"limit": limit, "status": status}
+    if cursor:
+        params["cursor"] = cursor
+
+    url = BASE + "?" + urllib.parse.urlencode(params)
+
+    req = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": "Mozilla/5.0",
+            "Accept": "application/json",
+        },
+        method="GET",
+    )
+
+    try:
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except Exception as e:
+        print("fetch error:", e)
+        return None
+
+def pick_yes_price(m):
+    for k in ("yes_ask", "yes_bid", "last_price", "yes_price"):
+        v = m.get(k)
+        if v is not None:
+            try:
+                x = float(v)
+                return x / 100.0 if x > 1 else x
+            except:
+                pass
+    return None
+
+def main():
+    rows = []
+    cursor = None
+
+    for i in range(5):  # 🔒 reduce pages to avoid 429
+        data = fetch_page(limit=100, cursor=cursor)
+
+        if not data:
+            print("stopping early due to error")
+            break
+
+        markets = data.get("markets") or data.get("data") or []
+
+        for m in markets:
+            try:
+                market_id = m.get("ticker") or m.get("id")
+                market_name = m.get("title") or m.get("subtitle")
+                yes_price = pick_yes_price(m)
+
+                if not market_id or not market_name or yes_price is None:
+                    continue
+
+                rows.append({
+                    "market_id": str(market_id),
+                    "market_name": str(market_name),
+                    "yes_price": float(yes_price),
+                })
+            except:
+                continue
+
+        cursor = data.get("cursor")
+
+        print(f"page {i+1}: collected {len(rows)} markets")
+
+        if not cursor:
+            break
+
+        time.sleep(2)  # 🔑 rate limit protection
+
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    OUT.write_text(json.dumps(rows, indent=2), encoding="utf-8")
+
+    print("wrote:", OUT)
+    print("rows:", len(rows))
+    if rows:
+        print("sample:", rows[0])
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,93 @@
+import json
+import urllib.parse
+import urllib.request
+from pathlib import Path
+
+OUT = Path("analytics/kalshi_snapshot.json")
+BASE = "https://api.elections.kalshi.com/trade-api/v2/markets"
+
+def fetch_page(limit=200, cursor=None, status="open"):
+    params = {"limit": limit, "status": status}
+    if cursor:
+        params["cursor"] = cursor
+    url = BASE + "?" + urllib.parse.urlencode(params)
+
+    req = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": "Mozilla/5.0",
+            "Accept": "application/json",
+        },
+        method="GET",
+    )
+    with urllib.request.urlopen(req, timeout=20) as resp:
+        return json.loads(resp.read().decode("utf-8"))
+
+def pick_yes_price(m):
+    # Try likely fields first
+    for k in ("yes_ask", "yes_bid", "last_price", "yes_price"):
+        v = m.get(k)
+        if v is not None:
+            try:
+                x = float(v)
+                # Kalshi prices are usually in cents on some endpoints; normalize if needed
+                return x / 100.0 if x > 1 else x
+            except Exception:
+                pass
+
+    # Fallback from orderbook-style fields if present
+    yes = m.get("yes")
+    if isinstance(yes, dict):
+        for k in ("ask", "bid", "price"):
+            v = yes.get(k)
+            if v is not None:
+                try:
+                    x = float(v)
+                    return x / 100.0 if x > 1 else x
+                except Exception:
+                    pass
+    return None
+
+def main():
+    rows = []
+    cursor = None
+    seen = 0
+
+    for _ in range(10):  # enough for first useful snapshot
+        data = fetch_page(limit=200, cursor=cursor, status="open")
+        markets = data.get("markets") or data.get("data") or []
+        if not markets:
+            break
+
+        for m in markets:
+            try:
+                market_id = m.get("ticker") or m.get("id")
+                market_name = m.get("title") or m.get("subtitle") or m.get("event_title") or m.get("market_title")
+                yes_price = pick_yes_price(m)
+
+                if not market_id or not market_name or yes_price is None:
+                    continue
+
+                rows.append({
+                    "market_id": str(market_id),
+                    "market_name": str(market_name),
+                    "yes_price": float(yes_price),
+                })
+                seen += 1
+            except Exception:
+                continue
+
+        cursor = data.get("cursor")
+        if not cursor:
+            break
+
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    OUT.write_text(json.dumps(rows, indent=2), encoding="utf-8")
+
+    print("wrote:", OUT)
+    print("rows:", len(rows))
+    if rows:
+        print("sample:", rows[0])
+
+if __name__ == "__main__":
+    main()

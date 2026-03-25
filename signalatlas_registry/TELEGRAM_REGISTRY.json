@@ -1,0 +1,43 @@
+{
+  "timestamp": "2026-03-12T19:03:16.671393+00:00",
+  "known_channels": [
+    "SignalAtlas Market Radar",
+    "Signal Atlas Pro"
+  ],
+  "known_env": [
+    "TG_BOT_TOKEN",
+    "TG_PUBLIC_CHAT_ID",
+    "TG_PRO_CHAT_ID"
+  ],
+  "related_files": [
+    "polymarket_engine/adaptive_alpha_feed.py",
+    "polymarket_engine/alert_router.py",
+    "polymarket_engine/alpha_alert_engine.py",
+    "polymarket_engine/alpha_feed_generator.py",
+    "polymarket_engine/feed_cooldown_engine.py",
+    "polymarket_engine/feed_engine.py",
+    "polymarket_engine/feed_v2_formatter.py",
+    "polymarket_engine/liquidity_vacuum_v2_alert_engine.py",
+    "polymarket_engine/premium_feed_formatter.py",
+    "polymarket_engine/probability_shock_detector.py",
+    "polymarket_engine/public_feed_formatter.py",
+    "polymarket_engine/public_teaser_feed.py",
+    "polymarket_engine/radar_alert_engine.py",
+    "polymarket_engine/repricing_alert_engine.py",
+    "polymarket_engine/send_alpha_feed.py",
+    "polymarket_engine/send_daily_brief.py",
+    "polymarket_engine/send_intelligence_feed.py",
+    "polymarket_engine/send_pro_feed.py",
+    "polymarket_engine/send_pro_feed_v2.py",
+    "polymarket_engine/send_pro_feed_v2_if_changed.py",
+    "polymarket_engine/send_public_feed.py",
+    "polymarket_engine/send_public_teaser.py",
+    "polymarket_engine/send_shock_alerts.py",
+    "polymarket_engine/send_tom_brief.py",
+    "polymarket_engine/send_tom_card.py",
+    "polymarket_engine/shock_alert_engine.py",
+    "polymarket_engine/shock_detector.py",
+    "polymarket_engine/shock_detector_engine.py",
+    "polymarket_engine/telegram_alpha_broadcaster.py"
+  ]
+}

@@ -1,0 +1,64 @@
+import json
+from pathlib import Path
+from collections import defaultdict
+from polymarket_engine.utils.channel_sender import send as send_channel
+
+CLOSED_PATH = Path("logs/trades_closed.jsonl")
+OPEN_PATH = Path("logs/trades_open.jsonl")
+
+def load_jsonl(path):
+    if not path.exists():
+        return []
+    with path.open("r", encoding="utf-8") as f:
+        return [json.loads(x) for x in f if x.strip()]
+
+def latest_open_positions(open_rows, closed_rows):
+    closed_ids = {r.get("trade_id") for r in closed_rows}
+    latest = {}
+    for r in open_rows:
+        tid = r.get("trade_id")
+        if tid and tid not in closed_ids:
+            latest[tid] = r
+    return list(latest.values())
+
+def main():
+    closed = load_jsonl(CLOSED_PATH)
+    open_rows = load_jsonl(OPEN_PATH)
+    open_positions = latest_open_positions(open_rows, closed)
+
+    pnls = [float(r.get("realized_pnl", 0.0) or 0.0) for r in closed]
+    wins = [x for x in pnls if x > 0]
+    losses = [x for x in pnls if x < 0]
+
+    total_realized = sum(pnls)
+    win_rate = (len(wins) / len(pnls) * 100.0) if pnls else 0.0
+    avg_win = (sum(wins) / len(wins)) if wins else 0.0
+    avg_loss = (sum(losses) / len(losses)) if losses else 0.0
+
+    by_reason = defaultdict(int)
+    for r in closed:
+        by_reason[str(r.get("close_reason") or "UNKNOWN")] += 1
+
+    best = max(closed, key=lambda r: float(r.get("realized_pnl", 0.0) or 0.0), default=None)
+    worst = min(closed, key=lambda r: float(r.get("realized_pnl", 0.0) or 0.0), default=None)
+
+    lines = []
+    lines.append("POLY ENGINE DAILY")
+    lines.append(f"Closed: {len(closed)} | Open: {len(open_positions)}")
+    lines.append(f"Realized PnL: {total_realized:.2f}")
+    lines.append(f"Win Rate: {win_rate:.1f}%")
+    lines.append(f"Avg Win: {avg_win:.2f} | Avg Loss: {avg_loss:.2f}")
+    lines.append(f"Profit Take: {by_reason.get('PROFIT_TAKE', 0)} | Edge Decay: {by_reason.get('EDGE_DECAY', 0)}")
+
+    if best:
+        lines.append("")
+        lines.append(f"Best: {best.get('market_name','?')[:42]} | {float(best.get('realized_pnl',0)):.2f}")
+    if worst:
+        lines.append(f"Worst: {worst.get('market_name','?')[:42]} | {float(worst.get('realized_pnl',0)):.2f}")
+
+    ok = send_channel("operator", "\n".join(lines))
+    print("\n".join(lines))
+    print("\nsent:", ok)
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,120 @@
+import json
+import re
+from pathlib import Path
+
+POLY_FILE = "analytics/polymarket_snapshot.json"
+KALSHI_FILE = "analytics/kalshi_manual_snapshot.json"
+
+POLY_FEE = 0.02
+KALSHI_FEE = 0.02
+SLIPPAGE = 0.01
+
+EXECUTION_SLIP = 0.02     # 2% adverse move risk
+FAIL_PROB = 0.15          # 15% chance second leg fails
+
+TEST_SIZES = [10, 50, 100]
+
+def load(path):
+    if not Path(path).exists():
+        return []
+    return json.loads(Path(path).read_text())
+
+def normalize(name):
+    n = name.lower()
+    n = re.sub(r"[^a-z0-9 ]", " ", n)
+
+    party = None
+    if "republican" in n:
+        party = "republican"
+    elif "democrat" in n:
+        party = "democrat"
+
+    if "senate" in n and party and "2026" in n:
+        return f"senate_{party}_2026"
+
+    return None
+
+def base_key(k):
+    p = k.split("_")
+    return f"{p[0]}_{p[2]}" if len(p)==3 else None
+
+def build_maps(rows, is_kalshi=False):
+    out = {}
+    for r in rows:
+        key = normalize(r.get("market_name",""))
+        if not key:
+            continue
+
+        if is_kalshi:
+            out[key] = {
+                "name": r["market_name"],
+                "bid": float(r.get("yes_bid", 0)),
+                "ask": float(r.get("yes_ask", 0)),
+                "size": float(r.get("size", 0)),
+            }
+        else:
+            price = float(r.get("yes_price", 0))
+            out[key] = {
+                "name": r["market_name"],
+                "bid": price * 0.99,
+                "ask": price * 1.01,
+                "size": 1000,
+            }
+    return out
+
+def run():
+    poly_rows = load(POLY_FILE)
+    kalshi_rows = load(KALSHI_FILE)
+
+    print(f"Loaded {len(poly_rows)} poly | {len(kalshi_rows)} kalshi")
+
+    poly = build_maps(poly_rows)
+    kalshi = build_maps(kalshi_rows, True)
+
+    for k in set(poly.keys()) & set(kalshi.keys()):
+        poly_bid = poly[k]["bid"]
+        kalshi_ask = kalshi[k]["ask"]
+
+        base_edge = poly_bid - kalshi_ask
+
+        if base_edge < 0.05:
+            continue
+
+        print("\n🚨 EXECUTION-RISK ADJUSTED ARB")
+        print("Market:", k)
+
+        for size in TEST_SIZES:
+            eff_size = min(size, kalshi[k]["size"])
+
+            # ideal
+            ideal = base_edge
+
+            # slippage case
+            slipped = base_edge - EXECUTION_SLIP
+
+            # failure case → assume -10% loss
+            fail_loss = -0.10
+
+            expected_edge = (
+                (1 - FAIL_PROB) * slipped +
+                FAIL_PROB * fail_loss
+            )
+
+            net = expected_edge - (POLY_FEE + KALSHI_FEE + SLIPPAGE)
+
+            pnl = net * eff_size
+
+            print(f"""
+Size ${eff_size}
+  Ideal Edge: {round(ideal,4)}
+  After Slip: {round(slipped,4)}
+  Expected Edge: {round(expected_edge,4)}
+  Net Edge: {round(net,4)}
+  Expected PnL: ${round(pnl,2)}
+""")
+
+        print("Poly:", poly[k]["name"])
+        print("Kalshi:", kalshi[k]["name"])
+
+if __name__ == "__main__":
+    run()

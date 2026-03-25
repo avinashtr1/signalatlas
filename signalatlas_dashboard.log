@@ -1,0 +1,250 @@
+nohup: ignoring input
+127.0.0.1 - - [12/Mar/2026 12:13:00] "GET /index.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 12:15:14] "GET / HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 12:15:15] code 404, message File not found
+103.157.195.70 - - [12/Mar/2026 12:15:15] "GET /favicon.ico HTTP/1.1" 404 -
+----------------------------------------
+Exception occurred during processing of request from ('103.157.195.70', 49157)
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/socketserver.py", line 692, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.12/http/server.py", line 1311, in finish_request
+    self.RequestHandlerClass(request, client_address, self,
+  File "/usr/lib/python3.12/http/server.py", line 672, in __init__
+    super().__init__(*args, **kwargs)
+  File "/usr/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/usr/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/usr/lib/python3.12/http/server.py", line 404, in handle_one_request
+    self.raw_requestline = self.rfile.readline(65537)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [Errno 104] Connection reset by peer
+----------------------------------------
+103.157.195.70 - - [12/Mar/2026 12:51:19] code 404, message File not found
+103.157.195.70 - - [12/Mar/2026 12:51:19] "GET /favicon.ico HTTP/1.1" 404 -
+103.157.195.70 - - [12/Mar/2026 12:51:22] "GET / HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 12:51:24] "GET / HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 12:51:26] "GET / HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 12:53:08] "GET / HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 12:53:10] "GET / HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 12:53:33] "GET / HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 13:28:11] code 404, message File not found
+103.157.195.70 - - [12/Mar/2026 13:28:11] "GET /favicon.ico HTTP/1.1" 404 -
+103.157.195.70 - - [12/Mar/2026 13:28:14] "GET / HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 13:28:16] "GET / HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 13:30:37] "GET / HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 13:30:39] code 404, message File not found
+103.157.195.70 - - [12/Mar/2026 13:30:39] "GET /favicon.ico HTTP/1.1" 404 -
+103.157.195.70 - - [12/Mar/2026 13:38:51] "GET / HTTP/1.1" 304 -
+103.157.195.70 - - [12/Mar/2026 13:38:54] "GET / HTTP/1.1" 304 -
+103.157.195.70 - - [12/Mar/2026 13:39:23] "GET /history.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 13:40:18] "GET /history.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 13:50:44] code 404, message File not found
+103.157.195.70 - - [12/Mar/2026 13:50:44] "GET /favicon.ico HTTP/1.1" 404 -
+103.157.195.70 - - [12/Mar/2026 13:51:37] "GET /history.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 13:51:39] code 404, message File not found
+103.157.195.70 - - [12/Mar/2026 13:51:39] "GET /favicon.ico HTTP/1.1" 404 -
+103.157.195.70 - - [12/Mar/2026 15:14:26] code 404, message File not found
+103.157.195.70 - - [12/Mar/2026 15:14:26] "GET /favicon.ico HTTP/1.1" 404 -
+103.157.195.70 - - [12/Mar/2026 15:14:29] "GET /history.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 15:14:31] "GET /history.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 15:14:54] "GET / HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 15:32:31] code 404, message File not found
+103.157.195.70 - - [12/Mar/2026 15:32:31] "GET /favicon.ico HTTP/1.1" 404 -
+103.157.195.70 - - [12/Mar/2026 15:32:42] "GET / HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 15:32:57] "GET / HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 15:50:06] "GET / HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 15:50:16] "GET / HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 15:50:18] "GET / HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 15:50:33] "GET /index.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 15:50:39] "GET /history.html HTTP/1.1" 304 -
+103.157.195.70 - - [12/Mar/2026 15:50:48] "GET /index.html HTTP/1.1" 304 -
+103.157.195.70 - - [12/Mar/2026 15:52:12] "GET /index.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 15:53:12] "GET /index.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 15:53:14] "GET /index.html HTTP/1.1" 304 -
+103.157.195.70 - - [12/Mar/2026 15:53:18] "GET /index.html HTTP/1.1" 304 -
+103.157.195.70 - - [12/Mar/2026 15:53:52] "GET /index.html HTTP/1.1" 304 -
+----------------------------------------
+Exception occurred during processing of request from ('103.157.195.70', 50329)
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/socketserver.py", line 692, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.12/http/server.py", line 1311, in finish_request
+    self.RequestHandlerClass(request, client_address, self,
+  File "/usr/lib/python3.12/http/server.py", line 672, in __init__
+    super().__init__(*args, **kwargs)
+  File "/usr/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/usr/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/usr/lib/python3.12/http/server.py", line 404, in handle_one_request
+    self.raw_requestline = self.rfile.readline(65537)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [Errno 104] Connection reset by peer
+----------------------------------------
+103.157.195.70 - - [12/Mar/2026 16:23:45] code 404, message File not found
+103.157.195.70 - - [12/Mar/2026 16:23:45] "GET /favicon.ico HTTP/1.1" 404 -
+103.157.195.70 - - [12/Mar/2026 16:23:48] "GET /index.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 16:23:50] "GET /index.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 16:23:53] "GET /index.html HTTP/1.1" 304 -
+103.157.195.70 - - [12/Mar/2026 16:24:57] "GET /index.html HTTP/1.1" 304 -
+103.157.195.70 - - [12/Mar/2026 16:29:56] "GET /index.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 16:29:59] "GET /history.html HTTP/1.1" 200 -
+----------------------------------------
+Exception occurred during processing of request from ('103.157.195.70', 53829)
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/socketserver.py", line 692, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.12/http/server.py", line 1311, in finish_request
+    self.RequestHandlerClass(request, client_address, self,
+  File "/usr/lib/python3.12/http/server.py", line 672, in __init__
+    super().__init__(*args, **kwargs)
+  File "/usr/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/usr/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/usr/lib/python3.12/http/server.py", line 404, in handle_one_request
+    self.raw_requestline = self.rfile.readline(65537)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [Errno 104] Connection reset by peer
+----------------------------------------
+103.157.195.70 - - [12/Mar/2026 16:32:17] "GET /index.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 16:32:41] "GET /history.html HTTP/1.1" 304 -
+----------------------------------------
+Exception occurred during processing of request from ('103.157.195.70', 53859)
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/socketserver.py", line 692, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.12/http/server.py", line 1311, in finish_request
+    self.RequestHandlerClass(request, client_address, self,
+  File "/usr/lib/python3.12/http/server.py", line 672, in __init__
+    super().__init__(*args, **kwargs)
+  File "/usr/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/usr/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/usr/lib/python3.12/http/server.py", line 404, in handle_one_request
+    self.raw_requestline = self.rfile.readline(65537)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [Errno 104] Connection reset by peer
+----------------------------------------
+103.157.195.70 - - [12/Mar/2026 17:05:58] code 404, message File not found
+103.157.195.70 - - [12/Mar/2026 17:05:58] "GET /favicon.ico HTTP/1.1" 404 -
+103.157.195.70 - - [12/Mar/2026 17:06:00] "GET /index.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 17:06:03] "GET /index.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 17:07:58] "GET /index.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 17:30:34] "GET /index.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 17:30:37] "GET /index.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 17:39:09] "GET /index.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 17:39:13] "GET /index.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 17:39:16] "GET /history.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 17:39:20] "GET /history.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 17:39:26] "GET /index.html HTTP/1.1" 304 -
+----------------------------------------
+Exception occurred during processing of request from ('103.157.195.70', 54479)
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/socketserver.py", line 692, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.12/http/server.py", line 1311, in finish_request
+    self.RequestHandlerClass(request, client_address, self,
+  File "/usr/lib/python3.12/http/server.py", line 672, in __init__
+    super().__init__(*args, **kwargs)
+  File "/usr/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/usr/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/usr/lib/python3.12/http/server.py", line 404, in handle_one_request
+    self.raw_requestline = self.rfile.readline(65537)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [Errno 104] Connection reset by peer
+----------------------------------------
+103.157.195.70 - - [12/Mar/2026 17:46:41] "GET /ops.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 17:46:48] "GET /ops.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 17:48:06] "GET /ops.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 17:48:11] "GET /ops.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 18:13:02] "GET /ops.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 18:13:40] "GET /index.html HTTP/1.1" 304 -
+103.157.195.70 - - [12/Mar/2026 18:13:43] "GET /index.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 18:13:55] "GET /index.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 18:19:36] "GET /index.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 18:19:54] "GET /heatmap.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 18:26:21] code 404, message File not found
+103.157.195.70 - - [12/Mar/2026 18:26:21] "GET /favicon.ico HTTP/1.1" 404 -
+103.157.195.70 - - [12/Mar/2026 18:26:23] "GET /heatmap.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 18:26:26] "GET /heatmap.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 18:26:30] "GET /heatmap.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 18:26:33] "GET /heatmap.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 18:26:43] "GET /heatmap.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 18:29:07] "GET /heatmap.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 18:32:33] "GET /heatmap.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 18:32:42] "GET /index.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 18:32:50] "GET /ops.html HTTP/1.1" 304 -
+103.157.195.70 - - [12/Mar/2026 18:34:30] "GET /ops.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 18:34:43] "GET /heatmap.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 18:34:49] "GET /index.html HTTP/1.1" 304 -
+----------------------------------------
+Exception occurred during processing of request from ('103.157.195.70', 55150)
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/socketserver.py", line 692, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.12/http/server.py", line 1311, in finish_request
+    self.RequestHandlerClass(request, client_address, self,
+  File "/usr/lib/python3.12/http/server.py", line 672, in __init__
+    super().__init__(*args, **kwargs)
+  File "/usr/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/usr/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/usr/lib/python3.12/http/server.py", line 404, in handle_one_request
+    self.raw_requestline = self.rfile.readline(65537)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [Errno 104] Connection reset by peer
+----------------------------------------
+103.157.195.70 - - [12/Mar/2026 18:38:44] "GET /clusters.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 19:28:09] "GET /execution.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 19:28:10] code 404, message File not found
+103.157.195.70 - - [12/Mar/2026 19:28:10] "GET /signalatlas_registry/EXECUTION_REGISTRY.json HTTP/1.1" 404 -
+103.157.195.70 - - [12/Mar/2026 19:29:40] code 404, message File not found
+103.157.195.70 - - [12/Mar/2026 19:29:40] "GET /signalatlas_registry/EXECUTION_REGISTRY.json HTTP/1.1" 404 -
+103.157.195.70 - - [12/Mar/2026 19:29:42] "GET /execution.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 19:29:42] code 404, message File not found
+103.157.195.70 - - [12/Mar/2026 19:29:42] "GET /signalatlas_registry/EXECUTION_REGISTRY.json HTTP/1.1" 404 -
+103.157.195.70 - - [12/Mar/2026 19:29:47] "GET /execution.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 19:29:48] code 404, message File not found
+103.157.195.70 - - [12/Mar/2026 19:29:48] "GET /signalatlas_registry/EXECUTION_REGISTRY.json HTTP/1.1" 404 -
+103.157.195.70 - - [12/Mar/2026 19:29:52] code 404, message File not found
+103.157.195.70 - - [12/Mar/2026 19:29:52] "GET /signalatlas_registry/EXECUTION_REGISTRY.json HTTP/1.1" 404 -
+103.157.195.70 - - [12/Mar/2026 19:32:03] code 404, message File not found
+103.157.195.70 - - [12/Mar/2026 19:32:03] "GET /signalatlas_registry/EXECUTION_REGISTRY.json HTTP/1.1" 404 -
+103.157.195.70 - - [12/Mar/2026 19:32:04] "GET /execution.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 19:32:05] "GET /EXECUTION_REGISTRY.json HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 19:43:09] code 404, message File not found
+103.157.195.70 - - [12/Mar/2026 19:43:09] "GET /favicon.ico HTTP/1.1" 404 -
+103.157.195.70 - - [12/Mar/2026 19:43:10] "GET /EXECUTION_REGISTRY.json HTTP/1.1" 304 -
+103.157.195.70 - - [12/Mar/2026 19:43:13] "GET /execution.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 19:43:34] "GET /execution.html HTTP/1.1" 304 -
+103.157.195.70 - - [12/Mar/2026 19:43:40] "GET /history.html HTTP/1.1" 200 -
+103.157.195.70 - - [12/Mar/2026 19:43:53] "GET /index.html HTTP/1.1" 304 -
+103.157.195.70 - - [12/Mar/2026 19:44:52] "GET /execution.html HTTP/1.1" 304 -
+103.157.195.70 - - [12/Mar/2026 19:44:52] "GET /EXECUTION_REGISTRY.json HTTP/1.1" 304 -
+103.157.195.70 - - [12/Mar/2026 19:48:19] "GET /EXECUTION_REGISTRY.json HTTP/1.1" 304 -
+103.157.195.70 - - [12/Mar/2026 19:50:34] "GET /EXECUTION_REGISTRY.json HTTP/1.1" 304 -

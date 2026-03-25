@@ -1,0 +1,18 @@
+{
+  "daily_brief": {
+    "bot_token_env": "TG_BOT_TOKEN",
+    "chat_id_env": "TG_CHAT_ID"
+  },
+  "tom_card": {
+    "bot_token_env": "TG_BOT_TOKEN",
+    "chat_id_env": "TG_CHAT_ID"
+  },
+  "alpha_feed": {
+    "bot_token_env": "TG_BOT_TOKEN",
+    "chat_id_env": "TG_CHAT_ID"
+  },
+  "public_teaser": {
+    "bot_token_env": "TG_BOT_TOKEN",
+    "chat_id_env": "TG_CHAT_ID"
+  }
+}

@@ -1,0 +1,43 @@
+import json
+from pathlib import Path
+
+POLY_FILE = "analytics/polymarket_snapshot.json"
+KALSHI_FILE = "analytics/kalshi_snapshot.json"
+
+def load(path):
+    if not Path(path).exists():
+        return []
+    return json.loads(Path(path).read_text())
+
+def match_market(poly_name, kalshi_name):
+    p = poly_name.lower()
+    k = kalshi_name.lower()
+    return any(word in k for word in p.split()[:5])
+
+def run():
+    poly = load(POLY_FILE)
+    kalshi = load(KALSHI_FILE)
+
+    print(f"Loaded {len(poly)} poly | {len(kalshi)} kalshi")
+
+    for p in poly:
+        for k in kalshi:
+            if match_market(p["market_name"], k["market_name"]):
+
+                poly_price = p.get("yes_price")
+                kalshi_price = k.get("yes_price")
+
+                if poly_price is None or kalshi_price is None:
+                    continue
+
+                edge = round(poly_price - kalshi_price, 4)
+
+                if abs(edge) >= 0.05:
+                    print("\n🚨 ARB FOUND")
+                    print("Market:", p["market_name"])
+                    print("Poly:", poly_price)
+                    print("Kalshi:", kalshi_price)
+                    print("Edge:", edge)
+
+if __name__ == "__main__":
+    run()

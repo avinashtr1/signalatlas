@@ -1,0 +1,122 @@
+import json
+import re
+from pathlib import Path
+
+POLY_FILE = "analytics/polymarket_snapshot.json"
+KALSHI_FILE = "analytics/kalshi_manual_snapshot.json"
+
+POLY_FEE = 0.02
+KALSHI_FEE = 0.02
+SLIPPAGE = 0.01
+
+TEST_SIZES = [10, 50, 100]
+
+def load(path):
+    if not Path(path).exists():
+        return []
+    return json.loads(Path(path).read_text())
+
+def normalize(name):
+    n = name.lower()
+    n = re.sub(r"[^a-z0-9 ]", " ", n)
+
+    party = None
+    if "republican" in n:
+        party = "republican"
+    elif "democrat" in n:
+        party = "democrat"
+
+    if "senate" in n and party and "2026" in n:
+        return f"senate_{party}_2026"
+
+    return None
+
+def base_key(k):
+    p = k.split("_")
+    return f"{p[0]}_{p[2]}" if len(p)==3 else None
+
+def party(k):
+    p = k.split("_")
+    return p[1] if len(p)==3 else None
+
+def build_maps(rows, is_kalshi=False):
+    out = {}
+    for r in rows:
+        key = normalize(r.get("market_name",""))
+        if not key:
+            continue
+
+        if is_kalshi:
+            out[key] = {
+                "name": r["market_name"],
+                "bid": float(r.get("yes_bid", 0)),
+                "ask": float(r.get("yes_ask", 0)),
+                "size": float(r.get("size", 0)),
+            }
+        else:
+            price = float(r.get("yes_price", 0))
+            out[key] = {
+                "name": r["market_name"],
+                "bid": price * 0.99,
+                "ask": price * 1.01,
+                "size": 1000,
+            }
+    return out
+
+def run():
+    poly_rows = load(POLY_FILE)
+    kalshi_rows = load(KALSHI_FILE)
+
+    print(f"Loaded {len(poly_rows)} poly | {len(kalshi_rows)} kalshi")
+
+    poly = build_maps(poly_rows)
+    kalshi = build_maps(kalshi_rows, True)
+
+    paired = {}
+
+    for k in set(poly.keys()) & set(kalshi.keys()):
+        b = base_key(k)
+        p = party(k)
+        if not b or not p:
+            continue
+
+        paired.setdefault(b, {})
+        paired[b][p] = {
+            "poly": poly[k],
+            "kalshi": kalshi[k]
+        }
+
+    for bkey, sides in paired.items():
+        side = "democrat" if "democrat" in sides else next(iter(sides.keys()))
+        s = sides[side]
+
+        poly_bid = s["poly"]["bid"]
+        kalshi_ask = s["kalshi"]["ask"]
+
+        edge = poly_bid - kalshi_ask
+
+        if edge < 0.05:
+            continue
+
+        print("\n🚨 EXECUTABLE BID/ASK ARB")
+        print("Market:", bkey)
+        print("Side:", side)
+
+        print("Poly bid (sell):", poly_bid)
+        print("Kalshi ask (buy):", kalshi_ask)
+
+        for size in TEST_SIZES:
+            eff_size = min(size, s["kalshi"]["size"])
+
+            gross = edge
+            net = gross - (POLY_FEE + KALSHI_FEE + SLIPPAGE)
+
+            pnl = net * eff_size
+
+            print(f"Size ${eff_size} → Net Edge {round(net,4)} | PnL ${round(pnl,2)}")
+
+        print("Poly:", s["poly"]["name"])
+        print("Kalshi:", s["kalshi"]["name"])
+
+if __name__ == "__main__":
+    run()

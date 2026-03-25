@@ -1,0 +1,126 @@
+import json
+import re
+from pathlib import Path
+
+POLY_FILE = "analytics/polymarket_snapshot.json"
+KALSHI_FILE = "analytics/kalshi_manual_snapshot.json"
+
+# --- ASSUMPTIONS (can tune later)
+POLY_FEE = 0.02
+KALSHI_FEE = 0.02
+MIN_EDGE = 0.05
+
+def load(path):
+    if not Path(path).exists():
+        return []
+    return json.loads(Path(path).read_text())
+
+def normalize(name):
+    n = name.lower()
+    n = re.sub(r"[^a-z0-9 ]", " ", n)
+
+    party = None
+    if "republican" in n:
+        party = "republican"
+    elif "democrat" in n:
+        party = "democrat"
+
+    chamber = "senate" if "senate" in n else None
+    year = "2026" if "2026" in n else None
+
+    if chamber and party:
+        return f"{chamber}_{party}_{year}"
+
+    return None
+
+def base_key(side_key):
+    parts = side_key.split("_")
+    return f"{parts[0]}_{parts[2]}" if len(parts) == 3 else None
+
+def party_from_key(side_key):
+    parts = side_key.split("_")
+    return parts[1] if len(parts) == 3 else None
+
+def build_maps(rows):
+    out = {}
+    for r in rows:
+        key = normalize(r.get("market_name", ""))
+        if not key:
+            continue
+        out[key] = {
+            "market_name": r.get("market_name"),
+            "yes_price": float(r.get("yes_price")),
+            "liquidity": float(r.get("liquidity", 0)),
+        }
+    return out
+
+def run():
+    poly_rows = load(POLY_FILE)
+    kalshi_rows = load(KALSHI_FILE)
+
+    print(f"Loaded {len(poly_rows)} poly | {len(kalshi_rows)} kalshi")
+
+    poly = build_maps(poly_rows)
+    kalshi = build_maps(kalshi_rows)
+
+    paired = {}
+
+    for key in set(poly.keys()) & set(kalshi.keys()):
+        bkey = base_key(key)
+        party = party_from_key(key)
+        if not bkey or not party:
+            continue
+
+        paired.setdefault(bkey, {})
+        paired[bkey][party] = {
+            "poly": poly[key],
+            "kalshi": kalshi[key],
+        }
+
+    found = False
+
+    for bkey, sides in paired.items():
+        chosen_party = "democrat" if "democrat" in sides else next(iter(sides.keys()))
+        s = sides[chosen_party]
+
+        poly_price = s["poly"]["yes_price"]
+        kalshi_price = s["kalshi"]["yes_price"]
+
+        raw_edge = poly_price - kalshi_price
+
+        # --- fee adjusted edge
+        net_edge = raw_edge - (POLY_FEE + KALSHI_FEE)
+
+        if abs(net_edge) < MIN_EDGE:
+            continue
+
+        found = True
+
+        if net_edge > 0:
+            action = "BUY_KALSHI_SELL_POLY"
+        else:
+            action = "BUY_POLY_SELL_KALSHI"
+
+        # --- confidence (simple parity sanity)
+        parity_sum = round(poly_price + (1 - poly_price), 3)
+        confidence = "HIGH" if abs(parity_sum - 1) < 0.01 else "LOW"
+
+        print("\n🚨 EXECUTABLE ARB")
+        print("Market:", bkey)
+        print("Side:", chosen_party)
+        print("Action:", action)
+        print("Raw Edge:", round(raw_edge, 4))
+        print("Net Edge (after fees):", round(net_edge, 4))
+        print("Confidence:", confidence)
+
+        print("Poly:", poly_price)
+        print("Kalshi:", kalshi_price)
+
+        print("Poly Market:", s["poly"]["market_name"])
+        print("Kalshi Market:", s["kalshi"]["market_name"])
+
+    if not found:
+        print("No executable arb")
+
+if __name__ == "__main__":
+    run()

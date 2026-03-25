@@ -1,0 +1,371 @@
+
+
+
+import json
+import os
+import subprocess
+from pathlib import Path
+import json
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
+BASE = Path("analytics")
+
+FILES = {
+    "/api/leaderboard": BASE / "alpha_leaderboard.json",
+    "/api/radar": BASE / "opportunity_radar.json",
+    "/api/mispricing": BASE / "mispricing_report.json",
+    "/api/shocks": BASE / "probability_shocks.json",
+    "/api/drift": BASE / "probability_drift_report.json",
+    "/api/liquidity": BASE / "liquidity_collapse_report.json",
+    "/api/vacuum-v2": BASE / "liquidity_vacuum_v2.json",
+    "/api/cross-lag": BASE / "cross_market_lag.json",
+    "/api/resolution-arb": BASE / "resolution_arbitrage.json",
+    "/api/microstructure": BASE / "microstructure_intelligence.json",
+    "/api/alpha-feed": BASE / "alpha_feed.json",
+    "/api/stale-repricing": BASE / "stale_repricing.json",
+    "/api/signal-memory-summary": BASE / "signal_memory_summary.json",
+    "/api/signal-memory-analytics": BASE / "signal_memory_analytics.json",
+    "/api/module-scoring": BASE / "module_scoring.json",
+    "/api/market-bucket-scoring": BASE / "market_bucket_scoring.json",
+    "/api/adaptive-weights": BASE / "adaptive_weights.json",
+    "/api/adaptive-composite": BASE / "adaptive_composite_score.json",
+    "/api/adaptive-alpha-feed": BASE / "adaptive_alpha_feed.json",
+    "/api/resolution-tracking": BASE / "resolution_tracking.json",
+    "/api/performance-analytics": BASE / "performance_analytics.json",
+    "/api/market-regime": BASE / "market_regime.json",
+    "/api/regime-adaptive-weights": BASE / "regime_adaptive_weights.json",
+    "/api/radar-live": BASE / "radar_live.json",
+    "/api/radar-alerts": BASE / "radar_alerts.json",
+    "/api/reputation": BASE / "signal_reputation_full.json",
+    "/api/executive": BASE / "executive_brief.json",
+    "/api/allocator": BASE / "portfolio_allocator.json",
+    "/api/public-feed": BASE / "public_feed.txt",
+    "/api/daily-brief": BASE / "daily_brief.txt",
+    "/api/weekly-brief": BASE / "weekly_brief.txt",
+    "/api/quality": BASE / "alpha_quality_scores.json",
+    "/api/terminal": None,
+    "/api/ops-summary": None,
+    "/api/ops-brief": None,
+    "/api/tom-status": None,
+    "/api/tom-card": None,
+    "/api/run-pipeline": None,
+    "/api/run-daily": None,
+    "/api/send-card": None,
+    "/api/refresh-signals": None,
+}
+
+PUBLIC_ENDPOINTS = {"/"}
+API_KEY = os.getenv("SIGNALATLAS_API_KEY", "").strip()
+
+def read_json(path: Path):
+    if not path.exists():
+        return {}
+    return json.loads(path.read_text(encoding="utf-8"))
+
+def read_text(path: Path):
+    if not path.exists():
+        return ""
+    return path.read_text(encoding="utf-8")
+
+def run_command(cmd: str):
+    try:
+        subprocess.Popen(
+            cmd,
+            cwd="/root/.openclaw/workspace",
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            shell=True,
+        )
+        return {"started": True}
+    except Exception as e:
+        return {"started": False, "error": str(e)}
+
+def build_terminal_payload():
+    executive = read_json(BASE / "executive_brief.json")
+    reputation = read_json(BASE / "signal_reputation_full.json")
+    perf = read_json(BASE / "performance_analytics.json")
+    resolution = read_json(BASE / "resolution_tracking.json")
+    radar_live = read_json(BASE / "radar_live.json")
+
+    resolved = int(perf.get("resolved", 0) or 0)
+    wins = int(perf.get("wins", 0) or 0)
+    losses = int(perf.get("losses", 0) or 0)
+    win_rate = float(perf.get("win_rate", 0) or 0)
+
+    deploy = radar_live.get("deploy_now", []) or []
+    watch = radar_live.get("watchlist", []) or []
+    top_live = (deploy[:1] or watch[:1] or [{}])[0]
+
+    executive["signals_resolved"] = resolved
+    executive["win_rate"] = win_rate
+    executive["realized_pnl"] = wins - losses
+    executive["deploy_now_count"] = len(deploy)
+    executive["top_opportunity"] = {
+        "market_name": top_live.get("market_name"),
+        "side": top_live.get("side"),
+        "edge_pct": round(float(top_live.get("total_edge", 0.0) or 0.0) * 100, 2),
+        "net_edge_pct": round(float(top_live.get("expected_net_edge_pct", 0.0) or 0.0), 2),
+        "adaptive_radar_score": float(top_live.get("adaptive_radar_score", 0.0) or 0.0),
+        "radar_tier": top_live.get("radar_tier", "D"),
+        "active_regime": top_live.get("active_regime", ""),
+    }
+    executive["recommendations"] = [
+        f"{len(deploy)} deploy-ready signals currently available.",
+        f"{len(watch)} watchlist signals currently active.",
+        f"Active regime: {top_live.get('active_regime', 'unknown') or 'unknown'}."
+    ]
+
+    reputation["signals_resolved"] = resolved
+    reputation["wins"] = wins
+    reputation["losses"] = losses
+    reputation["win_rate"] = win_rate
+    reputation["realized_pnl"] = wins - losses
+    reputation["resolution_rate"] = (resolved / reputation.get("signals_detected", 1)) if reputation.get("signals_detected", 0) else 0.0
+
+    return {
+        "service": "SignalAtlas Terminal API",
+        "executive": executive,
+        "leaderboard": read_json(BASE / "alpha_leaderboard.json"),
+        "reputation": reputation,
+        "allocator": read_json(BASE / "portfolio_allocator.json"),
+        "drift": read_json(BASE / "probability_drift_report.json"),
+        "shocks": read_json(BASE / "probability_shocks.json"),
+        "liquidity": read_json(BASE / "liquidity_collapse_report.json"),
+        "liquidity_collapse_v2": read_json(BASE / "liquidity_collapse_v2.json"),
+        "vacuum_v2": read_json(BASE / "liquidity_vacuum_v2.json"),
+        "cross_lag": read_json(BASE / "cross_market_lag.json"),
+        "resolution_arb": read_json(BASE / "resolution_arbitrage.json"),
+        "resolution_arbitrage_v2": read_json(BASE / "resolution_arbitrage_v2.json"),
+        "microstructure": read_json(BASE / "microstructure_intelligence.json"),
+        "alpha_feed": read_json(BASE / "alpha_feed.json"),
+        "stale_repricing": read_json(BASE / "stale_repricing.json"),
+        "signal_memory_summary": read_json(BASE / "signal_memory_summary.json"),
+        "signal_memory_analytics": read_json(BASE / "signal_memory_analytics.json"),
+        "module_scoring": read_json(BASE / "module_scoring.json"),
+        "market_bucket_scoring": read_json(BASE / "market_bucket_scoring.json"),
+        "adaptive_weights": read_json(BASE / "adaptive_weights.json"),
+        "adaptive_composite": read_json(BASE / "adaptive_composite_score.json"),
+        "adaptive_alpha_feed": read_json(BASE / "adaptive_alpha_feed.json"),
+        "market_regime": read_json(BASE / "market_regime.json"),
+        "regime_adaptive_weights": read_json(BASE / "regime_adaptive_weights.json"),
+        "resolution_tracking": resolution,
+        "performance_analytics": perf,
+        "radar": read_json(BASE / "opportunity_radar.json"),
+        "quality": read_json(BASE / "alpha_quality_scores.json"),
+        "public_feed": read_text(BASE / "public_feed.txt"),
+        "radar_live": read_json(BASE / "radar_live.json"),
+        "radar_alerts": read_json(BASE / "radar_alerts.json"),
+        "signal_state_change": read_json(BASE / "signal_state_change.json"),
+        "cross_market_correlation": read_json(BASE / "cross_market_correlation.json"),
+        "execution_timing": read_json(BASE / "execution_timing.json"),
+    }
+
+def build_ops_summary():
+    exec_ = read_json(BASE / "executive_brief.json")
+    radar = read_json(BASE / "opportunity_radar.json").get("radar", {})
+    quality = read_json(BASE / "alpha_quality_scores.json").get("scores", [])
+    allocator = read_json(BASE / "portfolio_allocator.json")
+    top = exec_.get("top_opportunity") or {}
+    deploy = radar.get("deploy_now", [])
+    watch = radar.get("watchlist", [])
+    return {
+        "system_status": exec_.get("system_status", "UNKNOWN"),
+        "signals_detected": exec_.get("signals_detected", 0),
+        "signals_executed": exec_.get("signals_executed", 0),
+        "signals_resolved": exec_.get("signals_resolved", 0),
+        "deploy_now_count": exec_.get("deploy_now_count", 0),
+        "shock_count": exec_.get("shock_count", 0),
+        "drift_count": exec_.get("drift_count", 0),
+        "collapse_count": exec_.get("collapse_count", 0),
+        "allocated_capital": exec_.get("total_allocated_capital", 0),
+        "top_opportunity": {
+            "market_name": top.get("market_name"),
+            "side": top.get("side"),
+            "edge_pct": round(float(top.get("total_edge", 0.0) or 0.0) * 100, 2),
+            "net_edge_pct": round(float(top.get("expected_net_edge_pct", 0.0) or 0.0), 2),
+        },
+        "deploy_now": [
+            {"market_name": r.get("market_name"), "edge_pct": round(float(r.get("total_edge", 0.0) or 0.0) * 100, 2)}
+            for r in deploy[:5]
+        ],
+        "watchlist": [
+            {"market_name": r.get("market_name"), "edge_pct": round(float(r.get("total_edge", 0.0) or 0.0) * 100, 2)}
+            for r in watch[:5]
+        ],
+        "top_quality": [
+            {"market_name": r.get("market_name"), "grade": r.get("grade"), "score": r.get("quality_score")}
+            for r in quality[:5]
+        ],
+        "recommendations": exec_.get("recommendations", []),
+        "allocator_summary": {
+            "reference_equity": allocator.get("reference_equity", 0),
+            "total_allocated_capital": allocator.get("total_allocated_capital", 0),
+            "total_allocated_pct": allocator.get("total_allocated_pct", 0),
+        },
+    }
+
+def build_ops_brief_text():
+    s = build_ops_summary()
+    lines = []
+    lines.append("SIGNALATLAS OPS BRIEF")
+    lines.append("")
+    lines.append(f"Status: {s['system_status']}")
+    lines.append(f"Signals: detected={s['signals_detected']} executed={s['signals_executed']} resolved={s['signals_resolved']}")
+    lines.append(f"Deploy-Now: {s['deploy_now_count']} | Drift: {s['drift_count']} | Shocks: {s['shock_count']} | Collapse: {s['collapse_count']}")
+    lines.append(f"Allocated Capital: {float(s['allocated_capital']):.2f}")
+    lines.append("")
+    top = s.get("top_opportunity") or {}
+    if top.get("market_name"):
+        lines.append("TOP OPPORTUNITY")
+        lines.append(f"{top['market_name']} | side={top.get('side')} | edge={top.get('edge_pct', 0):.2f}% | net={top.get('net_edge_pct', 0):.2f}%")
+        lines.append("")
+    if s.get("deploy_now"):
+        lines.append("DEPLOY NOW")
+        for i, r in enumerate(s["deploy_now"], start=1):
+            lines.append(f"{i}. {r['market_name']} | edge={r['edge_pct']:.2f}%")
+        lines.append("")
+    if s.get("top_quality"):
+        lines.append("TOP QUALITY")
+        for i, r in enumerate(s["top_quality"], start=1):
+            lines.append(f"{i}. {r['market_name']} | grade={r['grade']} | score={float(r['score']):.3f}")
+        lines.append("")
+    if s.get("recommendations"):
+        lines.append("RECOMMENDATIONS")
+        for i, r in enumerate(s["recommendations"], start=1):
+            lines.append(f"{i}. {r}")
+    return "\n".join(lines)
+
+def build_tom_status():
+    s = build_ops_summary()
+    top = s.get("top_opportunity") or {}
+    return {
+        "status": s["system_status"],
+        "counts": {
+            "detected": s["signals_detected"],
+            "executed": s["signals_executed"],
+            "resolved": s["signals_resolved"],
+            "deploy_now": s["deploy_now_count"],
+            "drift": s["drift_count"],
+            "shocks": s["shock_count"],
+            "collapse": s["collapse_count"],
+        },
+        "top_opportunity": top,
+        "top_deploy_now": s.get("deploy_now", [])[:3],
+        "top_quality": s.get("top_quality", [])[:3],
+        "allocated_capital": s["allocated_capital"],
+        "recommendations": s.get("recommendations", [])[:3],
+    }
+
+def build_tom_card():
+    s = build_tom_status()
+    lines = []
+    lines.append("TOM STATUS CARD")
+    lines.append("")
+    lines.append(f"Status: {s['status']}")
+    lines.append(f"Detected {s['counts']['detected']} | Executed {s['counts']['executed']} | Resolved {s['counts']['resolved']} | Deploy {s['counts']['deploy_now']}")
+    lines.append(f"Drift {s['counts']['drift']} | Shocks {s['counts']['shocks']} | Collapse {s['counts']['collapse']}")
+    lines.append(f"Allocated: {float(s['allocated_capital']):.2f}")
+    lines.append("")
+    top = s.get("top_opportunity") or {}
+    if top.get("market_name"):
+        lines.append("Top Opportunity")
+        lines.append(f"{top['market_name']} | {top.get('side')} | edge={float(top.get('edge_pct', 0)):.2f}% | net={float(top.get('net_edge_pct', 0)):.2f}%")
+        lines.append("")
+    if s.get("recommendations"):
+        lines.append("Recommendations")
+        for i, r in enumerate(s["recommendations"], start=1):
+            lines.append(f"{i}. {r}")
+    return "\n".join(lines)
+
+def json_response(handler, payload, status=200):
+    body = json.dumps(payload, indent=2).encode("utf-8")
+    handler.send_response(status)
+    handler.send_header("Content-Type", "application/json; charset=utf-8")
+    handler.send_header("Access-Control-Allow-Origin", "*")
+    handler.send_header("Access-Control-Allow-Headers", "X-API-Key, Content-Type")
+    handler.send_header("Content-Length", str(len(body)))
+    handler.end_headers()
+    handler.wfile.write(body)
+
+def text_response(handler, text, status=200):
+    body = text.encode("utf-8")
+    handler.send_response(status)
+    handler.send_header("Content-Type", "text/plain; charset=utf-8")
+    handler.send_header("Access-Control-Allow-Origin", "*")
+    handler.send_header("Access-Control-Allow-Headers", "X-API-Key, Content-Type")
+    handler.send_header("Content-Length", str(len(body)))
+    handler.end_headers()
+    handler.wfile.write(body)
+
+class Handler(BaseHTTPRequestHandler):
+    def _authorized(self):
+        if self.path in PUBLIC_ENDPOINTS:
+            return True
+        if not API_KEY:
+            return True
+        supplied = (self.headers.get("X-API-Key") or "").strip()
+        return supplied == API_KEY
+
+    def do_OPTIONS(self):
+        self.send_response(204)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Headers", "X-API-Key, Content-Type")
+        self.send_header("Access-Control-Allow-Methods", "GET, OPTIONS")
+        self.end_headers()
+
+    def do_GET(self):
+        if self.path == "/":
+            return json_response(self, {
+                "service": "SignalAtlas Intelligence API",
+                "status": "ok",
+                "auth_enabled": bool(API_KEY),
+                "public_endpoints": sorted(PUBLIC_ENDPOINTS),
+                "protected_endpoints": sorted(FILES.keys()),
+            })
+        if not self._authorized():
+            return json_response(self, {"error": "unauthorized"}, status=401)
+
+        if self.path == "/api/terminal":
+            return json_response(self, build_terminal_payload())
+        if self.path == "/api/ops-summary":
+            return json_response(self, build_ops_summary())
+        if self.path == "/api/ops-brief":
+            return text_response(self, build_ops_brief_text())
+        if self.path == "/api/tom-status":
+            return json_response(self, build_tom_status())
+        if self.path == "/api/tom-card":
+            return text_response(self, build_tom_card())
+        if self.path == "/api/run-pipeline":
+            return json_response(self, run_command("./run_signalatlas_daily.sh"))
+        if self.path == "/api/run-daily":
+            return json_response(self, run_command("./tom_daily_run.sh"))
+        if self.path == "/api/send-card":
+            return json_response(self, run_command("TOM_SEND_TG=1 ./tom_send_card.sh"))
+        if self.path == "/api/refresh-signals":
+            return json_response(self, run_command("./run_signalatlas_daily.sh"))
+
+        path = FILES.get(self.path)
+        if not path:
+            return json_response(self, {"error": "not_found", "path": self.path}, status=404)
+        if not path.exists():
+            return json_response(self, {"error": "file_not_ready", "path": str(path)}, status=404)
+        if path.suffix == ".json":
+            try:
+                payload = json.loads(path.read_text(encoding="utf-8"))
+            except Exception as e:
+                return json_response(self, {"error": "invalid_json", "detail": str(e)}, status=500)
+            return json_response(self, payload)
+        return text_response(self, path.read_text(encoding="utf-8"))
+
+    def log_message(self, format, *args):
+        return
+
+def main():
+    host = "0.0.0.0"
+    port = 8011
+    server = HTTPServer((host, port), Handler)
+    print(f"SignalAtlas Intelligence API running on http://{host}:{port} | auth_enabled={bool(API_KEY)}")
+    server.serve_forever()
+
+if __name__ == "__main__":
+    main()

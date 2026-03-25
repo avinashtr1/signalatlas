@@ -1,0 +1,191 @@
+import json
+from pathlib import Path
+from datetime import datetime, timezone, timedelta
+
+from polymarket_engine.edge_decay_monitor import detect_edge_decay
+from polymarket_engine.data_adapters.polymarket_adapter import PolymarketAdapter
+
+OPEN_LOG = Path("logs/trades_open.jsonl")
+CLOSED_LOG = Path("logs/trades_closed.jsonl")
+
+adapter = PolymarketAdapter()
+
+PROFIT_TAKE_PCT = 0.02
+EXPECTED_EDGE_CAPTURE_PCT = 0.20
+
+def load_jsonl(path):
+    rows = []
+    if not path.exists():
+        return rows
+    with path.open("r", encoding="utf-8") as f:
+        for line in f:
+            if line.strip():
+                rows.append(json.loads(line))
+    return rows
+
+def append_jsonl(path, row):
+    with path.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(row) + "\n")
+
+
+def latest_active_open_trades(open_rows, closed_rows):
+    closed_ids = {str(x.get("trade_id")) for x in closed_rows if x.get("trade_id")}
+    latest_by_id = {}
+
+    for row in open_rows:
+        tid = str(row.get("trade_id") or "")
+        if not tid or tid in closed_ids:
+            continue
+        latest_by_id[tid] = row
+
+    return list(latest_by_id.values())
+
+def _extract_bucket_sum(market_payload):
+    prices = market_payload.get("bucket_group_prices") or []
+    try:
+        vals = [float(x) for x in prices]
+    except Exception:
+        return None
+    if not vals:
+        return None
+    return sum(vals)
+
+def calc_realized(position, live_price):
+    entry = float(position.get("entry_price", 0) or 0)
+    size = float(position.get("filled_size_usd", 0) or 0)
+    side = str(position.get("side", "LONG")).upper()
+
+    if side == "SHORT":
+        return size * (entry - float(live_price))
+    return size * (float(live_price) - entry)
+
+def run_exit_engine():
+    open_rows = load_jsonl(OPEN_LOG)
+    closed_trades = load_jsonl(CLOSED_LOG)
+    open_trades = latest_active_open_trades(open_rows, closed_trades)
+    already_closed_ids = {str(x.get("trade_id")) for x in closed_trades if x.get("trade_id")}
+    decay_trades = detect_edge_decay()
+    decay_ids = {str(t["trade_id"]) for t in decay_trades} if decay_trades else set()
+    closed = []
+
+    for t in open_trades:
+        realized = 0
+        trade_id = str(t.get("trade_id"))
+        if trade_id in already_closed_ids:
+            continue
+
+        try:
+            live = adapter.get_market_by_id(str(t["market_id"]))
+            live_price = float(live.get("current_price", 0))
+        except Exception:
+            continue
+
+        bucket_sum = _extract_bucket_sum(live)
+        bucket_rebalanced = False
+        if str(t.get("side", "LONG")).upper() == "SHORT" and bucket_sum is not None and bucket_sum <= 1.02:
+            bucket_rebalanced = True
+
+        entry_price = float(t.get("entry_price", 0) or 0)
+        side = str(t.get("side", "LONG")).upper()
+
+        profit_take = False
+        expected_edge_capture = False
+
+        realized = calc_realized(t, live_price)
+
+        expected_edge_pct = float(t.get("expected_net_edge_pct", 0) or 0)
+        allocated_capital = float(t.get("allocated_capital", 0) or 0)
+        expected_edge_dollars = allocated_capital * (expected_edge_pct / 100.0)
+
+        # Edge-aware profit taking
+        if expected_edge_dollars > 0:
+            capture_ratio = realized / expected_edge_dollars
+            if capture_ratio >= 0.20:
+                profit_take = True
+
+        if expected_edge_dollars > 0 and realized >= EXPECTED_EDGE_CAPTURE_PCT * expected_edge_dollars:
+            expected_edge_capture = True
+
+        stale_recycle = False
+        try:
+            opened_ts = datetime.fromisoformat(str(t.get("ts")).replace("Z", "+00:00"))
+            age_minutes = (datetime.now(timezone.utc) - opened_ts).total_seconds() / 60.0
+        except Exception:
+            age_minutes = 0.0
+
+        raw_mode = str(t.get("execution_mode") or "").upper()
+        mode = "ACTIVE" if raw_mode == "ACTIVE" else "PASSIVE"
+
+        # PASSIVE: recycle faster if edge is not being captured
+        if mode == "PASSIVE":
+            if capture_ratio is not None and age_minutes >= 120 and capture_ratio < 0.10:
+                stale_recycle = True
+            if age_minutes >= 60 and abs(realized) <= 0.05:
+                stale_recycle = True
+
+        # ACTIVE: give more time, but still recycle dead trades
+        else:
+            if capture_ratio is not None and age_minutes >= 60 and capture_ratio < 0.00:
+                stale_recycle = True
+            if age_minutes >= 300 and abs(realized) <= 0.05:
+                stale_recycle = True
+
+        
+        # FORCE CLEAN DEAD POSITIONS
+        if age_minutes >= 60 and abs(realized) <= 0.02:
+            stale_recycle = True
+
+        if trade_id not in decay_ids and not bucket_rebalanced and not profit_take and not expected_edge_capture and not stale_recycle:
+            continue
+
+        if stale_recycle:
+            close_reason = "STALE_RECYCLE"
+        elif expected_edge_capture:
+            close_reason = "EDGE_CAPTURE"
+        elif profit_take:
+            close_reason = "PROFIT_TAKE"
+        elif bucket_rebalanced and trade_id not in decay_ids:
+            close_reason = "BUCKET_REBALANCE"
+        else:
+            close_reason = "EDGE_DECAY"
+
+        move_pct = 0.0
+        if entry_price > 0:
+            if side == "SHORT":
+                move_pct = (entry_price - live_price) / entry_price
+            else:
+                move_pct = (live_price - entry_price) / entry_price
+
+        close_record = {
+            "ts": datetime.now(timezone.utc).isoformat(),
+            "event": "CLOSE",
+            "trade_id": t.get("trade_id"),
+            "market_id": t.get("market_id"),
+            "market_name": t.get("market_name"),
+            "side": t.get("side"),
+            "entry_price": t.get("entry_price"),
+            "exit_price": live_price,
+            "allocated_capital": t.get("allocated_capital"),
+            "realized_pnl": realized,
+            "close_reason": close_reason,
+            "bucket_sum": bucket_sum,
+
+            "total_edge_at_entry": t.get("total_edge"),
+            "structural_edge_at_entry": t.get("structural_edge"),
+            "expected_net_edge_pct_at_entry": expected_edge_pct,
+            "expected_edge_dollars_at_entry": expected_edge_dollars,
+
+            "price_move_pct": move_pct,
+            "profit_take_hit": profit_take,
+            "edge_capture_hit": expected_edge_capture,
+            "bucket_rebalanced_hit": bucket_rebalanced,
+            "in_decay_set": trade_id in decay_ids,
+        }
+
+        append_jsonl(CLOSED_LOG, close_record)
+        closed.append(close_record)
+
+    return closed
+
+if __name__ == "__main__":
+    print(run_exit_engine())

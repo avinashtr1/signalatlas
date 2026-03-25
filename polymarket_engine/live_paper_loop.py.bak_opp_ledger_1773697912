@@ -1,0 +1,193 @@
+import time
+from datetime import datetime, timezone
+
+from polymarket_engine.models.trigger_event import TriggerEvent
+from polymarket_engine.triggers.near_resolution_scan import NearResolutionScanner
+from polymarket_engine.triggers.market_mapper import MarketMapper
+from polymarket_engine.config.market_filters import MarketFilterConfig
+from polymarket_engine.brain.evaluate import BrainEvaluator
+from polymarket_engine.execution.paper_executor import PaperExecutor
+from polymarket_engine.execution.capital_allocator import CapitalAllocator
+from polymarket_engine.execution.resolution_watcher import ResolutionWatcher
+from polymarket_engine.execution.kill_switch import KillSwitch
+from polymarket_engine.data_adapters.polymarket_adapter import PolymarketAdapter
+from polymarket_engine.utils.telegram_notifier import TelegramNotifier
+from polymarket_engine.utils.cycle_logger import CycleLogger
+from polymarket_engine.state_restore import restore_state
+from polymarket_engine.exit_engine import run_exit_engine
+from polymarket_engine.brain.inventory import Inventory
+from polymarket_engine.brain.gates import Gates
+
+SCAN_INTERVAL_SECONDS = 5
+
+
+def main():
+    cfg = {
+        "W_ANNUALIZED_EDGE": 0.3,
+        "W_FILL_PROB": 0.2,
+        "W_NET_EDGE": 0.5,
+        "DS_BASE_RISK_PCT": 0.06,
+        "DS_SCORE_SENSITIVITY": 0.02,
+    }
+
+    adapter = PolymarketAdapter()
+    filter_config = MarketFilterConfig()
+    mapper = MarketMapper(filter_config)
+    mapper.polymarket_adapter = adapter
+
+    near_res_scanner = NearResolutionScanner()
+
+    inventory = Inventory(100000.0)
+    gates = Gates()
+    brain = BrainEvaluator(filter_config, gates, inventory)
+    paper_executor = PaperExecutor()
+    allocator = CapitalAllocator(inventory, paper_executor, cfg)
+    resolution_watcher = ResolutionWatcher(paper_executor, inventory, adapter)
+    kill_switch = KillSwitch()
+    tg = TelegramNotifier()
+    cycle_logger = CycleLogger()
+
+    restore_report = restore_state(paper_executor, inventory)
+
+    print(
+        f"[BOOT] live paper loop started | scan_interval={SCAN_INTERVAL_SECONDS}s | "
+        f"restored_open={restore_report['restored_open_positions']} | "
+        f"restored_closed={restore_report['restored_closed_trades']} | "
+        f"restored_realized={round(restore_report['restored_realized_pnl'], 4)}",
+        flush=True
+    )
+
+    try:
+        tg.send(
+            "POLY LOOP ACTIVE\n"
+            f"restored_open={restore_report['restored_open_positions']}\n"
+            f"restored_closed={restore_report['restored_closed_trades']}\n"
+            f"restored_realized={round(restore_report['restored_realized_pnl'], 4)}\n"
+            f"scan_interval={SCAN_INTERVAL_SECONDS}s"
+        )
+    except Exception:
+        pass
+
+    while True:
+        now = datetime.now(timezone.utc)
+
+        try:
+            summary_before = inventory.get_summary(paper_executor)
+            allowed, kill_reason = kill_switch.check(summary_before)
+
+            if not allowed:
+                print("[KILL]", now.isoformat(), kill_reason, flush=True)
+                try:
+                    tg.send(f"POLY ENGINE HALT\n{kill_reason}")
+                except Exception:
+                    pass
+                cycle_logger.log({
+                    "type": "kill",
+                    "reason": kill_reason,
+                    "summary": summary_before,
+                })
+                time.sleep(SCAN_INTERVAL_SECONDS)
+                continue
+
+            triggers = [
+                TriggerEvent("market_scan", "system", "ALL", now, {}),
+            ]
+
+            acceptable = []
+            accepted_candidates = []
+
+            for trigger in triggers:
+                candidates = mapper.map_trigger_to_candidates(trigger)
+                for c in candidates:
+                    result = brain.evaluate_candidate(c)
+                    if result["decision"] == "ACCEPT":
+                        acceptable.append(result)
+                        a = result["analysis"]
+                        accepted_candidates.append({
+                            "market_id": c.market_state.market_id,
+                            "market_name": c.market_state.name,
+                            "bucket_group_id": (c.signal_details or {}).get("bucket_group_id"),
+                            "bucket_group_title": (c.signal_details or {}).get("bucket_group_title"),
+                            "trade_side": a.get("trade_side"),
+                            "structural_edge": a.get("structural_edge"),
+                            "vacuum_score": a.get("vacuum_score"),
+                            "vacuum_reason": a.get("vacuum_reason"),
+                            "microstructure_score": a.get("microstructure_score"),
+                            "microstructure_reasons": a.get("microstructure_reasons"),
+                            "resolution_score": a.get("resolution_score"),
+                            "resolution_reason": a.get("resolution_reason"),
+                            "total_edge": a.get("total_edge"),
+                            "rank_score": a.get("rank_score"),
+                        })
+
+            accepted_candidates = sorted(
+                accepted_candidates,
+                key=lambda x: float(x.get("total_edge", 0.0) or 0.0),
+                reverse=True,
+            )
+
+            report = allocator.allocate(acceptable)
+
+            paper_executor.refresh_all_unrealized_pnl(adapter)
+            settled = resolution_watcher.check_and_settle_positions()
+            exited = run_exit_engine()
+
+            summary = inventory.get_summary(paper_executor)
+
+            if exited:
+                for x in exited:
+                    try:
+                        tg.send(
+                            "POLY CLOSE\n"
+                            f"Market: {x.get('market_name')}\n"
+                            f"Side: {x.get('side')}\n"
+                            f"Entry: {x.get('entry_price')}\n"
+                            f"Exit: {round(float(x.get('exit_price', 0.0) or 0.0), 6)}\n"
+                            f"Realized PnL: {round(float(x.get('realized_pnl', 0.0) or 0.0), 4)}\n"
+                            f"Reason: EDGE_DECAY"
+                        )
+                    except Exception:
+                        pass
+
+            cycle_logger.log({
+                "type": "loop",
+                "triggers": len(triggers),
+                "acceptable": len(acceptable),
+                "leaderboard_top8": accepted_candidates[:8],
+                "allocator_report": dict(report),
+                "settled_count": len(settled),
+                "exited_count": len(exited),
+                "summary": summary,
+            })
+
+            print(
+                "[LOOP]",
+                now.isoformat(),
+                "| triggers=", len(triggers),
+                "| acceptable=", len(acceptable),
+                "| ranked=", report.get("candidates_ranked", 0),
+                "| funded_baskets=", report.get("funded_baskets", 0),
+                "| settled=", len(settled),
+                "| exited=", len(exited),
+                "| open_positions=", summary["position_state"]["open_positions_count"],
+                "| realized_pnl=", round(summary["pnl_state"]["realized_pnl"], 4),
+                "| free_capital=", round(summary["capital_state"]["free_capital"], 2),
+                flush=True,
+            )
+
+        except Exception as e:
+            print("[ERROR]", now.isoformat(), str(e), flush=True)
+            cycle_logger.log({
+                "type": "error",
+                "error": str(e),
+            })
+            try:
+                tg.send(f"POLY ENGINE ERROR\n{now.isoformat()}\n{str(e)}")
+            except Exception:
+                pass
+
+        time.sleep(SCAN_INTERVAL_SECONDS)
+
+
+if __name__ == "__main__":
+    main()

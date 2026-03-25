@@ -1,0 +1,115 @@
+import json
+from pathlib import Path
+
+POLY_FILE = "analytics/polymarket_snapshot.json"
+KALSHI_FILE = "analytics/kalshi_snapshot.json"
+
+def load(path):
+    if not Path(path).exists():
+        return []
+    return json.loads(Path(path).read_text())
+
+def _norm_words(name):
+    words = []
+    for w in name.lower().replace("-", " ").replace("?", " ").split():
+        w = w.strip()
+        if not w:
+            continue
+        if w in {"will","the","a","an","at","in","on","or","and","to","of","up","down","control"}:
+            continue
+        if len(w) <= 2:
+            continue
+        words.append(w)
+    return set(words)
+
+
+def extract_contract(name):
+    n = name.lower()
+
+    asset = None
+    if "bitcoin" in n or "btc" in n:
+        asset = "btc"
+    elif "eth" in n:
+        asset = "eth"
+
+    if "above" in n or "below" in n:
+        return {"type": "threshold", "asset": asset}
+
+    if "up or down" in n or "up/down" in n:
+        return {"type": "direction", "asset": asset}
+
+    if "win" in n or "control" in n:
+        return {"type": "event", "asset": None}
+
+    return {"type": "unknown", "asset": asset}
+
+
+def match_market(poly_name, kalshi_name):
+    p = extract_contract(poly_name)
+    k = extract_contract(kalshi_name)
+
+    # type must match
+    if p["type"] != k["type"]:
+        return False
+
+    # asset must match if present
+    if p["asset"] and k["asset"] and p["asset"] != k["asset"]:
+        return False
+
+    # event-type fallback (politics)
+    if p["type"] == "event":
+        return "senate" in poly_name.lower() and "senate" in kalshi_name.lower()
+
+    return True
+
+
+def is_valid_market(name: str) -> bool:
+    n = name.lower()
+
+    # ❌ kill time-based noise
+    bad_patterns = [
+        " at ", "today", "tonight", "this hour",
+        " by ", " before ", " after ",
+        "12:", "1:", "2:", "3:", "4:", "5:", "6:", "7:", "8:", "9:"
+    ]
+
+    for b in bad_patterns:
+        if b in n:
+            return False
+
+    # ❌ kill ultra short-term crypto triggers
+    if "bitcoin" in n and any(x in n for x in ["at", "minute", "hour"]):
+        return False
+
+    return True
+
+
+def run():
+    poly = load(POLY_FILE)
+    kalshi = load(KALSHI_FILE)
+
+    print(f"Loaded {len(poly)} poly | {len(kalshi)} kalshi")
+
+    for p in poly:
+        if not is_valid_market(p.get('market_name','')):
+            continue
+        for k in kalshi:
+            if match_market(p["market_name"], k["market_name"]):
+
+                poly_price = p.get("yes_price")
+                kalshi_price = k.get("yes_price")
+
+                if poly_price is None or kalshi_price is None:
+                    continue
+
+                edge = round(poly_price - kalshi_price, 4)
+
+                if abs(edge) >= 0.05:
+                    print("\n🚨 ARB FOUND")
+                    print("Market:", p["market_name"])
+                    print("Poly:", poly_price)
+                    print("Kalshi:", kalshi_price)
+                    print("Edge:", edge)
+
+if __name__ == "__main__":
+    run()

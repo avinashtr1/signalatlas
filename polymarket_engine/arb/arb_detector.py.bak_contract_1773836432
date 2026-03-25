@@ -1,0 +1,67 @@
+import json
+from pathlib import Path
+
+POLY_FILE = "analytics/polymarket_snapshot.json"
+KALSHI_FILE = "analytics/kalshi_snapshot.json"
+
+def load(path):
+    if not Path(path).exists():
+        return []
+    return json.loads(Path(path).read_text())
+
+def _norm_words(name):
+    words = []
+    for w in name.lower().replace("-", " ").replace("?", " ").split():
+        w = w.strip()
+        if not w:
+            continue
+        if w in {"will","the","a","an","at","in","on","or","and","to","of","up","down","control"}:
+            continue
+        if len(w) <= 2:
+            continue
+        words.append(w)
+    return set(words)
+
+def match_market(poly_name, kalshi_name):
+    p = _norm_words(poly_name)
+    k = _norm_words(kalshi_name)
+
+    overlap = p & k
+
+    # require meaningful overlap, not just one token
+    if len(overlap) >= 2:
+        return True
+
+    # stricter special-case for senate control
+    if {"republicans","senate"} <= p and {"republicans","senate"} <= k:
+        return True
+
+    return False
+
+def run():
+    poly = load(POLY_FILE)
+    kalshi = load(KALSHI_FILE)
+
+    print(f"Loaded {len(poly)} poly | {len(kalshi)} kalshi")
+
+    for p in poly:
+        for k in kalshi:
+            if match_market(p["market_name"], k["market_name"]):
+
+                poly_price = p.get("yes_price")
+                kalshi_price = k.get("yes_price")
+
+                if poly_price is None or kalshi_price is None:
+                    continue
+
+                edge = round(poly_price - kalshi_price, 4)
+
+                if abs(edge) >= 0.05:
+                    print("\n🚨 ARB FOUND")
+                    print("Market:", p["market_name"])
+                    print("Poly:", poly_price)
+                    print("Kalshi:", kalshi_price)
+                    print("Edge:", edge)
+
+if __name__ == "__main__":
+    run()

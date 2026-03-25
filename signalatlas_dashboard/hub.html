@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>SignalAtlas Operator Hub</title>
+<style>
+body{
+  background:#06121c;
+  color:#9fffc4;
+  font-family:monospace;
+  margin:0;
+  padding:40px;
+}
+h1{
+  font-size:36px;
+  margin-bottom:10px;
+}
+.subtitle{
+  color:#7bbf9b;
+  margin-bottom:40px;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:20px;
+}
+.card{
+  background:#0c1f2d;
+  padding:20px;
+  border-radius:12px;
+  border:1px solid #13344b;
+  transition:all .2s;
+}
+.card:hover{
+  transform:translateY(-4px);
+  border-color:#33ff99;
+}
+a{
+  color:#9fffc4;
+  text-decoration:none;
+  font-size:18px;
+  display:block;
+}
+.sub{
+  margin-top:10px;
+  font-size:13px;
+  color:#6ea58a;
+}
+</style>
+</head>
+<body>
+
+<h1>SignalAtlas Operator Hub</h1>
+<div class="subtitle">Prediction Market Intelligence System</div>
+
+<div class="grid">
+  <div class="card"><a href="/index.html">Terminal</a><div class="sub">Live intelligence terminal</div></div>
+  <div class="card"><a href="/execution.html">Execution</a><div class="sub">PnL, trades, edge capture</div></div>
+  <div class="card"><a href="/ops.html">Ops</a><div class="sub">System health and engine state</div></div>
+
+  <div class="card"><a href="/history.html">History</a><div class="sub">Signal memory and past events</div></div>
+  <div class="card"><a href="/heatmap.html">Heatmap</a><div class="sub">Market opportunity heatmap</div></div>
+  <div class="card"><a href="/clusters.html">Clusters</a><div class="sub">Narrative cluster detection</div></div>
+
+  <div class="card"><a href="/radar.html">Radar</a><div class="sub">Opportunity radar + scoring</div></div>
+  <div class="card"><a href="/brain.html">Brain</a><div class="sub">Decision engine visibility</div></div>
+  <div class="card"><a href="/architecture.html">Architecture</a><div class="sub">System map & components</div></div>
+</div>
+
+<script>
+async function loadStatus(){
+  try{
+    const res = await fetch("/hub_status.json", {cache:"no-store"});
+    const data = await res.json();
+
+    const sub = document.querySelector(".subtitle");
+    sub.innerText =
+      "System Live | signals: " + (data.signals_detected ?? "n/a") +
+      " | closed: " + (data.closed_positions ?? "n/a") +
+      " | pnl: " + (data.realized_pnl ?? "n/a") +
+      " | urgency: " + (data.avg_execution_urgency ?? "n/a") +
+      " | updated: " + (data.generated_at ?? "n/a");
+
+    try{
+      const ageSec = (Date.now() - new Date(data.generated_at).getTime()) / 1000;
+      if (ageSec <= 20){
+        sub.style.color = "#33ff99";
+      }else if (ageSec <= 60){
+        sub.style.color = "#ffd166";
+      }else{
+        sub.style.color = "#ff6b6b";
+      }
+    }catch(e){
+      sub.style.color = "#9fffc4";
+    }
+  }catch(e){
+    const sub = document.querySelector(".subtitle");
+    sub.innerText = "System Offline / No public status";
+    sub.style.color = "#ff6b6b";
+  }
+}
+
+loadStatus();
+setInterval(loadStatus, 5000);
+</script>
+
+</body>
+</html>
