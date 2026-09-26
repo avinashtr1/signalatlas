@@ -1,0 +1,18 @@
+[Unit]
+Description=EdgeAtlas Canonical Web Terminal
+After=network.target signalatlas-measurement-api.service
+
+[Service]
+Type=simple
+WorkingDirectory=/root/.openclaw/workspace/edgeatlas_web
+Environment=NODE_ENV=production
+Environment=SIGNALATLAS_API_URL=http://127.0.0.1:8011
+Environment=VELOCITY_API_URL=http://127.0.0.1:7777
+ExecStart=/root/.openclaw/workspace/edgeatlas_web/node_modules/.bin/next start -H 127.0.0.1 -p 3030
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,14 @@
+5 0 * * * cd ~/.openclaw/workspace && python3 -m polymarket_engine.daily_summary >> logs/daily_summary.log 2>&1
+# TEMP_DISABLED_SIGNALATLAS_AUDIT */2 * * * * /root/.openclaw/workspace/run_signalatlas_feed.sh >> /root/.openclaw/workspace/feed.log 2>&1
+0 3 * * 0 /root/.openclaw/workspace/velocity_atlas/cleanup.sh >> /root/.openclaw/workspace/velocity_atlas/logs/cleanup.log 2>&1
+# SIGNALATLAS_CANONICAL_MEASUREMENT
+1,16,31,46 * * * * cd /root/.openclaw/workspace && python3 -m polymarket_engine.market_raw_collector >> logs/market_measurement.log 2>&1
+# SIGNALATLAS_FORWARD_OUTCOMES
+4,19,34,49 * * * * cd /root/.openclaw/workspace && python3 -m polymarket_engine.outcome_engine >> logs/forward_outcomes.log 2>&1
+# SIGNALATLAS_CLOB_MEASUREMENT
+2,17,32,47 * * * * cd /root/.openclaw/workspace && python3 -m polymarket_engine.orderbook_collector >> logs/clob_measurement.log 2>&1
+# SIGNALATLAS_MEASUREMENT_HEALTH
+6,21,36,51 * * * * cd /root/.openclaw/workspace && python3 -m polymarket_engine.system_monitor >> logs/measurement_health.log 2>&1
+8,23,38,53 * * * * cd /root/.openclaw/workspace && python3 -m polymarket_engine.resolution_collector --identity-limit 100 --chain-limit 300 >> logs/resolution_measurement.log 2>&1
+# SIGNALATLAS_DATA_DURABILITY
+12 * * * * cd /root/.openclaw/workspace && /usr/bin/flock -n analytics/backups/market_measurements/.backup.lock /bin/sh -c '/usr/bin/python3 -m polymarket_engine.data_durability backup && /usr/bin/python3 -m polymarket_engine.data_durability verify --backup latest && /usr/bin/python3 -m polymarket_engine.data_durability retention --apply' >> logs/data_durability.log 2>&1

@@ -1,0 +1,52 @@
+SignalAtlas Rebuild Runtime Baseline
+Canonical date: 2026-09-26
+
+Certified source baseline:
+Git commit: f455db8
+Roadmap: SignalAtlas Master Roadmap v2.0
+
+Operating system:
+Ubuntu 24.04 LTS
+Architecture: x86_64
+
+Runtime:
+Python: 3.12.3
+Node.js: 22.22.2
+npm: 10.9.7
+
+Python dependency contracts:
+requirements-core.txt
+requirements-api.txt
+
+EdgeAtlas dependency contract:
+edgeatlas_web/package.json
+edgeatlas_web/package-lock.json
+
+Canonical database:
+analytics/market_measurements.sqlite3
+
+Canonical services:
+signalatlas-measurement-api.service
+edgeatlas-web.service
+
+VelocityAtlas:
+velocityatlas-live5m.service
+MUST remain disabled by default during SignalAtlas recovery.
+
+Canonical ports:
+SignalAtlas API: 127.0.0.1:8011
+EdgeAtlas: 127.0.0.1:3030
+Velocity API reference: 127.0.0.1:7777
+
+Canonical measurement schedule:
+:01 Gamma snapshots
+:02 CLOB/event measurements
+:04 forward outcomes
+:06 measurement health
+:08 resolution truth
+:12 hourly durability backup
+
+Safety state:
+Brain: FAIL-CLOSED
+SignalAtlas execution: NONE
+VelocityAtlas live execution: DISABLED

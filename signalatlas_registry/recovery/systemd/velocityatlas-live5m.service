@@ -1,0 +1,31 @@
+[Unit]
+Description=VelocityAtlas Canonical Polymarket 5m Live Executor
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/.openclaw/workspace/velocity_atlas
+
+EnvironmentFile=/root/.openclaw/workspace/.env
+Environment=PYTHONUNBUFFERED=1
+
+ExecStart=/root/.openclaw/workspace/velocity_atlas/venv/bin/python3 -u /root/.openclaw/workspace/velocity_atlas/live_velocity_loop_5m_live.py
+
+Restart=on-failure
+RestartSec=15
+
+TimeoutStopSec=20
+KillSignal=SIGTERM
+
+NoNewPrivileges=true
+PrivateTmp=true
+
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
