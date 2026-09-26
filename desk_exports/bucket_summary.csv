@@ -1,0 +1,4 @@
+bucket,legs,capital,avg_total_edge,avg_structural_edge,avg_vacuum_score,avg_micro_score,avg_resolution_score
+NBA Eastern Conference Champion ,1,234.0,0.1405,0.0805,0.2,0.05,0.0
+NBA Western Conference Champion ,1,231.3,0.134,0.074,0.2,0.05,0.0
+Which party will win the Senate in 2026?,1,160.5,0.11,0.06,0.0,0.05,0.0

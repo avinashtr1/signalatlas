@@ -1,0 +1,248 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>SignalAtlas Terminal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg:#071018; --card:#0d1722; --border:#183245; --text:#d7ffe0; --muted:#9ec5aa;
+      --accent:#8fffb5; --white:#ffffff; --good-bg:#12361f; --good:#8fffb5;
+      --warn-bg:#3b3210; --warn:#ffe28a; --bad-bg:#3a1621; --bad:#ff9cab;
+      --neutral-bg:#24303d; --neutral:#b8c7d6;
+    }
+    body{margin:0;background:var(--bg);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;}
+    .wrap{max-width:1280px;margin:0 auto;padding:18px;}
+    .topbar{position:sticky;top:0;z-index:5;background:rgba(7,16,24,.92);backdrop-filter:blur(6px);border-bottom:1px solid #0f2433;margin:-18px -18px 18px -18px;padding:16px 18px;}
+    .title{font-size:30px;font-weight:800;color:var(--accent);letter-spacing:.5px;}
+    .sub{margin-top:6px;color:var(--muted);font-size:13px;}
+    .grid{display:grid;grid-template-columns:1.15fr 1fr;gap:16px;}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 0 0 1px rgba(120,255,180,.03) inset;}
+    .full{grid-column:1 / -1;}
+    h2{margin:0 0 12px 0;font-size:16px;color:var(--accent);}
+    .metric{font-size:15px;margin:6px 0;}
+    .metrics-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+    .pill{display:inline-block;padding:4px 9px;border-radius:999px;font-size:12px;background:#162636;color:var(--text);cursor:pointer;}
+    .live{background:var(--good-bg);color:var(--good);}
+    .tier{background:#102d3d;color:#9ad7ff;}
+    .risk-low{background:var(--good-bg);color:var(--good);}
+    .risk-medium{background:var(--warn-bg);color:var(--warn);}
+    .risk-high{background:var(--bad-bg);color:var(--bad);}
+    .urg-low{background:var(--neutral-bg);color:var(--neutral);}
+    .urg-medium{background:var(--warn-bg);color:var(--warn);}
+    .urg-high{background:var(--bad-bg);color:var(--bad);}
+    .validated{background:var(--good-bg);color:var(--good);}
+    .watch{background:var(--warn-bg);color:var(--warn);}
+    .flat{background:var(--neutral-bg);color:var(--neutral);}
+    .failed{background:var(--bad-bg);color:var(--bad);}
+    .op-row,.sig-row,.cm-row,.pv-row{padding:12px 0;border-bottom:1px solid #163043;}
+    .op-row:last-child,.sig-row:last-child,.cm-row:last-child,.pv-row:last-child{border-bottom:none;}
+    .market{color:var(--white);font-weight:800;line-height:1.35;margin-bottom:8px;word-break:break-word;}
+    .small{color:var(--muted);font-size:13px;white-space:pre-wrap;line-height:1.5;}
+    .kv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px;margin-top:10px;}
+    .kv div{background:#0a131d;border:1px solid #112737;border-radius:10px;padding:10px;}
+    .k{font-size:11px;color:#88a997;text-transform:uppercase;letter-spacing:.5px;}
+    .v{margin-top:4px;font-size:18px;color:var(--white);font-weight:700;}
+    a{color:var(--accent);text-decoration:none;}
+    @media (max-width: 860px){ .grid{grid-template-columns:1fr;} .title{font-size:24px;} .kv{grid-template-columns:1fr 1fr;} }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="title">SignalAtlas Terminal</div>
+      <div class="sub">Prediction market intelligence terminal · <span id="lastRefresh">refresh pending</span></div>
+    </div>
+
+    <div class="grid">
+      <div class="card" id="regime">
+        <h2>Market Regime</h2>
+        <div id="regimeText" class="metric">Loading...</div>
+        <div id="regimeMetrics" class="kv"></div>
+      </div>
+
+      <div class="card">
+        <h2>Navigation</h2>
+        <div class="metric"><a href="/index.html">/terminal</a></div>
+        <div class="metric"><a href="/history.html">/history</a></div>
+        <div class="metric"><a href="/ops.html">/ops</a></div>
+        <div class="metric"><a href="/heatmap.html">/heatmap</a></div>
+        <div class="metrics-row">
+          <a href="#regime" class="pill live">live</a>
+          <a href="http://187.77.83.169:8012/api/health" class="pill">api</a>
+          <a href="/index.html" class="pill">dashboard</a>
+          <a href="/ops.html" class="pill">ops</a>
+          <a href="/heatmap.html" class="pill">heatmap</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Signal Performance</h2>
+        <div id="signalStats" class="kv">Loading...</div>
+      </div>
+
+      <div class="card">
+        <h2>Cross-Market Intelligence</h2>
+        <div id="crossMarket">Loading...</div>
+      </div>
+
+      <div class="card">
+        <h2>Probability Velocity</h2>
+        <div id="probVelocity">Loading...</div>
+      </div>
+
+      <div class="card">
+        <h2>Latest Pro Feed</h2>
+        <div id="feed" class="small">Loading...</div>
+      </div>
+
+      <div class="card full">
+        <h2>Top Opportunities</h2>
+        <div id="opps">Loading...</div>
+      </div>
+
+      <div class="card">
+        <h2>Latest Intelligence Report</h2>
+        <div id="report" class="small">Loading...</div>
+      </div>
+
+      <div class="card full">
+        <h2>Recent Signals & Validation</h2>
+        <div id="signals">Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = "http://187.77.83.169:8012/api";
+    const REFRESH_MS = 60000;
+    async function loadJSON(path) { const r = await fetch(API + path); if (!r.ok) throw new Error(path); return r.json(); }
+    async function loadText(path) { const r = await fetch(API + path); if (!r.ok) throw new Error(path); return r.text(); }
+    function fmtNum(x, n=3){ const v = Number(x); return Number.isFinite(v) ? v.toFixed(n) : "n/a"; }
+    function urgencyClass(v){ v = Number(v || 0); if (v >= 0.66) return "urg-high"; if (v >= 0.33) return "urg-medium"; return "urg-low"; }
+    function urgencyLabel(v){ v = Number(v || 0); if (v >= 0.66) return "urgency high"; if (v >= 0.33) return "urgency medium"; return "urgency low"; }
+    function riskClass(r){ const x = String(r || "").toLowerCase(); if (x.includes("high")) return "risk-high"; if (x.includes("medium")) return "risk-medium"; return "risk-low"; }
+    function statusFromRow(r) {
+      const outcome = r.outcome_pnl;
+      const future = r.future_market_probability;
+      const edge = Number(r.mispricing_edge || 0);
+      if (outcome !== null && outcome !== undefined) {
+        if (Number(outcome) > 0) return ["validated", "validated"];
+        if (Number(outcome) < 0) return ["failed", "failed"];
+      }
+      if (future !== null && future !== undefined) return ["watch", "watch"];
+      if (edge >= 0.12) return ["watch", "watch"];
+      return ["flat", "flat"];
+    }
+
+    async function main() {
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
+      const ss = String(now.getSeconds()).padStart(2, '0');
+      const el = document.getElementById("lastRefresh");
+      if (el) el.textContent = `last refresh ${hh}:${mm}:${ss}`;
+      try {
+        const regime = await loadJSON("/regime");
+        document.getElementById("regimeText").innerHTML =
+          `Environment: <b>${regime.regime || "unknown"}</b> <span class="pill live">live</span>`;
+        const m = regime.metrics || {};
+        document.getElementById("regimeMetrics").innerHTML = `
+          <div><div class="k">Avg radar</div><div class="v">${fmtNum(m.avg_radar_score, 3)}</div></div>
+          <div><div class="k">Avg urgency</div><div class="v">${fmtNum(m.avg_execution_urgency, 3)}</div></div>
+          <div><div class="k">Avg EV</div><div class="v">${fmtNum(m.avg_expected_value, 3)}</div></div>
+          <div><div class="k">Radar range</div><div class="v">${fmtNum(m.radar_range, 3)}</div></div>
+        `;
+      } catch { document.getElementById("regimeText").textContent = "Failed to load regime"; }
+
+      try {
+        const out = await loadJSON("/outcomes");
+        document.getElementById("signalStats").innerHTML = `
+          <div><div class="k">Validated</div><div class="v">${out.validated ?? 0}</div></div>
+          <div><div class="k">Failed</div><div class="v">${out.failed ?? 0}</div></div>
+          <div><div class="k">Watching</div><div class="v">${out.watching ?? 0}</div></div>
+          <div><div class="k">Success rate</div><div class="v">${fmtNum((out.success_rate || 0) * 100, 1)}%</div></div>
+        `;
+      } catch { document.getElementById("signalStats").textContent = "Failed to load signal stats"; }
+
+      try {
+        const cm = await loadJSON("/cross-market");
+        const rows = (cm.signals || []).slice(0, 5);
+        document.getElementById("crossMarket").innerHTML = !rows.length
+          ? `<div class="small">No cross-market contradictions right now.</div>`
+          : rows.map((r, i) => `
+            <div class="cm-row">
+              <div class="market">${i+1}. ${r.parent_market}</div>
+              <div class="small">vs ${r.child_market}</div>
+              <div class="metrics-row">
+                <span class="pill tier">${r.reason}</span>
+                <span class="pill ${r.confidence === 'HIGH' ? 'risk-high' : 'risk-medium'}">confidence ${String(r.confidence || '').toLowerCase()}</span>
+              </div>
+              <div class="small">Parent: ${fmtNum(r.parent_score, 3)} | Child: ${fmtNum(r.child_score, 3)} | Edge: ${fmtNum(r.edge, 3)}</div>
+            </div>
+          `).join("");
+      } catch { document.getElementById("crossMarket").textContent = "Failed to load cross-market signals"; }
+
+      try {
+        const pv = await loadJSON("/probability-velocity");
+        const rows = (pv.signals || []).slice(0, 5);
+        document.getElementById("probVelocity").innerHTML = !rows.length
+          ? `<div class="small">No fast repricing detected right now.</div>`
+          : rows.map((r, i) => `
+            <div class="pv-row">
+              <div class="market">${i+1}. ${r.market}</div>
+              <div class="metrics-row">
+                <span class="pill tier">velocity</span>
+              </div>
+              <div class="small">Velocity: ${fmtNum(r.velocity, 4)} | Score: ${fmtNum(r.score, 3)} | EV: ${fmtNum(r.expected_value, 3)}</div>
+            </div>
+          `).join("");
+      } catch { document.getElementById("probVelocity").textContent = "Failed to load probability velocity"; }
+
+      try {
+        const opps = await loadJSON("/opportunities");
+        const rows = (opps.top_opportunities || []).slice(0, 5);
+        document.getElementById("opps").innerHTML = rows.map((r, i) => {
+          const risk = r.risk_level || "medium";
+          const tier = r.tier || r.alpha_tier || "n/a";
+          return `
+          <div class="op-row">
+            <div class="market">${i+1}. ${r.market_name || "Unknown"}</div>
+            <div class="metrics-row">
+              <span class="pill tier">tier ${tier}</span>
+              <span class="pill ${riskClass(risk)}">risk ${risk}</span>
+              <span class="pill ${urgencyClass(r.execution_urgency)}">${urgencyLabel(r.execution_urgency)}</span>
+            </div>
+            <div class="small">Opportunity: ${fmtNum(r.opportunity_score, 3)} | Alpha: ${fmtNum(r.alpha_score, 3)} | Mispricing: ${fmtNum(r.mispricing_edge, 3)} | Collapse: ${fmtNum(r.collapse_score, 3)}</div>
+          </div>`;
+        }).join("");
+      } catch { document.getElementById("opps").textContent = "Failed to load opportunities"; }
+
+      try { document.getElementById("feed").textContent = await loadText("/feed-v2"); }
+      catch { document.getElementById("feed").textContent = "Failed to load feed"; }
+
+      try { document.getElementById("report").textContent = await loadText("/report"); }
+      catch { document.getElementById("report").textContent = "Failed to load report"; }
+
+      try {
+        const mem = await loadJSON("/signal-memory");
+        const rows = (mem.rows || []).slice(-8).reverse();
+        document.getElementById("signals").innerHTML = rows.map((r, i) => {
+          const [cls, label] = statusFromRow(r);
+          return `
+            <div class="sig-row">
+              <div class="market">${i+1}. ${r.market_name || "Unknown"}</div>
+              <div class="small">Opportunity: ${fmtNum(r.opportunity_score, 3)} | Alpha: ${fmtNum(r.alpha_score, 3)} | Mispricing: ${fmtNum(r.mispricing_edge, 3)} | Collapse: ${fmtNum(r.collapse_score, 3)}</div>
+              <div class="small">Timestamp: ${r.timestamp || "n/a"}</div>
+              <div class="metrics-row"><span class="pill ${cls}">${label}</span></div>
+            </div>
+          `;
+        }).join("");
+      } catch { document.getElementById("signals").textContent = "Failed to load signal history"; }
+    }
+
+    main();
+    setInterval(main, REFRESH_MS);
+  </script>
+</body>
+</html>

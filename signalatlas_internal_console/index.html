@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>SignalAtlas Terminal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #0b1020; color: #e8ecf3; }
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 20px; }
+    h1, h2, h3 { margin: 0 0 10px; }
+    .muted { color: #9aa4b2; }
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; margin-top: 16px; }
+    .card { background: #131a2d; border: 1px solid #24304d; border-radius: 12px; padding: 16px; box-shadow: 0 0 0 1px rgba(255,255,255,0.02) inset; }
+    .span-12 { grid-column: span 12; } .span-8 { grid-column: span 8; } .span-6 { grid-column: span 6; } .span-4 { grid-column: span 4; } .span-3 { grid-column: span 3; }
+    .kv { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin: 6px 0; border-bottom: 1px solid #202a42; padding-bottom: 6px; }
+    .pill { display:inline-block; padding:4px 10px; border-radius:999px; background:#1f2b46; border:1px solid #32446d; color:#d7deea; font-size:12px; }
+    .ok { color:#6ee7b7; } .bad { color:#fca5a5; }
+    table { width:100%; border-collapse:collapse; font-size:14px; }
+    th, td { text-align:left; padding:10px 8px; border-bottom:1px solid #202a42; vertical-align:top; }
+    th { color:#9aa4b2; font-weight:600; }
+    pre { white-space:pre-wrap; word-wrap:break-word; background:#0d1424; border:1px solid #202a42; border-radius:10px; padding:12px; color:#dce4f2; min-height:80px; }
+    input { width:100%; padding:10px 12px; border-radius:10px; border:1px solid #32446d; background:#0d1424; color:#fff; box-sizing:border-box; margin-top:8px; }
+    button { margin-top:10px; padding:10px 14px; border-radius:10px; border:1px solid #385183; background:#1f3a6d; color:white; cursor:pointer; }
+    ul.compact { margin:0; padding-left:18px; } ul.compact li { margin:6px 0; }
+    @media (max-width:900px){ .span-8,.span-6,.span-4,.span-3{grid-column:span 12;} }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>SignalAtlas Terminal</h1>
+  <div class="muted">Internal intelligence console</div>
+
+  <div class="grid">
+    <div class="card span-12">
+      <h2>API Settings</h2>
+      <div class="muted">Internal dashboard over the protected SignalAtlas API.</div>
+      <div class="grid">
+        <div class="span-6">
+          <label>API Base URL</label>
+          <input id="apiBase" />
+        </div>
+        <div class="span-6">
+          <label>API Key</label>
+          <input id="apiKey" placeholder="Enter X-API-Key" />
+        </div>
+      </div>
+      <button onclick="loadAll()">Load Terminal</button>
+      <div id="status" class="muted" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="card span-3"><h2>System</h2><div id="systemBox" class="muted">Not loaded</div></div>
+    <div class="card span-3"><h2>Reputation</h2><div id="reputationBox" class="muted">Not loaded</div></div>
+    <div class="card span-3"><h2>Allocator</h2><div id="allocatorBox" class="muted">Not loaded</div></div>
+    <div class="card span-3"><h2>Event Signals</h2><div id="eventSignalsBox" class="muted">Not loaded</div></div>
+
+    <div class="card span-8"><h2>Top Opportunity</h2><div id="topOpportunity" class="muted">Not loaded</div></div>
+    <div class="card span-4"><h2>Recommendations</h2><div id="recommendations" class="muted">Not loaded</div></div>
+
+    <div class="card span-4"><h2>Opportunity Radar</h2><div id="radarBox" class="muted">Not loaded</div></div>
+    <div class="card span-4"><h2>Alpha Quality</h2><div id="qualityBox" class="muted">Not loaded</div></div>
+    <div class="card span-4"><h2>Probability Drift</h2><div id="driftBox" class="muted">Not loaded</div></div>
+
+    <div class="card span-4"><h2>Probability Shocks</h2><div id="shockBox" class="muted">Not loaded</div></div>
+    <div class="card span-4"><h2>Liquidity Collapse</h2><div id="liquidityBox" class="muted">Not loaded</div></div>
+    <div class="card span-4"><h2>Vacuum Opportunities</h2><div id="vacuumBox" class="muted">Not loaded</div></div>
+    <div class="card span-4"><h2>Cross-Market Lag</h2><div id="lagBox" class="muted">Not loaded</div></div>
+    <div class="card span-4"><h2>Resolution Arbitrage</h2><div id="arbBox" class="muted">Not loaded</div></div>
+<div class="card span-4"><h2>Resolution Arbitrage v2</h2><div id="arbV2Box" class="muted">Loading...</div></div>
+    <div class="card span-4"><h2>Microstructure</h2><div id="microBox" class="muted">Not loaded</div></div>
+    <div class="card span-4"><h2>Alpha Feed</h2><div id="alphaFeedBox" class="muted">Not loaded</div></div>
+    <div class="card span-4"><h2>Stale Repricing</h2><div id="staleBox" class="muted">Not loaded</div></div>
+    <div class="card span-4"><h2>Signal Memory</h2><div id="memoryBox" class="muted">Not loaded</div></div>
+    <div class="card span-4"><h2>Memory Analytics</h2><div id="memoryAnalyticsBox" class="muted">Not loaded</div></div>
+    <div class="card span-4"><h2>Module Scoring</h2><div id="moduleBox" class="muted">Not loaded</div></div>
+    <div class="card span-4"><h2>Market / Bucket Scoring</h2><div id="bucketBox" class="muted">Not loaded</div></div>
+    <div class="card span-4"><h2>Adaptive Weights</h2><div id="weightBox" class="muted">Not loaded</div></div>
+    <div class="card span-4"><h2>Adaptive Composite</h2><div id="adaptiveBox" class="muted">Not loaded</div></div>
+<div class="card span-4"><h2>Adaptive Alpha Feed</h2><div id="adaptiveAlphaBox" class="muted">Not loaded</div></div>
+<div class="card span-4"><h2>Market Regime</h2><div id="regimeBox" class="muted">Not loaded</div></div>
+<div class="card span-4"><h2>Regime Adaptive Weights</h2><div id="regimeWeightsBox" class="muted">Not loaded</div></div>
+<div class="card span-4"><h2>Live Radar</h2><div id="liveRadarBox" class="muted">Not loaded</div></div>
+<div class="card span-4"><h2>Alert Status</h2><div id="alertStatusBox" class="muted">Not loaded</div></div>
+<div class="card span-4"><h2>Resolution Tracking</h2><div id="resolutionBox" class="muted">Not loaded</div></div>
+<div class="card span-4"><h2>Performance Analytics</h2><div id="perfBox" class="muted">Not loaded</div></div>
+    <div class="card span-4"><h2>Public Intelligence</h2><pre id="publicFeed">Not loaded</pre></div>
+
+    <div class="card span-6"><h2>Executive Brief</h2><pre id="executiveText">Not loaded</pre></div>
+    <div class="card span-6"><h2>Deployable Allocations</h2><div id="deployAllocBox" class="muted">Not loaded</div></div>
+
+    <div class="card span-12"><h2>Leaderboard</h2><div id="leaderboard" class="muted">Not loaded</div></div>
+  </div>
+</div>
+
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  const apiBaseEl = document.getElementById('apiBase');
+  if (apiBaseEl && !apiBaseEl.value) apiBaseEl.value = `${window.location.protocol}//${window.location.hostname}:8011`;
+  const savedKey = localStorage.getItem('signalatlas_api_key');
+  if (savedKey) document.getElementById('apiKey').value = savedKey;
+});
+
+async function apiGet(path) {
+  const base = document.getElementById('apiBase').value.trim().replace(/\/$/, '');
+  const key = document.getElementById('apiKey').value.trim();
+  const res = await fetch(base + path, { headers: key ? { 'X-API-Key': key } : {} });
+  if (!res.ok) throw new Error(path + " -> " + res.status + " " + await res.text());
+  return await res.json();
+}
+function fmtPct(x){ return (x*100).toFixed(2) + "%"; }
+function safeNum(x, fallback=0){ const n=Number(x); return Number.isFinite(n)?n:fallback; }
+
+async function loadAll(){
+  const status = document.getElementById('status');
+  status.textContent = "Loading...";
+  try{
+    const key = document.getElementById('apiKey').value.trim();
+    if (key) localStorage.setItem('signalatlas_api_key', key);
+
+    const terminal = await apiGet('/api/terminal');
+
+    renderExecutive(terminal.executive);
+    renderLeaderboard(terminal.leaderboard);
+    renderReputation(terminal.reputation);
+    renderAllocator(terminal.allocator);
+    renderDrift(terminal.drift);
+    renderShocks(terminal.shocks);
+    renderLiquidity(terminal.liquidity);
+    renderVacuum(terminal.vacuum_v2 || {});
+    renderLag(terminal.cross_lag || {});
+    renderArb(terminal.resolution_arb || {});
+renderResolutionArbV2(terminal.resolution_arbitrage_v2 || {});
+    renderMicro(terminal.microstructure || {});
+    renderAlphaFeed(terminal.alpha_feed || {});
+    renderStale(terminal.stale_repricing || {});
+    renderMemory(terminal.signal_memory_summary || {});
+    renderMemoryAnalytics(terminal.signal_memory_analytics || {});
+    renderModuleScoring(terminal.module_scoring || {});
+    renderMarketBucketScoring(terminal.market_bucket_scoring || {});
+    renderAdaptiveWeights(terminal.adaptive_weights || {});
+    renderAdaptiveComposite(terminal.adaptive_composite || {});
+renderAdaptiveAlphaFeed(terminal.adaptive_alpha_feed || {});
+renderMarketRegime(terminal.market_regime || {});
+renderRegimeAdaptiveWeights(terminal.regime_adaptive_weights || {});
+renderLiveRadar(terminal.radar_live || {});
+renderAlertStatus(terminal.radar_alerts || {});
+renderResolutionTracking(terminal.resolution_tracking || {});
+renderPerformanceAnalytics(terminal.performance_analytics || {});
+    renderRadar(terminal.radar);
+    renderQuality(terminal.quality);
+    renderDeployAlloc(terminal.allocator);
+    document.getElementById('publicFeed').textContent = terminal.public_feed || "";
+    document.getElementById('executiveText').textContent = JSON.stringify(terminal.executive, null, 2);
+
+    status.innerHTML = '<span class="ok">Loaded successfully</span>';
+  } catch(e){
+    status.innerHTML = '<span class="bad">' + e.message + '</span>';
+  }
+}
+
+function renderExecutive(exec){
+  document.getElementById('systemBox').innerHTML = `
+    <div class="kv"><span>Status</span><strong>${exec.system_status}</strong></div>
+    <div class="kv"><span>Signals Detected</span><strong>${exec.signals_detected}</strong></div>
+    <div class="kv"><span>Signals Executed</span><strong>${exec.signals_executed}</strong></div>
+    <div class="kv"><span>Signals Resolved</span><strong>${exec.signals_resolved}</strong></div>
+    <div class="kv"><span>Deploy-Now</span><strong>${exec.deploy_now_count}</strong></div>`;
+  document.getElementById('eventSignalsBox').innerHTML = `
+    <div class="kv"><span>Probability Shocks</span><strong>${exec.shock_count}</strong></div>
+    <div class="kv"><span>Probability Drift</span><strong>${exec.drift_count}</strong></div>
+    <div class="kv"><span>Liquidity Collapse</span><strong>${exec.collapse_count}</strong></div>`;
+  const top = exec.top_opportunity;
+  if(top){
+    document.getElementById('topOpportunity').innerHTML = `
+      <div class="pill">Rank #${top.rank}</div>
+      <h3 style="margin-top:12px;">${top.market_name}</h3>
+      <div class="kv"><span>Side</span><strong>${top.side}</strong></div>
+      <div class="kv"><span>Total Edge</span><strong>${fmtPct(safeNum(top.total_edge))}</strong></div>
+      <div class="kv"><span>Net Edge</span><strong>${safeNum(top.expected_net_edge_pct).toFixed(2)}%</strong></div>
+      <div class="kv"><span>Vacuum</span><strong>${safeNum(top.vacuum_score).toFixed(2)}</strong></div>
+      <div class="kv"><span>Micro</span><strong>${safeNum(top.microstructure_score).toFixed(2)}</strong></div>
+      <div class="kv"><span>Entry Price</span><strong>${safeNum(top.entry_price).toFixed(4)}</strong></div>`;
+  }
+  const recs = exec.recommendations || [];
+  document.getElementById('recommendations').innerHTML = recs.length ? '<ol>' + recs.map(x=>`<li style="margin:8px 0;">${x}</li>`).join('') + '</ol>' : '<span class="muted">No recommendations</span>';
+}
+
+function renderReputation(rep){
+  document.getElementById('reputationBox').innerHTML = `
+    <div class="kv"><span>Detected</span><strong>${rep.signals_detected ?? 0}</strong></div>
+    <div class="kv"><span>Executed</span><strong>${rep.signals_executed ?? 0}</strong></div>
+    <div class="kv"><span>Resolved</span><strong>${rep.signals_resolved ?? 0}</strong></div>
+    <div class="kv"><span>Win Rate</span><strong>${fmtPct(safeNum(rep.win_rate))}</strong></div>
+    <div class="kv"><span>Realized PnL</span><strong>${safeNum(rep.realized_pnl).toFixed(4)}</strong></div>`;
+}
+
+function renderAllocator(alloc){
+  document.getElementById('allocatorBox').innerHTML = `
+    <div class="kv"><span>Ref Equity</span><strong>${safeNum(alloc.reference_equity).toFixed(2)}</strong></div>
+    <div class="kv"><span>Total Allocated</span><strong>${safeNum(alloc.total_allocated_capital).toFixed(2)}</strong></div>
+    <div class="kv"><span>Deployment</span><strong>${fmtPct(safeNum(alloc.total_allocated_pct))}</strong></div>
+    <div class="kv"><span>Max Deploy</span><strong>${fmtPct(safeNum(alloc.max_total_deployment_pct))}</strong></div>`;
+}
+
+function renderRadar(data){
+  const radar = data.radar || {};
+  const deploy = radar.deploy_now || [];
+  const watch = radar.watchlist || [];
+  let html = '';
+  if (deploy.length) html += `<div class="pill">Deploy Now ${deploy.length}</div><ul class="compact">${deploy.slice(0,3).map(r=>`<li>${r.market_name}</li>`).join('')}</ul>`;
+  if (watch.length) html += `<div class="pill">Watchlist ${watch.length}</div><ul class="compact">${watch.slice(0,3).map(r=>`<li>${r.market_name}</li>`).join('')}</ul>`;
+  document.getElementById('radarBox').innerHTML = html || '<span class="muted">No radar data</span>';
+}
+
+function renderQuality(data){
+  const rows = data.scores || [];
+  document.getElementById('qualityBox').innerHTML = rows.length
+    ? `<ul class="compact">${rows.slice(0,5).map(r=>`<li>${r.market_name} <span class="pill">${r.grade}</span> score=${safeNum(r.quality_score).toFixed(3)}</li>`).join('')}</ul>`
+    : '<span class="muted">No quality scores</span>';
+}
+
+function renderDrift(data){
+  const rows = data.drift_markets || [];
+  document.getElementById('driftBox').innerHTML = rows.length
+    ? `<ul class="compact">${rows.slice(0,5).map(r=>`<li>${r.market_name} <span class="pill">${r.drift_class}</span> move=${(safeNum(r.move)*100).toFixed(2)}%</li>`).join('')}</ul>`
+    : '<span class="muted">No drift detected</span>';
+}
+
+function renderShocks(data){
+  const rows = data.shocks || [];
+  document.getElementById('shockBox').innerHTML = rows.length
+    ? `<ul class="compact">${rows.slice(0,5).map(r=>`<li>${r.market_name} move=${(safeNum(r.move)*100).toFixed(2)}%</li>`).join('')}</ul>`
+    : '<span class="muted">No shocks detected</span>';
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function renderPerformanceAnalytics(data){
+  const modules = data.module_summary || [];
+  const html = `
+    <div class="kv"><span>Resolved</span><strong>${Number(data.resolved || 0)}</strong></div>
+    <div class="kv"><span>Unresolved</span><strong>${Number(data.unresolved || 0)}</strong></div>
+    <div class="kv"><span>Wins</span><strong>${Number(data.wins || 0)}</strong></div>
+    <div class="kv"><span>Losses</span><strong>${Number(data.losses || 0)}</strong></div>
+    <div class="kv"><span>Win Rate</span><strong>${(Number(data.win_rate || 0) * 100).toFixed(2)}%</strong></div>
+    ${modules.length ? `<ul class="compact">${modules.slice(0,4).map(r => `<li>${r.module} <span class="pill">${(Number(r.hit_rate || 0) * 100).toFixed(1)}%</span></li>`).join("")}</ul>` : ""}
+  `;
+  document.getElementById("perfBox").innerHTML = html;
+}
+
+
+function renderLiveRadar(data){
+  const deploy = data.deploy_now || [];
+  const watch = data.watchlist || [];
+  let html = `
+    <div class="kv"><span>Deploy Now</span><strong>${deploy.length}</strong></div>
+    <div class="kv"><span>Watchlist</span><strong>${watch.length}</strong></div>
+  `;
+  if (deploy.length) {
+    html += `<div class="pill">Top Live Signals</div><ul class="compact">${deploy.slice(0,5).map(r => `<li>${r.market_name} <span class="pill">tier ${r.radar_tier || "D"}</span> <span class="pill">radar ${Number(r.adaptive_radar_score || 0).toFixed(3)}</span> <span class="pill">${Number(r.expected_net_edge_pct || 0).toFixed(2)}%</span></li>`).join("")}</ul>`;
+  }
+  if (watch.length) {
+    html += `<div class="pill">Watchlist</div><ul class="compact">${watch.slice(0,5).map(r => `<li>${r.market_name} <span class="pill">tier ${r.radar_tier || "D"}</span> <span class="pill">radar ${Number(r.adaptive_radar_score || 0).toFixed(3)}</span> <span class="pill">${Number(r.expected_net_edge_pct || 0).toFixed(2)}%</span></li>`).join("")}</ul>`;
+  }
+  document.getElementById("liveRadarBox").innerHTML = html;
+}
+
+function renderAlertStatus(data){
+  const alerts = data.alerts || [];
+  const newCount = Number(data.new_count || 0);
+  let html = `
+    <div class="kv"><span>Total Alerts</span><strong>${alerts.length}</strong></div>
+    <div class="kv"><span>New Alerts</span><strong>${newCount}</strong></div>
+  `;
+  if (alerts.length) {
+    html += `<ul class="compact">${alerts.slice(0,5).map(a => `<li>${a.market_name} <span class="pill">${a.is_new ? "new" : "sent"}</span></li>`).join("")}</ul>`;
+  }
+  document.getElementById("alertStatusBox").innerHTML = html;
+}
+
+
+function renderResolutionTracking(data){
+  const markets = data.market_summary || [];
+  const html = markets.length
+    ? `<div class="kv"><span>Rows</span><strong>${Number(data.rows || 0)}</strong></div>
+       <div class="kv"><span>Resolved</span><strong>${Number(data.resolved_signals || 0)}</strong></div>
+       <div class="kv"><span>Unresolved</span><strong>${Number(data.unresolved_signals || 0)}</strong></div>
+       <ul class="compact">${markets.slice(0,3).map(r =>
+         `<li>${r.market_name} <span class="pill">${Number(r.avg_edge * 100).toFixed(2)}%</span></li>`
+       ).join("")}</ul>`
+    : '<span class="muted">No resolution tracking yet</span>';
+  document.getElementById("resolutionBox").innerHTML = html;
+}
+
+
+
+function renderRegimeAdaptiveWeights(data){
+  const rows = data.adaptive_weights || {};
+  const active = data.active_regime || 'unknown';
+  let html = `<div class="kv"><span>Active</span><strong>${active}</strong></div>`;
+  if (Object.keys(rows).length) {
+    html += `<ul class="compact">${Object.entries(rows).map(([k,v]) =>
+      `<li>${k} <span class="pill">${Number(v).toFixed(3)}</span></li>`
+    ).join("")}</ul>`;
+  } else {
+    html += '<span class="muted">No regime adaptive weights</span>';
+  }
+  document.getElementById("regimeWeightsBox").innerHTML = html;
+}
+
+
+function renderMarketRegime(data){
+  const scores = data.regime_scores || {};
+  const active = data.active_regime || 'unknown';
+  const html = `
+    <div class="kv"><span>Active</span><strong>${active}</strong></div>
+    <ul class="compact">
+      <li>calm <span class="pill">${Number(scores.calm || 0).toFixed(3)}</span></li>
+      <li>volatile <span class="pill">${Number(scores.volatile || 0).toFixed(3)}</span></li>
+      <li>thin_liquidity <span class="pill">${Number(scores.thin_liquidity || 0).toFixed(3)}</span></li>
+      <li>resolution_phase <span class="pill">${Number(scores.resolution_phase || 0).toFixed(3)}</span></li>
+      <li>event_spike <span class="pill">${Number(scores.event_spike || 0).toFixed(3)}</span></li>
+    </ul>`;
+  document.getElementById("regimeBox").innerHTML = html;
+}
+
+
+function renderAdaptiveAlphaFeed(data){
+
+  const rows = data.markets || []
+
+  document.getElementById("adaptiveAlphaBox").innerHTML =
+    rows.length
+    ? `<ul class="compact">${
+        rows.slice(0,5).map(r =>
+        `<li>${r.market_name} <span class="pill">${Number(r.adaptive_composite_score).toFixed(3)}</span></li>`
+        ).join("")
+      }</ul>`
+    : '<span class="muted">No adaptive feed yet</span>'
+}
+
+function renderAdaptiveComposite(data){
+  const rows = data.ranked_markets || [];
+  document.getElementById('adaptiveBox').innerHTML = rows.length
+    ? `<ul class="compact">${rows.slice(0,5).map(r=>`<li>${r.market_name} <span class="pill">${Number(r.adaptive_composite_score).toFixed(3)}</span></li>`).join('')}</ul>`
+    : '<span class="muted">No adaptive composite data</span>';
+}
+
+function renderAdaptiveWeights(data){
+  const rows = data.adaptive_weights || {};
+  const html = Object.keys(rows).length
+    ? `<ul class="compact">${Object.entries(rows).map(([k,v])=>`<li>${k} <span class="pill">${Number(v).toFixed(3)}</span></li>`).join('')}</ul>`
+    : '<span class="muted">No adaptive weights</span>';
+  document.getElementById('weightBox').innerHTML = html;
+}
+
+function renderMarketBucketScoring(data){
+  const markets = data.top_markets || [];
+  const buckets = data.top_buckets || [];
+  let html = '';
+  if (markets.length) {
+    html += `<div class="pill">Markets</div><ul class="compact">${markets.slice(0,3).map(r=>`<li>${r.name} <span class="pill">${Number(r.score).toFixed(3)}</span></li>`).join('')}</ul>`;
+  }
+  if (buckets.length) {
+    html += `<div class="pill">Buckets</div><ul class="compact">${buckets.slice(0,3).map(r=>`<li>${r.name} <span class="pill">${Number(r.score).toFixed(3)}</span></li>`).join('')}</ul>`;
+  }
+  document.getElementById('bucketBox').innerHTML = html || '<span class="muted">No market/bucket scoring</span>';
+}
+
+function renderModuleScoring(data){
+  const rows = data.modules || [];
+  document.getElementById('moduleBox').innerHTML = rows.length
+    ? `<ul class="compact">${rows.map(r=>`<li>${r.module} <span class="pill">${Number(r.avg_score).toFixed(3)}</span> (${r.count})</li>`).join('')}</ul>`
+    : '<span class="muted">No module scoring</span>';
+}
+
+function renderMemoryAnalytics(data){
+  const grades = data.grade_distribution || {};
+  const features = data.feature_counts || {};
+  document.getElementById('memoryAnalyticsBox').innerHTML = `
+    <div class="kv"><span>Rows</span><strong>${Number(data.rows || 0)}</strong></div>
+    <div class="kv"><span>A Grades</span><strong>${Number(grades.A || 0)}</strong></div>
+    <div class="kv"><span>B Grades</span><strong>${Number(grades.B || 0)}</strong></div>
+    <div class="kv"><span>Vacuum Flags</span><strong>${Number(features.has_vacuum || 0)}</strong></div>
+    <div class="kv"><span>Micro Flags</span><strong>${Number(features.has_micro || 0)}</strong></div>
+    <div class="kv"><span>Stale Flags</span><strong>${Number(features.has_stale || 0)}</strong></div>
+  `;
+}
+
+function renderMemory(data){
+  const rows = Number(data.rows_written || 0);
+  const ts = data.timestamp || '';
+  document.getElementById('memoryBox').innerHTML = rows
+    ? `<div class="kv"><span>Rows Written</span><strong>${rows}</strong></div><div class="kv"><span>Last Update</span><strong>${ts}</strong></div>`
+    : '<span class="muted">No memory data</span>';
+}
+
+function renderStale(data){
+  const rows = data.stale_repricing_opportunities || [];
+  document.getElementById('staleBox').innerHTML = rows.length
+    ? `<ul class="compact">${rows.slice(0,5).map(r=>`<li>${r.market_name} <span class="pill">${Number(r.stale_repricing_score).toFixed(3)}</span></li>`).join('')}</ul>`
+    : '<span class="muted">No stale repricing</span>';
+}
+
+function renderAlphaFeed(data){
+  const deploy = data.deploy_now || [];
+  const quality = data.top_quality || [];
+  const items = [...deploy.slice(0,2).map(r => `${r.market_name} | deploy`), ...quality.slice(0,2).map(r => `${r.market_name} | ${r.grade}`)];
+  document.getElementById('alphaFeedBox').innerHTML = items.length
+    ? `<ul class="compact">${items.map(x=>`<li>${x}</li>`).join('')}</ul>`
+    : '<span class="muted">No alpha feed items</span>';
+}
+
+function renderMicro(data){
+  const rows = data.microstructure_signals || [];
+  document.getElementById('microBox').innerHTML = rows.length
+    ? `<ul class="compact">${rows.slice(0,5).map(r=>`<li>${r.market_name} <span class="pill">${Number(r.micro_rank).toFixed(3)}</span></li>`).join('')}</ul>`
+    : '<span class="muted">No microstructure signals</span>';
+}
+
+function renderArb(data){
+  const rows = data.arbitrage_candidates || [];
+  document.getElementById('arbBox').innerHTML = rows.length
+    ? `<ul class="compact">${rows.slice(0,5).map(r=>`<li>${r.bucket} <span class="pill">${Number(r.arbitrage_score).toFixed(3)}</span></li>`).join('')}</ul>`
+    : '<span class="muted">No resolution arbitrage</span>';
+}
+
+function renderLag(data){
+  const rows = data.lags || [];
+  document.getElementById('lagBox').innerHTML = rows.length
+    ? `<ul class="compact">${rows.slice(0,5).map(r=>`<li>${r.bucket} <span class="pill">${Number(r.lag_score).toFixed(3)}</span></li>`).join('')}</ul>`
+    : '<span class="muted">No cross-market lag</span>';
+}
+
+function renderVacuum(data){
+  const rows = data.vacuum_opportunities || [];
+  document.getElementById('vacuumBox').innerHTML = rows.length
+    ? `<ul class="compact">${rows.slice(0,5).map(r=>`<li>${r.market_name} <span class="pill">${Number(r.vacuum_rank).toFixed(3)}</span></li>`).join('')}</ul>`
+    : '<span class="muted">No vacuum opportunities</span>';
+}
+
+
+function renderLiquidityV2(data){
+  const rows = data.collapse_v2_signals || [];
+  let html = '';
+  if (rows.length) {
+    html += `<ul class="compact">${rows.slice(0,5).map(r =>
+      `<li>${r.market_name} <span class="pill">${Number(r.collapse_v2_score).toFixed(3)}</span> <span class="pill">${r.confidence_tier}</span></li>`
+    ).join("")}</ul>`;
+  } else {
+    html = '<span class="muted">No liquidity collapse v2 data</span>';
+  }
+  document.getElementById("collapseV2Box").innerHTML = html;
+}
+
+function renderLiquidity(data){
+  const rows = data.collapses || [];
+  document.getElementById('liquidityBox').innerHTML = rows.length
+    ? `<ul class="compact">${rows.slice(0,5).map(r=>`<li>${r.market_name} collapse=${safeNum(r.collapse_score).toFixed(3)}</li>`).join('')}</ul>`
+    : '<span class="muted">No liquidity collapse detected</span>';
+}
+
+function renderDeployAlloc(alloc){
+  const rows = alloc.allocations || [];
+  document.getElementById('deployAllocBox').innerHTML = rows.length
+    ? `<ul class="compact">${rows.slice(0,5).map(r=>`<li>${r.market_name} <span class="pill">${r.allocation_tier}</span> ${safeNum(r.target_allocation_pct*100).toFixed(2)}% / ${safeNum(r.suggested_capital).toFixed(2)}</li>`).join('')}</ul>`
+    : '<span class="muted">No allocations</span>';
+}
+
+function renderLeaderboard(data){
+  const rows = data.leaderboard || [];
+  if (!rows.length) {
+    document.getElementById('leaderboard').innerHTML = '<span class="muted">No leaderboard data</span>';
+    return;
+  }
+  let html = '<table><thead><tr><th>Rank</th><th>Market</th><th>Side</th><th>Edge</th><th>Net</th><th>Vacuum</th><th>Micro</th></tr></thead><tbody>';
+  for (const r of rows) {
+    html += `<tr><td>${r.rank}</td><td>${r.market_name}</td><td>${r.side}</td><td>${fmtPct(safeNum(r.total_edge))}</td><td>${safeNum(r.expected_net_edge_pct).toFixed(2)}%</td><td>${safeNum(r.vacuum_score).toFixed(2)}</td><td>${safeNum(r.microstructure_score).toFixed(2)}</td></tr>`;
+  }
+  html += '</tbody></table>';
+  document.getElementById('leaderboard').innerHTML = html;
+}
+
+
+function renderResolutionArbV2(data){
+  const rows = data.resolution_arb_v2_signals || [];
+  let html = '';
+  if(rows.length){
+    html = '<ul class="compact">' + rows.slice(0,5).map(r =>
+      `<li>${r.market_name} <span class="pill">${Number(r.resolution_arb_v2_score||0).toFixed(3)}</span></li>`
+    ).join('') + '</ul>';
+  } else {
+    html = '<span class="muted">0 opportunities</span>';
+  }
+  const el = document.getElementById("arbV2Box");
+  if(el) el.innerHTML = html;
+}
+
+
+</script>
+</body>
+</html>

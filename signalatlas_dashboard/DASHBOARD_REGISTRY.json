@@ -1,0 +1,23 @@
+{
+  "timestamp": "2026-03-12T19:03:16.664475+00:00",
+  "public_shell_port": 8020,
+  "pages_count": 5,
+  "pages": [
+    "signalatlas_dashboard/clusters.html",
+    "signalatlas_dashboard/heatmap.html",
+    "signalatlas_dashboard/history.html",
+    "signalatlas_dashboard/index.html",
+    "signalatlas_dashboard/ops.html"
+  ],
+  "known_pages": {
+    "terminal": "signalatlas_dashboard/index.html",
+    "history": "signalatlas_dashboard/history.html",
+    "ops": "signalatlas_dashboard/ops.html",
+    "heatmap": "signalatlas_dashboard/heatmap.html",
+    "clusters": "signalatlas_dashboard/clusters.html"
+  },
+  "internal_console": {
+    "dashboard_port": 8022,
+    "api_port": 8011
+  }
+}

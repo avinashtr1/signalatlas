@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>SignalAtlas Alpha Radar</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<style>
+:root{
+  --bg:#071018; --card:#0d1722; --border:#183245; --text:#d7ffe0; --muted:#9ec5aa;
+  --accent:#8fffb5; --white:#ffffff; --good:#8fffb5; --warn:#ffe28a;
+}
+body{margin:0;background:var(--bg);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;}
+.wrap{max-width:1280px;margin:0 auto;padding:18px}
+.topbar{position:sticky;top:0;z-index:5;background:rgba(7,16,24,.92);backdrop-filter:blur(6px);border-bottom:1px solid #0f2433;margin:-18px -18px 18px -18px;padding:16px 18px}
+.title{font-size:30px;font-weight:800;color:var(--accent)}
+.sub{margin-top:6px;color:var(--muted);font-size:13px}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.pill{display:inline-block;padding:4px 9px;border-radius:999px;font-size:12px;background:#162636;color:var(--text);text-decoration:none}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.metric{background:#0a131d;border:1px solid #112737;border-radius:10px;padding:10px}
+.k{font-size:11px;color:#88a997;text-transform:uppercase;letter-spacing:.5px}
+.v{margin-top:4px;font-size:22px;color:var(--white);font-weight:700}
+.row{padding:12px 0;border-bottom:1px solid #163043}
+.row:last-child{border-bottom:none}
+.name{font-weight:700;color:var(--white);font-size:18px}
+.small{color:var(--muted);font-size:13px;line-height:1.5;white-space:pre-wrap}
+.badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#162636;font-size:12px;margin-right:6px}
+.ok{color:var(--good)} .warn{color:var(--warn)}
+.cols{display:grid;grid-template-columns:1.5fr 1fr;gap:16px}
+@media (max-width: 980px){ .grid{grid-template-columns:repeat(2,minmax(0,1fr));} .cols{grid-template-columns:1fr} .title{font-size:24px;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="title">SignalAtlas Alpha Radar</div>
+    <div class="sub">Canonical opportunity feed · <span id="lastRefresh">refresh pending</span></div>
+    <div class="pills">
+      <a class="pill" href="/index.html">terminal</a>
+      <a class="pill" href="/history.html">history</a>
+      <a class="pill" href="/ops.html">ops</a>
+      <a class="pill" href="/heatmap.html">heatmap</a>
+      <a class="pill" href="/clusters.html">clusters</a>
+      <a class="pill" href="/execution.html">execution</a>
+      <a class="pill" href="/architecture.html">architecture</a>
+      <a class="pill" href="/brain.html">brain</a>
+      <a class="pill" href="/radar.html">radar</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="grid">
+      <div class="metric"><div class="k">Deploy Now</div><div class="v" id="deployNow">-</div></div>
+      <div class="metric"><div class="k">Detected</div><div class="v" id="detected">-</div></div>
+      <div class="metric"><div class="k">Executed</div><div class="v" id="executed">-</div></div>
+      <div class="metric"><div class="k">Allocated Capital</div><div class="v" id="allocated">-</div></div>
+    </div>
+  </div>
+
+  <div class="cols">
+    <div class="card">
+      <div class="name">Live Opportunities</div>
+      <div id="opps" class="small">Loading...</div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="name">Top Opportunity</div>
+        <div id="top" class="small">Loading...</div>
+      </div>
+      <div class="card">
+        <div class="name">Recommendations</div>
+        <div id="recs" class="small">Loading...</div>
+      </div>
+      <div class="card">
+        <div class="name">Radar Notes</div>
+        <div class="small">This page must remain display-only. Intelligence logic stays in engines and APIs.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const PUBLIC_API = "http://187.77.83.169:8012/api";
+
+function setRefreshClock(){
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  const ss = String(now.getSeconds()).padStart(2,'0');
+  document.getElementById("lastRefresh").textContent = `last refresh ${hh}:${mm}:${ss}`;
+}
+function fmt(x,n=2){
+  const v = Number(x);
+  return Number.isFinite(v) ? v.toFixed(n) : "n/a";
+}
+async function loadJSON(url){
+  const r = await fetch(url);
+  if(!r.ok) throw new Error(url);
+  return await r.json();
+}
+async function main(){
+  setRefreshClock();
+
+  let snap = null;
+  try{
+    snap = await loadJSON("/intel_snapshot.json");
+    const intel = snap.data || {};
+    document.getElementById("deployNow").innerText = intel.deploy_now_count ?? "-";
+    document.getElementById("detected").innerText = intel.signals_detected ?? "-";
+    document.getElementById("executed").innerText = intel.signals_executed ?? "-";
+    document.getElementById("allocated").innerText = fmt(intel.total_allocated_capital,2);
+
+    const t = intel.top_opportunity || {};
+    document.getElementById("top").innerHTML =
+      `<div class="row">
+        <div class="name">${t.market_name || "Unknown"}</div>
+        <div><span class="badge">${t.side || "n/a"}</span><span class="badge">rank ${t.rank ?? "n/a"}</span></div>
+        <div>entry=${fmt(t.entry_price,4)} | structural=${fmt(t.structural_edge,4)}</div>
+        <div>total_edge=${fmt(t.total_edge,4)} | net=${fmt(t.expected_net_edge_pct,2)}%</div>
+        <div>vacuum=${fmt(t.vacuum_score,3)} | micro=${fmt(t.microstructure_score,3)} | fill=${fmt(t.expected_fill_probability,2)}</div>
+        <div>capital=${fmt(t.allocated_capital,2)}</div>
+      </div>`;
+
+    const recs = intel.recommendations || [];
+    document.getElementById("recs").innerText = recs.length ? recs.join("\n") : "No recommendations";
+  }catch{
+    document.getElementById("top").innerText = "Snapshot unavailable";
+    document.getElementById("recs").innerText = "Snapshot unavailable";
+  }
+
+  try{
+    const o = await loadJSON(PUBLIC_API + "/opportunities");
+    const rows = (o.top_opportunities || []).slice(0,10);
+    document.getElementById("opps").innerHTML = rows.length ? rows.map((r,i) => `
+      <div class="row">
+        <div class="name">${i+1}. ${r.market_name || "Unknown"}</div>
+        <div>
+          <span class="badge">${r.side || "n/a"}</span>
+          <span class="badge">${(r.opportunity_score ?? 0) >= 0.3 ? "high priority" : "watch"}</span>
+        </div>
+        <div>opp=${fmt(r.opportunity_score,3)} | alpha=${fmt(r.alpha_score,3)} | radar=${fmt(r.radar_score,3)}</div>
+        <div>mispricing=${fmt(r.mispricing_edge,3)} | collapse=${fmt(r.collapse_score,3)} | urgency=${fmt(r.execution_urgency,3)}</div>
+      </div>
+    `).join("") : "No live opportunities";
+  }catch{
+    document.getElementById("opps").innerText = "Opportunities unavailable";
+  }
+}
+main();
+setInterval(main, 30000);
+</script>
+</body>
+</html>

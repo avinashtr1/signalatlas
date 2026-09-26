@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>SignalAtlas Alpha Heatmap</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root{
+  --bg:#071018; --card:#0d1722; --border:#183245; --text:#d7ffe0; --muted:#9ec5aa;
+  --accent:#8fffb5; --white:#ffffff;
+}
+body{margin:0;background:var(--bg);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;}
+.wrap{max-width:1280px;margin:0 auto;padding:18px;}
+.topbar{position:sticky;top:0;z-index:5;background:rgba(7,16,24,.92);backdrop-filter:blur(6px);border-bottom:1px solid #0f2433;margin:-18px -18px 18px -18px;padding:16px 18px;}
+.title{font-size:30px;font-weight:800;color:var(--accent);}
+.sub{margin-top:6px;color:var(--muted);font-size:13px;}
+.grid{display:grid;grid-template-columns:1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;}
+h2{margin:0 0 12px 0;font-size:16px;color:var(--accent);}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.pill{display:inline-block;padding:4px 9px;border-radius:999px;font-size:12px;background:#162636;color:var(--text);text-decoration:none}
+.cluster{margin-bottom:18px}
+.cluster-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.cluster-name{font-size:18px;font-weight:800;color:#fff}
+.cluster-count{font-size:13px;color:var(--muted)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.tile{border-radius:12px;padding:12px;border:1px solid #173143;min-height:108px;box-shadow:0 0 0 1px rgba(120,255,180,.03) inset;}
+.tile .market{font-size:13px;line-height:1.3;font-weight:700;color:#fff;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tile .meta{margin-top:8px;font-size:12px;color:#d7ffe0}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:middle}
+.small{color:var(--muted);font-size:13px;line-height:1.5}
+@media (max-width:860px){.title{font-size:24px}.tiles{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="title">SignalAtlas Alpha Heatmap</div>
+    <div class="sub">Narrative clusters and opportunity pockets</div>
+    <div class="pills">
+      <a class="pill" href="/index.html">terminal</a>
+      <a class="pill" href="/history.html">history</a>
+      <a class="pill" href="/ops.html">ops</a>
+      <a class="pill" href="/heatmap.html">heatmap</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Legend</h2>
+    <div class="legend">
+      <span><span class="sw" style="background:#12361f"></span>low alpha</span>
+      <span><span class="sw" style="background:#3b3210"></span>medium alpha</span>
+      <span><span class="sw" style="background:#5a2a11"></span>high alpha</span>
+      <span><span class="sw" style="background:#3a1621"></span>extreme alpha</span>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Cluster Heatmap</h2>
+      <div id="heatmap" class="small">Loading...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API="http://187.77.83.169:8012/api";
+
+async function loadJSON(path){
+  const r = await fetch(API + path);
+  if(!r.ok) throw new Error(path);
+  return r.json();
+}
+
+function alphaColor(x){
+  const v = Math.abs(Number(x || 0));
+  if(v >= 0.12) return "#3a1621";
+  if(v >= 0.08) return "#5a2a11";
+  if(v >= 0.03) return "#3b3210";
+  return "#12361f";
+}
+
+function fmt(x,n=3){
+  const v = Number(x);
+  return Number.isFinite(v) ? v.toFixed(n) : "n/a";
+}
+
+async function main(){
+  try{
+    const [clusters, mis] = await Promise.all([
+      loadJSON("/clusters"),
+      loadJSON("/mispricing-live")
+    ]);
+
+    const alphaMap = {};
+    for(const r of (mis.signals || [])){
+      alphaMap[r.question] = r;
+    }
+
+    const rows = (clusters.clusters || []).slice(0, 8);
+
+    if(!rows.length){
+      document.getElementById("heatmap").innerText = "No cluster data yet.";
+      return;
+    }
+
+    document.getElementById("heatmap").innerHTML = rows.map(c => {
+      const markets = (c.top_markets || []).slice(0, 12).map(m => {
+        const q = m.question || "Unknown";
+        const r = alphaMap[q] || {};
+        const alpha = Number(r.alpha || 0);
+        const mp = Number(r.market_probability || 0);
+        const model = Number(r.model_probability || 0);
+        const color = alphaColor(alpha);
+
+        return `
+          <div class="tile" style="background:${color}">
+            <div class="market">${q}</div>
+            <div class="meta">Alpha: ${fmt(alpha)}</div>
+            <div class="meta">Mkt: ${fmt(mp)} | Model: ${fmt(model)}</div>
+          </div>
+        `;
+      }).join("");
+
+      return `
+        <div class="cluster">
+          <div class="cluster-head">
+            <div class="cluster-name">${c.cluster}</div>
+            <div class="cluster-count">${c.count} markets</div>
+          </div>
+          <div class="tiles">${markets || '<div class="small">No mapped markets yet.</div>'}</div>
+        </div>
+      `;
+    }).join("");
+
+  }catch(e){
+    document.getElementById("heatmap").innerText = "Failed to load heatmap.";
+  }
+}
+
+main();
+setInterval(main, 60000);
+</script>
+</body>
+</html>

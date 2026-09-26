@@ -1,0 +1,209 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>SignalAtlas History</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      background: #071018;
+      color: #d7ffe0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    .wrap {
+      max-width: 1250px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+    .title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 18px;
+      color: #8fffb5;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .card {
+      background: #0d1722;
+      border: 1px solid #183245;
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 0 0 1px rgba(120,255,180,0.03) inset;
+    }
+    .card h2 {
+      margin: 0 0 12px 0;
+      font-size: 16px;
+      color: #8fffb5;
+    }
+    .row {
+      padding: 10px 0;
+      border-bottom: 1px solid #163043;
+    }
+    .row:last-child {
+      border-bottom: none;
+    }
+    .market {
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.35;
+      margin-bottom: 6px;
+    }
+    .small {
+      color: #9ec5aa;
+      font-size: 13px;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+    .pill {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      margin-top: 6px;
+      background: #162636;
+      color: #d7ffe0;
+    }
+    .full {
+      grid-column: 1 / -1;
+    }
+    a {
+      color: #8fffb5;
+      text-decoration: none;
+    }
+    @media (max-width: 860px) {
+      .grid { grid-template-columns: 1fr; }
+      .title { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="title">SignalAtlas History</div><div class="small" id="lastRefresh">refresh pending</div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Navigation</h2>
+        <div><a href="/index.html">← /terminal</a></div>
+      </div>
+
+      <div class="card">
+        <h2>Status</h2>
+        <div id="status" class="small">Loading...</div>
+      </div>
+
+      <div class="card full">
+        <h2>Recent Signal Memory</h2>
+        <div id="signalMemory">Loading...</div>
+      </div>
+
+      <div class="card">
+        <h2>Edge Decay Events</h2>
+        <div id="edgeDecay">Loading...</div>
+      </div>
+
+      <div class="card">
+        <h2>Latest Pro Feed</h2>
+        <div id="feed" class="small">Loading...</div>
+      </div>
+
+      <div class="card full">
+        <h2>Latest Intelligence Report</h2>
+        <div id="report" class="small">Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = "http://187.77.83.169:8012/api";
+    const REFRESH_MS = 60000;
+
+    async function loadJSON(path) {
+      const r = await fetch(API + path);
+      if (!r.ok) throw new Error(path);
+      return r.json();
+    }
+
+    async function loadText(path) {
+      const r = await fetch(API + path);
+      if (!r.ok) throw new Error(path);
+      return r.text();
+    }
+
+    function statusFromRow(r) {
+      const outcome = r.outcome_pnl;
+      const future = r.future_market_probability;
+      const edge = Number(r.mispricing_edge || 0);
+
+      if (outcome !== null && outcome !== undefined) {
+        if (Number(outcome) > 0) return "validated";
+        if (Number(outcome) < 0) return "failed";
+      }
+      if (future !== null && future !== undefined) return "watch";
+      if (edge >= 0.12) return "watch";
+      return "flat";
+    }
+
+    async function main() {
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
+      const ss = String(now.getSeconds()).padStart(2, '0');
+      const el = document.getElementById("lastRefresh");
+      if (el) el.textContent = `last refresh ${hh}:${mm}:${ss}`;
+      try {
+        const mem = await loadJSON("/signal-memory");
+        const decay = await loadJSON("/edge-decay");
+
+        document.getElementById("status").textContent =
+          `Signal rows: ${(mem.rows || []).length}\nEdge decay count: ${decay.count || 0}`;
+
+        const memRows = (mem.rows || []).slice(-12).reverse();
+        document.getElementById("signalMemory").innerHTML = memRows.map((r, i) => `
+          <div class="row">
+            <div class="market">${i+1}. ${r.market_name || "Unknown"}</div>
+            <div class="small">Timestamp: ${r.timestamp || "n/a"}</div>
+            <div class="small">Opportunity: ${r.opportunity_score ?? "n/a"} | Alpha: ${r.alpha_score ?? "n/a"} | Mispricing: ${r.mispricing_edge ?? "n/a"} | Collapse: ${r.collapse_score ?? "n/a"}</div>
+            <span class="pill">${statusFromRow(r)}</span>
+          </div>
+        `).join("");
+
+        const decayRows = (decay.decays || []);
+        document.getElementById("edgeDecay").innerHTML = decayRows.length
+          ? decayRows.map((r, i) => `
+            <div class="row">
+              <div class="market">${i+1}. ${r.market_name || "Unknown"}</div>
+              <div class="small">Reason: ${r.reason || "n/a"}</div>
+              <div class="small">Decay: ${r.decay_amount ?? "n/a"}</div>
+            </div>
+          `).join("")
+          : `<div class="small">No edge decay events right now.</div>`;
+      } catch (e) {
+        document.getElementById("status").textContent = "Failed to load history status";
+        document.getElementById("signalMemory").textContent = "Failed to load signal memory";
+        document.getElementById("edgeDecay").textContent = "Failed to load edge decay";
+      }
+
+      try {
+        const feed = await loadText("/feed-v2");
+        document.getElementById("feed").textContent = feed;
+      } catch (e) {
+        document.getElementById("feed").textContent = "Failed to load feed";
+      }
+
+      try {
+        const report = await loadText("/report");
+        document.getElementById("report").textContent = report;
+      } catch (e) {
+        document.getElementById("report").textContent = "Failed to load report";
+      }
+    }
+
+    main();
+    setInterval(main, REFRESH_MS);
+  </script>
+</body>
+</html>

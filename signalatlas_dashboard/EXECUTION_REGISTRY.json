@@ -1,0 +1,47 @@
+{
+  "timestamp": "2026-03-12T19:24:19.411346+00:00",
+  "count": 7,
+  "execution_modules": [
+    {
+      "name": "__init__",
+      "file": "polymarket_engine/execution/__init__.py",
+      "status": "present"
+    },
+    {
+      "name": "basket_executor",
+      "file": "polymarket_engine/execution/basket_executor.py",
+      "status": "present"
+    },
+    {
+      "name": "capital_allocator",
+      "file": "polymarket_engine/execution/capital_allocator.py",
+      "status": "present"
+    },
+    {
+      "name": "execution_optimizer",
+      "file": "polymarket_engine/execution/execution_optimizer.py",
+      "status": "present"
+    },
+    {
+      "name": "kill_switch",
+      "file": "polymarket_engine/execution/kill_switch.py",
+      "status": "present"
+    },
+    {
+      "name": "paper_executor",
+      "file": "polymarket_engine/execution/paper_executor.py",
+      "status": "present"
+    },
+    {
+      "name": "resolution_watcher",
+      "file": "polymarket_engine/execution/resolution_watcher.py",
+      "status": "present"
+    }
+  ],
+  "summary": {
+    "paper_execution_present": true,
+    "allocator_present": true,
+    "kill_switch_present": true,
+    "resolution_watcher_present": true
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "timestamp": "2026-09-26T09:42:42.727593+00:00",
+  "status": "canonical_active",
+  "api_file": "polymarket_engine/api_server.py",
+  "service_unit": "signalatlas-measurement-api.service",
+  "bind_host": "127.0.0.1",
+  "port": 8011,
+  "exposure": "localhost_only",
+  "mode": "read_only",
+  "backing_store": "analytics/market_measurements.sqlite3",
+  "health_artifact": "analytics/system_status.json",
+  "source_scope": {
+    "complete_universe": false,
+    "coverage": "partial_event_slice",
+    "role": "current measurement collection"
+  },
+  "routes_count": 11,
+  "routes": [
+    "@app.get(\"/\")",
+    "@app.get(\"/api/health\")",
+    "@app.get(\"/api/meta\")",
+    "@app.get(\"/api/markets\")",
+    "@app.get(\"/api/market/{market_id}\")",
+    "@app.get(\"/api/orderbook/{market_id}\")",
+    "@app.get(\"/api/measurements/{market_id}\")",
+    "@app.get(\"/api/forward-outcomes/{market_id}\")",
+    "@app.get(\"/api/resolution-status/{market_id}\")",
+    "@app.get(\"/api/resolution/{market_id}\")",
+    "@app.get(\"/api/resolutions\")"
+  ],
+  "allowed_capabilities": [
+    "read_measurement_health",
+    "read_api_metadata",
+    "read_latest_markets",
+    "read_market_snapshot",
+    "read_clob_measurement",
+    "read_market_history",
+    "read_forward_outcomes",
+    "read_resolution_status",
+    "read_market_resolution",
+    "list_market_resolutions"
+  ],
+  "excluded_capabilities": [
+    "shell_execution",
+    "trade_execution",
+    "pipeline_execution",
+    "capital_allocation",
+    "brain_decisioning",
+    "event_measurement_api_exposure",
+    "legacy_alpha_feed",
+    "legacy_radar",
+    "legacy_profit_simulation",
+    "legacy_tom_orchestration"
+  ],
+  "legacy_api": {
+    "file": "polymarket_engine/intelligence_api.py",
+    "status": "retired_fail_closed",
+    "former_port": 8011
+  },
+  "api_version": "2.1.0",
+  "resolution_scope": {
+    "complete_universe": false,
+    "coverage": "historically_observed_signalatlas_markets",
+    "role": "resolution tracking and immutable settlement truth"
+  }
+}

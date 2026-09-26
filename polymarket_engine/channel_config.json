@@ -1,0 +1,22 @@
+{
+  "daily_brief": {
+    "bot_token_env": "TG_BOT_TOKEN",
+    "chat_id_env": "TG_OPERATOR_CHAT_ID"
+  },
+  "tom_card": {
+    "bot_token_env": "TG_BOT_TOKEN",
+    "chat_id_env": "TG_OPERATOR_CHAT_ID"
+  },
+  "alpha_feed": {
+    "bot_token_env": "TG_BOT_TOKEN",
+    "chat_id_env": "TG_PRO_CHAT_ID"
+  },
+  "public_teaser": {
+    "bot_token_env": "TG_BOT_TOKEN",
+    "chat_id_env": "TG_PUBLIC_CHAT_ID"
+  },
+  "operator": {
+    "bot_token_env": "TG_BOT_TOKEN",
+    "chat_id_env": "TG_OPERATOR_CHAT_ID"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-09-25T17:10:09.556588+00:00",
+  "public_shell_port": 8020,
+  "pages_count": 12,
+  "pages": [
+    "signalatlas_dashboard/architecture.html",
+    "signalatlas_dashboard/brain.html",
+    "signalatlas_dashboard/clusters.html",
+    "signalatlas_dashboard/execution.html",
+    "signalatlas_dashboard/execution_v2.html",
+    "signalatlas_dashboard/heatmap.html",
+    "signalatlas_dashboard/history.html",
+    "signalatlas_dashboard/hub.html",
+    "signalatlas_dashboard/index.html",
+    "signalatlas_dashboard/ops.html",
+    "signalatlas_dashboard/radar.html",
+    "signalatlas_dashboard/terminal_v2.html"
+  ],
+  "known_pages": {
+    "terminal": "signalatlas_dashboard/index.html",
+    "history": "signalatlas_dashboard/history.html",
+    "ops": "signalatlas_dashboard/ops.html",
+    "heatmap": "signalatlas_dashboard/heatmap.html",
+    "clusters": "signalatlas_dashboard/clusters.html"
+  },
+  "canonical_api": {
+    "host": "127.0.0.1",
+    "port": 8011,
+    "exposure": "localhost_only",
+    "mode": "read_only",
+    "service_unit": "signalatlas-measurement-api.service"
+  }
+}

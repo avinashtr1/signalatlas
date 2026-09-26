@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>SignalAtlas Cluster Explorer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<style>
+:root{
+--bg:#071018;
+--card:#0d1722;
+--border:#183245;
+--text:#d7ffe0;
+--muted:#9ec5aa;
+--accent:#8fffb5;
+}
+
+body{
+margin:0;
+background:var(--bg);
+color:var(--text);
+font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+}
+
+.wrap{
+max-width:1200px;
+margin:auto;
+padding:20px;
+}
+
+.top{
+font-size:28px;
+font-weight:800;
+color:var(--accent);
+margin-bottom:10px;
+}
+
+.pills{
+display:flex;
+gap:8px;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+.pill{
+padding:5px 10px;
+border-radius:999px;
+background:#162636;
+font-size:12px;
+text-decoration:none;
+color:white;
+}
+
+.cluster{
+margin-bottom:28px;
+}
+
+.cluster-title{
+font-size:20px;
+font-weight:700;
+margin-bottom:12px;
+}
+
+.market{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:12px;
+padding:12px;
+margin-bottom:8px;
+}
+
+.alpha{
+color:#ffd166;
+font-size:12px;
+}
+
+.question{
+font-weight:700;
+margin-bottom:4px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<div class="top">SignalAtlas Cluster Explorer</div>
+
+<div class="pills">
+<a class="pill" href="/index.html">terminal</a>
+<a class="pill" href="/history.html">history</a>
+<a class="pill" href="/ops.html">ops</a>
+<a class="pill" href="/heatmap.html">heatmap</a>
+<a class="pill" href="/clusters.html">clusters</a>
+</div>
+
+<div id="clusters">Loading clusters...</div>
+
+</div>
+
+<script>
+
+const API="http://187.77.83.169:8012/api";
+
+async function loadJSON(path){
+const r=await fetch(API+path);
+return await r.json();
+}
+
+async function main(){
+
+const clusters=await loadJSON("/clusters");
+const mis=await loadJSON("/mispricing-live");
+
+const alphaMap={};
+
+for(const s of mis.signals){
+alphaMap[s.question]=s.alpha;
+}
+
+const html=clusters.clusters.map(c=>{
+
+const markets=c.top_markets
+.map(m=>{
+
+const q=m.question;
+const a=alphaMap[q]||0;
+
+return {q,a};
+
+})
+.sort((a,b)=>Math.abs(b.a)-Math.abs(a.a))
+.slice(0,20);
+
+return `
+<div class="cluster">
+
+<div class="cluster-title">
+${c.cluster} (${c.count})
+</div>
+
+${markets.map(m=>`
+<div class="market">
+<div class="question">${m.q}</div>
+<div class="alpha">alpha ${m.a.toFixed(3)}</div>
+</div>
+`).join("")}
+
+</div>
+`;
+
+}).join("");
+
+document.getElementById("clusters").innerHTML=html;
+
+}
+
+main();
+
+</script>
+
+</body>
+</html>

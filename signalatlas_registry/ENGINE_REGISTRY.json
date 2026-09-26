@@ -1,0 +1,715 @@
+{
+  "timestamp": "2026-09-26T09:14:48.180477+00:00",
+  "count": 137,
+  "canonical_measurement_pipeline": [
+    "polymarket_engine/market_raw_collector.py",
+    "polymarket_engine/orderbook_collector.py",
+    "polymarket_engine/outcome_engine.py",
+    "polymarket_engine/system_monitor.py",
+    "polymarket_engine/resolution_collector.py"
+  ],
+  "canonical_api": "polymarket_engine/api_server.py",
+  "legacy_retired": [
+    "polymarket_engine/intelligence_api.py",
+    "polymarket_engine/send_tom_card.py",
+    "polymarket_engine/alert_router.py",
+    "signalatlas_bridge/export_intel_snapshot.py"
+  ],
+  "engines": [
+    {
+      "name": "__init__",
+      "file": "polymarket_engine/__init__.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "adaptive_alpha_feed",
+      "file": "polymarket_engine/adaptive_alpha_feed.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "adaptive_composite_score",
+      "file": "polymarket_engine/adaptive_composite_score.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "adaptive_weight_trainer",
+      "file": "polymarket_engine/adaptive_weight_trainer.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "adaptive_weighting",
+      "file": "polymarket_engine/adaptive_weighting.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "agent_queries",
+      "file": "polymarket_engine/agent_queries.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "alert_router",
+      "file": "polymarket_engine/alert_router.py",
+      "status": "retired_fail_closed"
+    },
+    {
+      "name": "alpha_alert_engine",
+      "file": "polymarket_engine/alpha_alert_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "alpha_feed_generator",
+      "file": "polymarket_engine/alpha_feed_generator.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "alpha_fusion_engine",
+      "file": "polymarket_engine/alpha_fusion_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "alpha_leaderboard",
+      "file": "polymarket_engine/alpha_leaderboard.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "alpha_quality_scoring",
+      "file": "polymarket_engine/alpha_quality_scoring.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "api_server",
+      "file": "polymarket_engine/api_server.py",
+      "status": "canonical_api"
+    },
+    {
+      "name": "archive_engine",
+      "file": "polymarket_engine/archive_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "auto_settlement_scanner",
+      "file": "polymarket_engine/auto_settlement_scanner.py",
+      "status": "present_unclassified",
+      "note": "Non-canonical legacy/analysis module. Must not supply canonical market-resolution truth or resolution timestamps."
+    },
+    {
+      "name": "build_resolution_ledger",
+      "file": "polymarket_engine/build_resolution_ledger.py",
+      "status": "present_unclassified",
+      "note": "Non-canonical legacy/analysis module. Must not supply canonical market-resolution truth or resolution timestamps."
+    },
+    {
+      "name": "calibration_runner",
+      "file": "polymarket_engine/calibration_runner.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "change_detector",
+      "file": "polymarket_engine/change_detector.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "cross_market_correlation",
+      "file": "polymarket_engine/cross_market_correlation.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "cross_market_engine",
+      "file": "polymarket_engine/cross_market_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "cross_market_lag_detector",
+      "file": "polymarket_engine/cross_market_lag_detector.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "cross_market_lead_lag_engine",
+      "file": "polymarket_engine/cross_market_lead_lag_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "daily_brief",
+      "file": "polymarket_engine/daily_brief.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "daily_summary",
+      "file": "polymarket_engine/daily_summary.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "dashboard",
+      "file": "polymarket_engine/dashboard.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "desk_export",
+      "file": "polymarket_engine/desk_export.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "edge_decay_engine",
+      "file": "polymarket_engine/edge_decay_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "edge_decay_monitor",
+      "file": "polymarket_engine/edge_decay_monitor.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "ev_engine",
+      "file": "polymarket_engine/ev_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "execution_timing_engine",
+      "file": "polymarket_engine/execution_timing_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "executive_brief",
+      "file": "polymarket_engine/executive_brief.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "exit_engine",
+      "file": "polymarket_engine/exit_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "feed_cooldown_engine",
+      "file": "polymarket_engine/feed_cooldown_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "feed_engine",
+      "file": "polymarket_engine/feed_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "feed_v2_formatter",
+      "file": "polymarket_engine/feed_v2_formatter.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "hourly_summary",
+      "file": "polymarket_engine/hourly_summary.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "intelligence_api",
+      "file": "polymarket_engine/intelligence_api.py",
+      "status": "retired_fail_closed"
+    },
+    {
+      "name": "intelligence_report_engine",
+      "file": "polymarket_engine/intelligence_report_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "learning_engine",
+      "file": "polymarket_engine/learning_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "liquidity_collapse_detector",
+      "file": "polymarket_engine/liquidity_collapse_detector.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "liquidity_collapse_engine",
+      "file": "polymarket_engine/liquidity_collapse_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "liquidity_collapse_v2",
+      "file": "polymarket_engine/liquidity_collapse_v2.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "liquidity_vacuum_engine",
+      "file": "polymarket_engine/liquidity_vacuum_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "liquidity_vacuum_proxy_engine",
+      "file": "polymarket_engine/liquidity_vacuum_proxy_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "liquidity_vacuum_v2",
+      "file": "polymarket_engine/liquidity_vacuum_v2.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "liquidity_vacuum_v2_alert_engine",
+      "file": "polymarket_engine/liquidity_vacuum_v2_alert_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "liquidity_vacuum_v2_engine",
+      "file": "polymarket_engine/liquidity_vacuum_v2_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "live_paper_loop",
+      "file": "polymarket_engine/live_paper_loop.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "mark_to_market",
+      "file": "polymarket_engine/mark_to_market.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "market_bucket_scoring",
+      "file": "polymarket_engine/market_bucket_scoring.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "market_quality_gate",
+      "file": "polymarket_engine/market_quality_gate.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "market_raw_collector",
+      "file": "polymarket_engine/market_raw_collector.py",
+      "status": "canonical_measurement"
+    },
+    {
+      "name": "market_regime_detector",
+      "file": "polymarket_engine/market_regime_detector.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "market_regime_engine",
+      "file": "polymarket_engine/market_regime_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "market_selector",
+      "file": "polymarket_engine/market_selector.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "market_snapshot_engine",
+      "file": "polymarket_engine/market_snapshot_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "market_state_cache",
+      "file": "polymarket_engine/market_state_cache.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "memory_engine",
+      "file": "polymarket_engine/memory_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "microstructure_engine",
+      "file": "polymarket_engine/microstructure_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "microstructure_intelligence",
+      "file": "polymarket_engine/microstructure_intelligence.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "mispricing_engine",
+      "file": "polymarket_engine/mispricing_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "module_scoring",
+      "file": "polymarket_engine/module_scoring.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "momentum_break_engine",
+      "file": "polymarket_engine/momentum_break_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "mtm_dashboard",
+      "file": "polymarket_engine/mtm_dashboard.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "narrative_cluster_engine",
+      "file": "polymarket_engine/narrative_cluster_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "operator_report",
+      "file": "polymarket_engine/operator_report.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "opportunity_lifecycle",
+      "file": "polymarket_engine/opportunity_lifecycle.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "opportunity_radar",
+      "file": "polymarket_engine/opportunity_radar.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "opportunity_ranker",
+      "file": "polymarket_engine/opportunity_ranker.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "opportunity_score_engine",
+      "file": "polymarket_engine/opportunity_score_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "orderbook_collector",
+      "file": "polymarket_engine/orderbook_collector.py",
+      "status": "canonical_measurement"
+    },
+    {
+      "name": "orderbook_imbalance_engine",
+      "file": "polymarket_engine/orderbook_imbalance_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "outcome_engine",
+      "file": "polymarket_engine/outcome_engine.py",
+      "status": "canonical_measurement"
+    },
+    {
+      "name": "outcome_entry",
+      "file": "polymarket_engine/outcome_entry.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "performance_analytics",
+      "file": "polymarket_engine/performance_analytics.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "performance_engine",
+      "file": "polymarket_engine/performance_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "portfolio_allocator",
+      "file": "polymarket_engine/portfolio_allocator.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "portfolio_allocator_v2",
+      "file": "polymarket_engine/portfolio_allocator_v2.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "premium_feed_formatter",
+      "file": "polymarket_engine/premium_feed_formatter.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "premium_signal_card",
+      "file": "polymarket_engine/premium_signal_card.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "probability_drift_engine",
+      "file": "polymarket_engine/probability_drift_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "probability_repricing_engine",
+      "file": "polymarket_engine/probability_repricing_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "probability_shock_detector",
+      "file": "polymarket_engine/probability_shock_detector.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "probability_velocity",
+      "file": "polymarket_engine/probability_velocity.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "profit_simulator",
+      "file": "polymarket_engine/profit_simulator.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "public_feed_formatter",
+      "file": "polymarket_engine/public_feed_formatter.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "public_teaser_feed",
+      "file": "polymarket_engine/public_teaser_feed.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "radar_alert_engine",
+      "file": "polymarket_engine/radar_alert_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "radar_engine",
+      "file": "polymarket_engine/radar_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "regime_adaptive_weights",
+      "file": "polymarket_engine/regime_adaptive_weights.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "regime_engine",
+      "file": "polymarket_engine/regime_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "repricing_alert_engine",
+      "file": "polymarket_engine/repricing_alert_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "repricing_engine",
+      "file": "polymarket_engine/repricing_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "reputation_engine",
+      "file": "polymarket_engine/reputation_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "reputation_export",
+      "file": "polymarket_engine/reputation_export.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "resolution_arbitrage_detector",
+      "file": "polymarket_engine/resolution_arbitrage_detector.py",
+      "status": "present_unclassified",
+      "note": "Non-canonical legacy/analysis module. Must not supply canonical market-resolution truth or resolution timestamps."
+    },
+    {
+      "name": "resolution_arbitrage_engine",
+      "file": "polymarket_engine/resolution_arbitrage_engine.py",
+      "status": "present_unclassified",
+      "note": "Non-canonical legacy/analysis module. Must not supply canonical market-resolution truth or resolution timestamps."
+    },
+    {
+      "name": "resolution_arbitrage_v2",
+      "file": "polymarket_engine/resolution_arbitrage_v2.py",
+      "status": "present_unclassified",
+      "note": "Non-canonical legacy/analysis module. Must not supply canonical market-resolution truth or resolution timestamps."
+    },
+    {
+      "name": "resolution_intelligence",
+      "file": "polymarket_engine/resolution_intelligence.py",
+      "status": "present_unclassified",
+      "note": "Non-canonical legacy/analysis module. Must not supply canonical market-resolution truth or resolution timestamps."
+    },
+    {
+      "name": "resolution_risk_model",
+      "file": "polymarket_engine/resolution_risk_model.py",
+      "status": "present_unclassified",
+      "note": "Non-canonical legacy/analysis module. Must not supply canonical market-resolution truth or resolution timestamps."
+    },
+    {
+      "name": "resolution_tracking",
+      "file": "polymarket_engine/resolution_tracking.py",
+      "status": "present_unclassified",
+      "note": "Non-canonical legacy/analysis module. Must not supply canonical market-resolution truth or resolution timestamps."
+    },
+    {
+      "name": "send_alpha_feed",
+      "file": "polymarket_engine/send_alpha_feed.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "send_daily_brief",
+      "file": "polymarket_engine/send_daily_brief.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "send_intelligence_feed",
+      "file": "polymarket_engine/send_intelligence_feed.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "send_pro_feed",
+      "file": "polymarket_engine/send_pro_feed.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "send_pro_feed_v2",
+      "file": "polymarket_engine/send_pro_feed_v2.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "send_pro_feed_v2_if_changed",
+      "file": "polymarket_engine/send_pro_feed_v2_if_changed.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "send_public_feed",
+      "file": "polymarket_engine/send_public_feed.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "send_public_teaser",
+      "file": "polymarket_engine/send_public_teaser.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "send_shock_alerts",
+      "file": "polymarket_engine/send_shock_alerts.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "send_tom_brief",
+      "file": "polymarket_engine/send_tom_brief.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "send_tom_card",
+      "file": "polymarket_engine/send_tom_card.py",
+      "status": "retired_fail_closed"
+    },
+    {
+      "name": "settlement_updater",
+      "file": "polymarket_engine/settlement_updater.py",
+      "status": "present_unclassified",
+      "note": "Non-canonical legacy/analysis module. Must not supply canonical market-resolution truth or resolution timestamps."
+    },
+    {
+      "name": "shock_alert_engine",
+      "file": "polymarket_engine/shock_alert_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "shock_detector",
+      "file": "polymarket_engine/shock_detector.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "shock_detector_engine",
+      "file": "polymarket_engine/shock_detector_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "signal_confidence",
+      "file": "polymarket_engine/signal_confidence.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "signal_detection_logger",
+      "file": "polymarket_engine/signal_detection_logger.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "signal_interactions",
+      "file": "polymarket_engine/signal_interactions.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "signal_memory",
+      "file": "polymarket_engine/signal_memory.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "signal_memory_analytics",
+      "file": "polymarket_engine/signal_memory_analytics.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "signal_momentum",
+      "file": "polymarket_engine/signal_momentum.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "signal_reputation_full",
+      "file": "polymarket_engine/signal_reputation_full.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "signal_state_change",
+      "file": "polymarket_engine/signal_state_change.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "smoke_test",
+      "file": "polymarket_engine/smoke_test.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "spread_explosion_engine",
+      "file": "polymarket_engine/spread_explosion_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "stale_repricing_detector",
+      "file": "polymarket_engine/stale_repricing_detector.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "state_restore",
+      "file": "polymarket_engine/state_restore.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "system_monitor",
+      "file": "polymarket_engine/system_monitor.py",
+      "status": "canonical_measurement"
+    },
+    {
+      "name": "telegram_alpha_broadcaster",
+      "file": "polymarket_engine/telegram_alpha_broadcaster.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "tier_engine",
+      "file": "polymarket_engine/tier_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "top_opportunities_engine",
+      "file": "polymarket_engine/top_opportunities_engine.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "universe_cleaner",
+      "file": "polymarket_engine/universe_cleaner.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "universe_scanner",
+      "file": "polymarket_engine/universe_scanner.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "validation_runner",
+      "file": "polymarket_engine/validation_runner.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "weekly_brief",
+      "file": "polymarket_engine/weekly_brief.py",
+      "status": "present_unclassified"
+    },
+    {
+      "name": "resolution_collector",
+      "file": "polymarket_engine/resolution_collector.py",
+      "status": "canonical_measurement",
+      "note": "Canonical Polygon CTF resolution truth collector. Gamma supplies identity/outcome ordering only; CTF payout state is settlement authority. ConditionResolution event evidence is required before resolution_time_valid may become true."
+    }
+  ]
+}

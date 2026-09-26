@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-03-12T20:31:03.384819+00:00",
+  "data": {
+    "timestamp": "2026-03-12T20:26:37.731557+00:00",
+    "system_status": "HEALTHY",
+    "signals_detected": 1071,
+    "signals_executed": 3,
+    "signals_resolved": 0,
+    "win_rate": 0.0,
+    "realized_pnl": 0.0,
+    "deploy_now_count": 2,
+    "shock_count": 0,
+    "drift_count": 0,
+    "collapse_count": 0,
+    "total_allocated_capital": 1683.15,
+    "top_opportunity": {
+      "trade_id": "68b1e9b1-a7f1-4642-a148-aa2d075eedd5",
+      "timestamp": "2026-03-09T16:00:06.250932+00:00",
+      "market_id": "564218",
+      "market_name": "Will the San Antonio Spurs win the NBA Western Conference Finals?",
+      "bucket_group_title": "NBA Western Conference Champion ",
+      "side": "SHORT",
+      "entry_price": 0.2285,
+      "structural_edge": 0.0734999999999999,
+      "total_edge": 0.1334999999999999,
+      "expected_net_edge_pct": 11.88299999999999,
+      "microstructure_score": 0.05,
+      "vacuum_score": 0.2,
+      "expected_fill_probability": 0.98,
+      "allocated_capital": 231.45,
+      "rank": 1
+    },
+    "recommendations": [
+      "No signals resolved yet \u2014 focus on data accumulation and avoid over-interpreting early PnL.",
+      "2 deploy-now opportunities available \u2014 prioritize monitoring highest-ranked names."
+    ]
+  }
+}
