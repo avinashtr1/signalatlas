@@ -1,241 +1,823 @@
-# SignalAtlas Master Roadmap
+# SignalAtlas Master Roadmap v2.0
 
-## Vision
+**Canonical date:** 26 September 2026  
+**Status:** Supersedes the original SignalAtlas Master Roadmap
 
-SignalAtlas = prediction-market intelligence infrastructure.
+## North Star
 
-Long-term product:
+SignalAtlas is prediction-market intelligence infrastructure.
 
-70% Bloomberg Terminal
-+
-30% Nansen Analytics
+The long-term product is a Bloomberg + Nansen-style intelligence platform for prediction markets, serving:
 
-for prediction markets.
+- professional traders
+- research desks
+- market makers
+- funds
+- AI agents
+- analytics platforms
 
-Primary machine customer:
+SignalAtlas must earn the right to produce intelligence by first establishing trustworthy measurement, outcomes, resolution truth and executable economics.
 
-AI agents
+VelocityAtlas remains a separate permissioned execution layer.
 
-Human operators remain important, but APIs and deterministic schemas are first-class architecture.
+EdgeAtlas remains the operator and product interface.
 
 ---
 
-# PHASE 1 — Measurement Foundation
+## Core Architecture
 
-Status:
+The canonical dependency chain is:
 
-ACTIVE / FOUNDATION BUILT
+**Data → Measurement → Outcomes / Resolution Truth → Intelligence → Brain → Risk / Execution → API / Distribution**
+
+Operationally, until calibrated alpha exists:
+
+**Data Truth → Measurement → Forward Outcomes → Resolution Truth → Health → Read-Only API → Research**
+
+No layer may manufacture information that the layer below it has not established.
+
+---
+
+## Permanent Engineering Principles
+
+### Measurement before modeling
+
+Do not infer alpha before proving the underlying measurements.
+
+### Executable economics before signal claims
+
+A theoretical probability difference is not edge.
+
+Canonical economic edge must be based on:
+
+**same-share executable PnL − measured execution costs − applicable fees**
+
+### Prospective evidence before production permission
+
+Historical patterns may generate hypotheses.
+
+They do not automatically authorize Brain decisions.
+
+### Brain is fail-closed
+
+No calibrated model means:
+
+**reject**
+
+not:
+
+**guess**
+
+### CLOB is execution truth
+
+Gamma provides market discovery and metadata.
+
+Executable prices and depth come from the actual order book.
+
+### Settlement truth comes from settlement infrastructure
+
+Market metadata does not substitute for on-chain resolution state.
+
+### SignalAtlas and VelocityAtlas remain separated
+
+SignalAtlas measures and reasons.
+
+VelocityAtlas executes only through explicit permissions and hard risk constraints.
+
+### UI contains no business logic
+
+EdgeAtlas presents canonical system objects and state.
+
+### Every production component must be recoverable
+
+Source, database, configuration, dependencies and services must be reproducible from documented artifacts.
+
+---
+
+## Phase 0 — Truth & Platform Foundation
+
+**Status: MOSTLY COMPLETE / CERTIFIED**
+
+This phase was missing from the original roadmap and has become the foundation for everything that follows.
+
+### 0.1 Canonical Market Data
 
 Completed:
 
-- repaired Polymarket adapter
+- Polymarket Gamma ingestion
+- canonical market normalization
+- CanonicalMarket
 - canonical snapshot measurement
-- real Gamma top-of-book semantics
-- real CLOB depth collection
-- durable SQLite measurement history
-- 1h / 6h / 24h forward outcome framework
-- measurement health
-- canonical Polygon CTF resolution truth — v1 certified / frozen
-- canonical read-only OpenAPI
-- legacy heuristic API retired
-- old paper runtime retired
-- Brain frozen fail-closed
+- invalid pseudo-quote sanitization
+- explicit partial-universe scope
+- clean 15-minute measurement buckets
 
-Current requirement:
+Canonical modules:
 
-accumulate clean forward data before rebuilding alpha.
+- `polymarket_adapter.py`
+- `market_raw_collector.py`
+
+### 0.2 Executable Order-Book Measurement
+
+Completed:
+
+- public Polymarket CLOB collection
+- executable best bid / ask
+- book spread
+- real depth
+- fixed-dollar VWAP measurement
+- collector health and coverage
+- Gamma/CLOB bucket alignment
+
+Canonical module:
+
+- `orderbook_collector.py`
+
+### 0.3 Forward Outcome Truth
+
+Completed:
+
+- 1h
+- 6h
+- 24h
+
+forward outcome framework.
+
+Rules:
+
+- exact target buckets
+- bounded grace window
+- missing data remains missing
+- no fabricated labels
+
+Canonical module:
+
+- `outcome_engine.py`
+
+### 0.4 Resolution Truth
+
+**CERTIFIED / FROZEN**
+
+Completed:
+
+Gamma:
+
+- market identity / condition mapping / outcome order
+
+Polygon CTF:
+
+- settlement authority
+
+Canonical state separation:
+
+- `resolution_watch`
+- `market_resolutions`
+
+No inferred historical resolution timestamps.
+
+No mutable truth once an immutable resolution has been certified.
+
+### 0.5 Measurement Health
+
+Completed:
+
+- collection freshness
+- missing buckets
+- CLOB collection state
+- Gamma/CLOB alignment
+- forward-outcome status
+- factual database health
+
+Canonical module:
+
+- `system_monitor.py`
+
+### 0.6 Execution-Economics Calibration
+
+**COMPLETE / FROZEN**
+
+Established that broad taker directional trading is not supported by current evidence after actual execution costs.
+
+Result:
+
+**Brain remains FAIL-CLOSED.**
+
+Future research must prove executable-net economics rather than theoretical price movement.
+
+### 0.7 Canonical Read-Only API
+
+**API v2.1.0 — CERTIFIED / FROZEN**
+
+Architecture:
+
+**SQLite → deterministic canonical objects → REST/OpenAPI → future SDK/MCP/agents**
+
+Current properties:
+
+- read-only
+- deterministic
+- explicit universe scope
+- explicit resolution scope
+- no Brain output
+- no execution
+- no capital allocation
+- no experimental event scoring
+
+### 0.8 EdgeAtlas Platform Shell
+
+Completed structurally:
+
+- Markets
+- Market detail
+- Ops
+- Architecture
+- Velocity datasets
+- health/state visualization
+- registry-driven system metadata
+
+Legacy dashboards are retired.
+
+EdgeAtlas remains presentation-only.
+
+### 0.9 Data Durability & Disaster Recovery
+
+**CERTIFIED / FROZEN**
+
+Completed:
+
+- WAL-safe SQLite backups
+- hash manifests
+- integrity validation
+- compressed retention
+- autonomous VPS backups
+- off-host Windows recovery points
+- PC restore drill
+- machine recovery pack
+- source/dependency/service/config snapshots
+
+### 0.10 Source Control & Release Integrity
+
+**CERTIFIED / FROZEN**
+
+Certified release:
+
+`1942254a9f6f76204d216c1a40b214930d4920e7`
+
+Tag:
+
+`signalatlas-certified-2026-09-26`
+
+Completed:
+
+- generated artifacts removed from Git
+- virtualenv removed from Git
+- logs/backups excluded
+- reproducible API requirements
+- legacy paths retired
+- complete new Git root
+- historical contaminated ancestry disconnected
+- full-tree secret scan
+- dedicated GitHub deploy key
+- canonical main reset to certified root
+
+### Phase 0 Remaining Gate
+
+Before declaring Phase 0 fully closed:
+
+**Clean-VPS Rebuild Rehearsal v1**
+
+Prove a clean machine can reconstruct SignalAtlas from:
+
+- certified Git root
+- off-host database backup
+- recovery assets
+- credential recovery procedure
+
+Also revoke/rotate any legacy credential already considered exposed.
 
 ---
 
-# PHASE 2 — Calibrated Intelligence
+## Phase 1 — Calibrated Intelligence Research
 
-Status:
+**Status: ACTIVE NEXT RESEARCH PHASE**
 
-PENDING DATA
+Goal:
 
-Candidate research areas:
+Turn trustworthy measurements into statistically and economically defensible intelligence.
 
-- directional probability models
+This phase does not begin by re-enabling old signal engines.
+
+It begins with evidence.
+
+### 1.1 Event Measurement Study
+
+Current experiment:
+
+**prospective / frozen**
+
+Checkpoint:
+
+approximately **29 September 2026**
+
+Study:
+
+- event-level market structure
+- dispersion
+- probability concentration
+- two-sidedness
+- liquidity
+- depth
+- imbalance
+- CLOB coverage
+- short-horizon changes
+
+No tuning during accumulation.
+
+### 1.2 Canonical Universe Expansion
+
+Universe Discovery Audit v1 is complete.
+
+Observed discovery scale already proves the production universe cannot simply CLOB-poll everything.
+
+Future architecture:
+
+**Gamma Discovery → Canonical Universe Index → Lifecycle / Identity Eligibility → CLOB Verification Scheduler → HOT / WARM / COLD Universes → Measurement**
+
+Important correction:
+
+Gamma `two_sided` must not permanently determine CLOB eligibility.
+
+The CLOB itself must establish:
+
+- TWO_SIDED
+- ONE_SIDED
+- NO_BOOK
+
+Production universe changes remain frozen until the event experiment checkpoint.
+
+### 1.3 Intelligence Research Families
+
+Research may examine:
+
+- structural mispricing
+- liquidity dislocations
 - microstructure
-- liquidity / execution quality
-- probability drift / repricing
-- standard NegRisk basket economics
+- resolution-state effects
 - cross-market relationships
-- narrative clustering
+- narrative/event structure
+- probability repricing
+- event-level regimes
 
-Requirement:
+Existing historical engines are hypothesis sources—not production truth.
 
-models must be evidence-driven and calibrated against collected outcomes.
+### 1.4 Research Standards
 
-Execution-sensitive research must use net executable economics: same-share quantity, measured book depth, and applicable market-specific fees. Gross price movement alone is not a valid economic target.
+Every candidate signal must answer:
 
-No heuristic may be promoted to production alpha without validation.
+- What was known at decision time?
+- What executable price was actually available?
+- What happened prospectively afterward?
+- What costs apply?
+- Does the effect persist out of sample?
+- Does it survive across relevant regimes?
 
----
+### Phase 1 Exit Gate
 
-# PHASE 3 — Brain / Portfolio Intelligence
+A candidate intelligence model may progress only when there is enough evidence to establish:
 
-Status:
+- clear causal measurement definition
+- no look-ahead contamination
+- sufficient prospective sample
+- repeatability
+- economically meaningful effect
+- executable-net advantage
+- bounded failure modes
 
-FROZEN
+Until then:
 
-Future responsibilities:
-
-- signal evaluation
-- confidence calibration
-- opportunity ranking
-- portfolio allocation
-- risk-aware capital budgeting
-
-Current Brain remains fail-closed until calibrated intelligence exists.
-
----
-
-# PHASE 4 — Operator Terminal
-
-Professional prediction-market workstation.
-
-Potential surfaces:
-
-- market explorer
-- measurement history
-- orderbook / liquidity analytics
-- intelligence views
-- structural-market analysis
-- portfolio / execution monitoring
-
-UI remains downstream of APIs.
+**no Brain permission**
 
 ---
 
-# PHASE 5 — Agent Intelligence API
+## Phase 2 — Brain Certification & Shadow Decisions
 
-Status:
+**Status: NOT STARTED**
 
-FOUNDATION ACTIVE
+Goal:
 
-Expose deterministic prediction-market intelligence to AI agents.
+Convert individually certified intelligence models into deterministic decision objects.
 
-Currently implemented:
+The Brain should not become a single global model.
 
-read markets
-read measurements
-read CLOB state
-read forward-outcome history
-read API authority / freshness metadata
-read resolution tracking status
-read immutable on-chain settlement truth
-read resolution event evidence when available
+Permissions should be granular.
 
-Not yet available:
+Examples:
 
-calibrated signals
-event-measurement API exposure
+- model
+- market class
+- event class
+- horizon
+- liquidity regime
+- execution mode
 
-Later:
+Development sequence:
 
-submit execution intents
-request simulations
-query portfolio state
+**Research model → offline evaluation → prospective shadow decisions → monitored paper decisions → certified strategy permission**
 
-Agents do not receive unrestricted trading authority.
+Canonical Brain output eventually includes:
 
----
+- decision
+- direction
+- expected edge
+- evidence provenance
+- confidence / uncertainty
+- market regime
+- execution assumptions
+- rejection reason
 
-# PHASE 6 — Distribution / Commercial Intelligence
+Every decision must be explainable from canonical inputs.
 
-Possible products:
+### Phase 2 Exit Gate
 
-SignalAtlas Radar
-private alpha feed
-professional API
-institutional terminal
-research feeds
+No strategy progresses until:
 
-Commercial distribution follows validated intelligence.
-
----
-
-# PHASE 7 — Strategy Infrastructure
-
-Validated strategies may become deployable through VelocityAtlas.
-
-Possible models:
-
-directional
-structural basket
-cross-market
-execution / liquidity
-event-driven
-
-All execution remains permissioned and risk-controlled.
+- shadow behavior matches intended logic
+- prospective performance validates research
+- executable economics remain positive
+- failure states fail closed
+- attribution is available
+- model/version provenance is recorded
 
 ---
 
-# PHASE 8 — Agent Execution Layer
+## Phase 3 — Paper Portfolio & Risk Validation
+
+**Status: FUTURE**
+
+This replaces the old assumption that merely producing a signal should automatically create a paper trade.
+
+Only certified Brain strategies enter this phase.
+
+Goal:
+
+Measure interaction between multiple individually-valid opportunities.
+
+Research:
+
+- portfolio concentration
+- correlated event risk
+- strategy overlap
+- liquidity limits
+- sizing
+- drawdown behavior
+- execution timing
+- position lifecycle
+- resolution exposure
+
+Canonical outputs:
+
+`CanonicalTrade`
+
+plus portfolio and strategy attribution.
+
+Paper results remain simulation evidence, not automatically live evidence.
+
+---
+
+## Phase 4 — Operator Intelligence Terminal
+
+**Status: PLATFORM SHELL ALREADY BUILT / INTELLIGENCE ACTIVATION PENDING**
+
+EdgeAtlas already supplies much of the infrastructure.
+
+Once certified intelligence exists, the terminal activates professional decision-support surfaces.
+
+Target capabilities:
+
+- live canonical markets
+- executable book state
+- event intelligence
+- certified opportunities
+- signal provenance
+- signal confidence
+- forward-outcome evidence
+- resolution state
+- cross-market relationships
+- market/event regime
+- historical model performance
+- strategy state
+- system/data health
+
+The terminal should answer:
+
+- What is happening?
+- Why does SignalAtlas think it matters?
+- What evidence supports it?
+- What could invalidate it?
+- What is executable now?
+
+This is the Bloomberg side of the product.
+
+Market/entity/network analytics become the Nansen side.
+
+---
+
+## Phase 5 — Intelligence API & Agent Read Layer
+
+**Status: TRANSPORT FOUNDATION COMPLETE / INTELLIGENCE CONTENT PENDING**
+
+The infrastructure exists ahead of schedule.
+
+Future work is not another API rewrite.
+
+It is controlled exposure of certified intelligence.
+
+Potential objects:
+
+- markets
+- measurements
+- books
+- events
+- resolutions
+- regimes
+- signals
+- relationships
+- opportunity state
+- model evidence
+
+Distribution:
+
+**REST/OpenAPI → SDK → MCP / agent tools**
+
+Agents receive deterministic structured information.
+
+Agents do not bypass SignalAtlas validation.
+
+---
+
+## Phase 6 — Commercial Intelligence Products
+
+**Status: DEFERRED UNTIL INTELLIGENCE EXISTS**
+
+The original roadmap moved rapidly toward Telegram alpha feeds.
+
+That order is retired.
+
+Commercialization can begin at multiple levels.
+
+### Data / Intelligence Products
+
+Can eventually include:
+
+- professional terminal
+- API access
+- market/event intelligence
+- resolution intelligence
+- historical datasets
+- research analytics
+- agent feeds
+
+### Certified Alpha Products
+
+Only if evidence justifies them:
+
+- opportunity feeds
+- strategy intelligence
+- premium alerts
+- professional research reports
+
+The product must never label ordinary measurements as alpha simply because they are interesting.
+
+Initial revenue objective may remain:
+
+**$10k MRR**
+
+but revenue must validate product usefulness—not pressure the research layer into premature signal production.
+
+---
+
+## Phase 7 — VelocityAtlas Permissioned Execution
+
+**Status: INFRASTRUCTURE EXISTS / LIVE DISABLED**
+
+VelocityAtlas remains independent from SignalAtlas.
+
+SignalAtlas can eventually emit:
+
+**intent**
+
+VelocityAtlas controls:
+
+**execution permission**
+
+No AI agent, frontend or SignalAtlas model can bypass Velocity risk controls.
+
+Before any funded deployment:
+
+- credentials rotated
+- signer/security path audited
+- order-book execution path audited
+- fail-open risks eliminated
+- exchange-truth reconciliation validated
+- kill switches tested
+- hard capital limits tested
+- tiny-notional canary deployment
+- rollback tested
+
+Progression:
+
+**shadow → paper → dry-run → tiny live → bounded live → controlled scaling**
+
+Never:
+
+**research model → unrestricted live capital**
+
+---
+
+## Phase 8 — Strategy Vault & Capital Scaling
+
+**Status: FUTURE**
+
+Only proven live strategies qualify.
+
+Capabilities may include:
+
+- strategy vaults
+- capital allocation
+- risk budgeting
+- performance attribution
+- capacity estimation
+- strategy retirement
+- investor/fund structures
+- performance-fee models
+
+Scaling is evidence driven.
+
+Capital increases only when:
+
+- live economics remain consistent
+- execution capacity supports it
+- drawdowns remain inside envelope
+- monitoring and recovery are mature
+
+---
+
+## Phase 9 — Agent Intelligence & Autonomous Market Infrastructure
+
+**Status: LONG-TERM**
+
+This becomes the mature form of the original Agent Intelligence Layer.
+
+SignalAtlas becomes an intelligence substrate used by humans and autonomous systems.
+
+Agents can:
+
+- discover markets
+- query market state
+- query event structure
+- inspect resolution state
+- compare related markets
+- consume certified intelligence
+- request execution intents
+- inspect performance
+- perform research workflows
+
+Agents cannot:
+
+- redefine truth
+- override model certification
+- bypass risk limits
+- bypass VelocityAtlas
+- alter immutable resolution history
+- manufacture missing data
+
+Long-term architecture:
+
+**SignalAtlas = intelligence authority**
+
+**VelocityAtlas = permissioned execution authority**
+
+**EdgeAtlas = human operator interface**
+
+**SDK/MCP/API = machine interface**
+
+---
+
+## Cross-Phase Certification Model
+
+From now on, major components should move through explicit lifecycle states:
+
+**EXPERIMENTAL → MEASURED → VALIDATED → CERTIFIED → FROZEN**
+
+A frozen component changes only through a new versioned workstream with evidence explaining why.
+
+Examples already following this model:
+
+- Resolution Truth v1 — CERTIFIED / FROZEN
+- API v2.1.0 — CERTIFIED / FROZEN
+- Execution Economics — COMPLETE / FROZEN
+- Data Durability & DR v1 — CERTIFIED / FROZEN
+- Source Control & Release Integrity v1 — CERTIFIED / FROZEN
+
+This should become permanent SignalAtlas governance.
+
+---
+
+## Current Position — 26 September 2026
+
+### Foundation
+
+**~90–95% complete**
+
+Strongest areas:
+
+- canonical measurement
+- CLOB truth
+- forward outcomes
+- resolution truth
+- deterministic API
+- EdgeAtlas infrastructure
+- backup / DR
+- source integrity
+- architecture boundaries
+
+### Intelligence
+
+**Research stage**
+
+No production directional alpha is currently certified.
+
+### Brain
+
+**FAIL-CLOSED**
+
+Correct state.
+
+### Execution
 
 SignalAtlas:
 
-intelligence infrastructure
+**NONE**
 
 VelocityAtlas:
 
-permissioned execution infrastructure
+**isolated / live disabled**
 
-Agent flow:
+### Product
 
-observe
-→ reason
-→ submit intent
-→ validate risk
-→ validate execution
-→ execute
-→ reconcile
-→ audit
+EdgeAtlas:
 
----
+**operator platform shell available**
 
-# Current Moat Being Built
+Certified intelligence surfaces:
 
-The immediate moat is not a dashboard or heuristic signal feed.
+**pending**
 
-It is:
+### Commercialization
 
-clean historical market state
+**not yet activated**
 
-+
-real execution-quality CLOB data
+### Immediate next dependency
 
-+
-forward outcome labels
-
-+
-strict structural semantics
-
-+
-fail-closed intelligence
-
-+
-agent-ready deterministic interfaces
-
----
-
-# Current Priority
-
-Do not optimize presentation.
-
-Do not revive legacy alpha.
-
-Do not re-enable the old feed.
-
-Do not modify the Brain without evidence.
-
-Collect clean data first.
+**Clean-VPS Rebuild Rehearsal v1**
 
 Then:
 
-measure
-→ diagnose
-→ model
-→ validate
-→ deploy
+**Sep-29 Event Measurement checkpoint**
+
+Then:
+
+**Universe Architecture + Phase-1 intelligence research**
+
+---
+
+## Near-Term Execution Order
+
+For the coming work, lock the sequence as:
+
+1. Clean-VPS Rebuild Rehearsal v1
+2. Event Measurement 72h analysis
+3. Decide event-measurement continuation / schema stability
+4. Canonical Universe Index + CLOB verification architecture
+5. Begin Phase-1 prospective intelligence research
+6. Certify or reject candidate signal families individually
+7. Only then open Brain shadow decisions
+8. Activate corresponding EdgeAtlas intelligence surfaces
+9. Expose certified intelligence through API/SDK/MCP
+10. Only after paper/shadow validation consider VelocityAtlas execution
+
+That sequence is now the shortest route to a serious product because it avoids rebuilding layers later.
+
+---
+
+## What Changes Relative to the Old Roadmap
+
+The old roadmap went roughly:
+
+**Intelligence → Terminal → Audience → Revenue → API → Platform → Vault → Agents**
+
+The canonical roadmap is now:
+
+**Truth/Foundation → Calibrated Intelligence → Brain Certification → Portfolio Validation → Operator Intelligence → API/Agent Distribution → Commercial Intelligence → Permissioned Execution → Strategy Scaling → Autonomous Agent Infrastructure**
+
+This v2.0 document is the canonical roadmap. The pre-v2 roadmap remains only in Git history and must not coexist as a competing source of architectural truth.
