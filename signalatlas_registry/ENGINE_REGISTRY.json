@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-09-26T09:14:48.180477+00:00",
-  "count": 137,
+  "timestamp": "2026-09-29T18:53:44.570977+00:00",
+  "count": 138,
   "canonical_measurement_pipeline": [
     "polymarket_engine/market_raw_collector.py",
     "polymarket_engine/orderbook_collector.py",
@@ -89,14 +89,12 @@
     {
       "name": "auto_settlement_scanner",
       "file": "polymarket_engine/auto_settlement_scanner.py",
-      "status": "present_unclassified",
-      "note": "Non-canonical legacy/analysis module. Must not supply canonical market-resolution truth or resolution timestamps."
+      "status": "present_unclassified"
     },
     {
       "name": "build_resolution_ledger",
       "file": "polymarket_engine/build_resolution_ledger.py",
-      "status": "present_unclassified",
-      "note": "Non-canonical legacy/analysis module. Must not supply canonical market-resolution truth or resolution timestamps."
+      "status": "present_unclassified"
     },
     {
       "name": "calibration_runner",
@@ -142,6 +140,11 @@
       "name": "dashboard",
       "file": "polymarket_engine/dashboard.py",
       "status": "present_unclassified"
+    },
+    {
+      "name": "data_durability",
+      "file": "polymarket_engine/data_durability.py",
+      "status": "canonical_durability"
     },
     {
       "name": "desk_export",
@@ -496,38 +499,37 @@
     {
       "name": "resolution_arbitrage_detector",
       "file": "polymarket_engine/resolution_arbitrage_detector.py",
-      "status": "present_unclassified",
-      "note": "Non-canonical legacy/analysis module. Must not supply canonical market-resolution truth or resolution timestamps."
+      "status": "present_unclassified"
     },
     {
       "name": "resolution_arbitrage_engine",
       "file": "polymarket_engine/resolution_arbitrage_engine.py",
-      "status": "present_unclassified",
-      "note": "Non-canonical legacy/analysis module. Must not supply canonical market-resolution truth or resolution timestamps."
+      "status": "present_unclassified"
     },
     {
       "name": "resolution_arbitrage_v2",
       "file": "polymarket_engine/resolution_arbitrage_v2.py",
-      "status": "present_unclassified",
-      "note": "Non-canonical legacy/analysis module. Must not supply canonical market-resolution truth or resolution timestamps."
+      "status": "present_unclassified"
+    },
+    {
+      "name": "resolution_collector",
+      "file": "polymarket_engine/resolution_collector.py",
+      "status": "canonical_measurement"
     },
     {
       "name": "resolution_intelligence",
       "file": "polymarket_engine/resolution_intelligence.py",
-      "status": "present_unclassified",
-      "note": "Non-canonical legacy/analysis module. Must not supply canonical market-resolution truth or resolution timestamps."
+      "status": "present_unclassified"
     },
     {
       "name": "resolution_risk_model",
       "file": "polymarket_engine/resolution_risk_model.py",
-      "status": "present_unclassified",
-      "note": "Non-canonical legacy/analysis module. Must not supply canonical market-resolution truth or resolution timestamps."
+      "status": "present_unclassified"
     },
     {
       "name": "resolution_tracking",
       "file": "polymarket_engine/resolution_tracking.py",
-      "status": "present_unclassified",
-      "note": "Non-canonical legacy/analysis module. Must not supply canonical market-resolution truth or resolution timestamps."
+      "status": "present_unclassified"
     },
     {
       "name": "send_alpha_feed",
@@ -587,8 +589,7 @@
     {
       "name": "settlement_updater",
       "file": "polymarket_engine/settlement_updater.py",
-      "status": "present_unclassified",
-      "note": "Non-canonical legacy/analysis module. Must not supply canonical market-resolution truth or resolution timestamps."
+      "status": "present_unclassified"
     },
     {
       "name": "shock_alert_engine",
@@ -704,12 +705,6 @@
       "name": "weekly_brief",
       "file": "polymarket_engine/weekly_brief.py",
       "status": "present_unclassified"
-    },
-    {
-      "name": "resolution_collector",
-      "file": "polymarket_engine/resolution_collector.py",
-      "status": "canonical_measurement",
-      "note": "Canonical Polygon CTF resolution truth collector. Gamma supplies identity/outcome ordering only; CTF payout state is settlement authority. ConditionResolution event evidence is required before resolution_time_valid may become true."
     }
   ]
 }

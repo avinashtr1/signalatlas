@@ -19,6 +19,8 @@ COMPONENT_STATUS = {
     "orderbook_collector": "canonical_measurement",
     "outcome_engine": "canonical_measurement",
     "system_monitor": "canonical_measurement",
+    "resolution_collector": "canonical_measurement",
+    "data_durability": "canonical_durability",
     "api_server": "canonical_api",
 
     "intelligence_api": "retired_fail_closed",
@@ -91,6 +93,7 @@ def build_engine_registry():
             "polymarket_engine/orderbook_collector.py",
             "polymarket_engine/outcome_engine.py",
             "polymarket_engine/system_monitor.py",
+            "polymarket_engine/resolution_collector.py",
         ],
 
         "canonical_api": "polymarket_engine/api_server.py",
@@ -137,39 +140,38 @@ def build_dashboard_registry():
 
 
 def build_analytics_registry():
+    # Preserve canonical/frozen analytics metadata from the version-controlled
+    # registry and refresh only runtime-derived inventory fields.
+    path = REG / "ANALYTICS_REGISTRY.json"
+
+    if not path.exists():
+        raise RuntimeError(
+            "canonical ANALYTICS_REGISTRY.json missing; refusing lossy rebuild"
+        )
+
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        raise RuntimeError(
+            "canonical ANALYTICS_REGISTRY.json invalid; refusing rebuild"
+        ) from exc
+
     files = list_json_files(ANALYTICS_DIR)
 
-    return {
-        "timestamp": now(),
-        "count": len(files),
-        "files": files,
+    data["timestamp"] = now()
+    data["count"] = len(files)
+    data["files"] = files
 
-        "canonical_measurement_store": {
-            "file":
-                "analytics/market_measurements.sqlite3",
-            "exists":
-                MEASUREMENT_DB.exists(),
-            "size_bytes":
-                MEASUREMENT_DB.stat().st_size
-                if MEASUREMENT_DB.exists()
-                else None,
-        },
+    store = data.setdefault("canonical_measurement_store", {})
+    store["file"] = str(MEASUREMENT_DB.relative_to(ROOT))
+    store["exists"] = MEASUREMENT_DB.exists()
+    store["size_bytes"] = (
+        MEASUREMENT_DB.stat().st_size
+        if MEASUREMENT_DB.exists()
+        else None
+    )
 
-        "canonical_artifacts": {
-            "latest_market_snapshot":
-                "analytics/market_raw.json",
-            "latest_clob_snapshot":
-                "analytics/orderbooks.json",
-            "measurement_health":
-                "analytics/system_status.json",
-        },
-
-        "historical_or_legacy_analytics_present": True,
-        "note": (
-            "Presence in analytics/ does not imply canonical "
-            "or currently active intelligence."
-        ),
-    }
+    return data
 
 
 def extract_routes():
@@ -193,67 +195,38 @@ def extract_routes():
 
 
 def build_api_registry():
+    # Preserve certified API metadata from the version-controlled registry and
+    # refresh only runtime-derived API-file and route inventory fields.
+    path = REG / "API_REGISTRY.json"
+
+    if not path.exists():
+        raise RuntimeError(
+            "canonical API_REGISTRY.json missing; refusing lossy rebuild"
+        )
+
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        raise RuntimeError(
+            "canonical API_REGISTRY.json invalid; refusing rebuild"
+        ) from exc
+
     routes = extract_routes()
 
-    return {
-        "timestamp": now(),
+    existing_routes = data.get("routes", [])
+    if len(existing_routes) == len(routes) and set(existing_routes) == set(routes):
+        routes = existing_routes
 
-        "status": "canonical_active",
+    data["timestamp"] = now()
+    data["api_file"] = (
+        str(API_FILE.relative_to(ROOT))
+        if API_FILE.exists()
+        else None
+    )
+    data["routes_count"] = len(routes)
+    data["routes"] = routes
 
-        "api_file":
-            str(API_FILE.relative_to(ROOT))
-            if API_FILE.exists()
-            else None,
-
-        "service_unit":
-            "signalatlas-measurement-api.service",
-
-        "bind_host": "127.0.0.1",
-        "port": 8011,
-        "exposure": "localhost_only",
-        "mode": "read_only",
-
-        "backing_store":
-            "analytics/market_measurements.sqlite3",
-
-        "health_artifact":
-            "analytics/system_status.json",
-
-        "source_scope": {
-            "complete_universe": False,
-            "coverage": "partial_event_slice",
-        },
-
-        "routes_count": len(routes),
-        "routes": routes,
-
-        "allowed_capabilities": [
-            "read_measurement_health",
-            "read_latest_markets",
-            "read_market_snapshot",
-            "read_clob_measurement",
-            "read_market_history",
-            "read_forward_outcomes",
-        ],
-
-        "excluded_capabilities": [
-            "shell_execution",
-            "trade_execution",
-            "pipeline_execution",
-            "legacy_alpha_feed",
-            "legacy_radar",
-            "legacy_profit_simulation",
-        ],
-
-        "legacy_api": {
-            "file":
-                "polymarket_engine/intelligence_api.py",
-            "status":
-                "retired_fail_closed",
-            "former_port":
-                8011,
-        },
-    }
+    return data
 
 
 def build_telegram_registry():
