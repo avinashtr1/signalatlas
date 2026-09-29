@@ -1,0 +1,867 @@
+{
+  "artifact_type": "signalatlas_frozen_validation_thresholds",
+  "algorithm_version": "clob_a_v2_validation_thresholds_v1",
+  "status": "FROZEN_PROSPECTIVE_VALIDATION",
+  "candidate": "CLOB-A",
+  "candidate_definition": {
+    "market_clob_spread": "median(YES spread, NO spread) when both token books are TWO_SIDED",
+    "event_median_clob_spread": "median(market_clob_spread across eligible constituent markets)",
+    "clob_a": "abs(event_median_clob_spread[t] - event_median_clob_spread[t-15m])",
+    "high_state": "clob_a > event-specific frozen Q75"
+  },
+  "outcome_definition": {
+    "market_move": "abs(YES true-CLOB midpoint[t+60m] - YES true-CLOB midpoint[t])",
+    "event_move": "median(market_move across available constituent markets)",
+    "large_move": "event_move > event-specific frozen Q90",
+    "horizon_minutes": 60
+  },
+  "quantile_algorithm": "sorted_values[round((n-1)*p)] using Python round; strict > for state/outcome",
+  "source_scope": {
+    "population": "frozen_original_100_event_partial_slice",
+    "event_count": 100,
+    "complete_universe": false
+  },
+  "calibration": {
+    "v1_window_start": "2026-09-26T05:45:00+00:00",
+    "v1_window_end": "2026-09-29T05:45:00+00:00",
+    "train_split": "2026-09-28T05:45:00+00:00",
+    "purged_train_end_exclusive": "2026-09-28T04:45:00+00:00",
+    "purge_minutes": 60,
+    "reason": "prevent 1h outcome labels from crossing into holdout"
+  },
+  "prospective_validation_v2": {
+    "schema_version": "canonical_event_measurement_v2",
+    "schema_t0": "2026-09-29T17:15:00+00:00",
+    "clob_a_validation_t0": "2026-09-29T17:30:00+00:00",
+    "validation_end_exclusive": "2026-10-02T17:30:00+00:00",
+    "earliest_final_analysis": "2026-10-02T18:30:00+00:00",
+    "expected_15m_buckets": 288,
+    "expected_event_observations": 28800,
+    "no_backfill": true,
+    "no_threshold_retuning": true,
+    "brain": "FAIL_CLOSED"
+  },
+  "pass_fail_protocol": {
+    "primary": "large-move rate in CLOB-A high state versus normal state",
+    "non_overlap_panels": [
+      "+00",
+      "+15",
+      "+30",
+      "+45"
+    ],
+    "pass": {
+      "pooled_lift_gte": 1.5,
+      "high_state_rate_gt_normal_in_all_4_panels": true,
+      "panels_with_lift_gte_1p25_min": 3,
+      "event_level_consistency": "positive_overall"
+    },
+    "fail": {
+      "pooled_lift_lte": 1.0,
+      "panels_high_state_underperforms_normal_gte": 2
+    },
+    "otherwise": "INCONCLUSIVE_REPEAT_WITH_IDENTICAL_FROZEN_DEFINITION"
+  },
+  "threshold_count": 100,
+  "thresholds": [
+    {
+      "event_id": "16183",
+      "event_title": "Kraken IPO by ___ ?",
+      "clob_a_q75": 0.05500000000000005,
+      "large_move_q90": 0.015000000000000013,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "16263",
+      "event_title": "Macron out by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "16423",
+      "event_title": "UK election called by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0050000000000000044,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "17526",
+      "event_title": "China x India military clash by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "17549",
+      "event_title": "NATO/EU troops fighting in Ukraine by...?",
+      "clob_a_q75": 0.0010000000000000009,
+      "large_move_q90": 0.0015000000000000013,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "17858",
+      "event_title": "Ukraine recognizes Russian sovereignty over its territory by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0005000000000000004,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "18558",
+      "event_title": "Ukraine election called by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0050000000000000044,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "18571",
+      "event_title": "Will any country leave NATO by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0005000000000000004,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "18576",
+      "event_title": "Ukraine election held by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0004999999999999987,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "22448",
+      "event_title": "Taylor Swift pregnant by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0022500000000000003,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "22527",
+      "event_title": "Mike Johnson out as Speaker by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0024999999999999953,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "25009",
+      "event_title": "Will OpenAI launch a consumer hardware product by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0025000000000000022,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "25410",
+      "event_title": "US x Russia military clash by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0010000000000000009,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "25413",
+      "event_title": "Will Russia invade a NATO country by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "25487",
+      "event_title": "Trump eliminates capital gains tax on crypto by ___?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0010000000000000009,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "25815",
+      "event_title": "Israel and Syria normalize relations by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "25827",
+      "event_title": "Will Russia capture Sumy by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "25930",
+      "event_title": "Pump.fun airdrop by ....? ",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.004999999999999977,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "27831",
+      "event_title": "Hyperliquid airdrop by ....? ",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.009999999999999981,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "29005",
+      "event_title": "MegaETH airdrop by...?",
+      "clob_a_q75": 0.010000000000000009,
+      "large_move_q90": 0.009999999999999981,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "30828",
+      "event_title": "Xi Jinping out before 2027?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0010000000000000009,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "30829",
+      "event_title": "Democratic Presidential Nominee 2028",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "31195",
+      "event_title": "Putin out as President of Russia by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0014999999999999979,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "31552",
+      "event_title": "Presidential Election Winner 2028",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "31875",
+      "event_title": "Republican Presidential Nominee 2028",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "32224",
+      "event_title": "Which party will win the Senate in 2026?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "32225",
+      "event_title": "Which party will win the House in 2026?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "32226",
+      "event_title": "Jeffrey Epstein foul play confirmed by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "32228",
+      "event_title": "Balance of Power: 2026 Midterms",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "32565",
+      "event_title": "SCOTUS accepts sports event contract case by...?     ",
+      "clob_a_q75": 0.005000000000000001,
+      "large_move_q90": 0.0025000000000000022,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "33228",
+      "event_title": "Which party wins 2028 US Presidential Election?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "33647",
+      "event_title": "Will Russia capture Lyman by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0005000000000000002,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "33685",
+      "event_title": "Will Israel annex any territory by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "33705",
+      "event_title": "Will Trump pardon Ghislaine Maxwell by end of 2026?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "34044",
+      "event_title": "Will China invade Taiwan by end of 2026?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.000999999999999994,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "34051",
+      "event_title": "Netanyahu out by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "34052",
+      "event_title": "Zelenskyy out as Ukraine president by end of 2026?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "34053",
+      "event_title": "Erdoğan out by December 31, 2026?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "34348",
+      "event_title": "Will Trump be impeached by...?",
+      "clob_a_q75": 0.030000000000000027,
+      "large_move_q90": 0.010000000000000009,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "34349",
+      "event_title": "Will Trump resign by December 31, 2026?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "34768",
+      "event_title": "Will USDC hit 50% of USDT market cap by ___?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.010000000000000009,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "34863",
+      "event_title": "Will USDT market cap hit $200B by ___?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0004999999999999449,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "34889",
+      "event_title": "Will Hamas agree to disarm by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "36173",
+      "event_title": "When will Bitcoin hit $150k?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "37568",
+      "event_title": "U.S. x Russia Nuclear deal by...?",
+      "clob_a_q75": 0.0010000000000000009,
+      "large_move_q90": 0.0012500000000000011,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "39836",
+      "event_title": "French election called by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0020000000000000018,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "40091",
+      "event_title": "Will El Salvador hold $1b+ of BTC by...? ",
+      "clob_a_q75": 0.03999999999999998,
+      "large_move_q90": 0.024999999999999994,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "40285",
+      "event_title": "Will Abstract launch a token by ___?",
+      "clob_a_q75": 0.0005000000000000004,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "40286",
+      "event_title": "Will Axiom launch a token by ___ ?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "40287",
+      "event_title": "Will Unit launch a token by ___ ?",
+      "clob_a_q75": 0.0005000000000000004,
+      "large_move_q90": 0.0025000000000000022,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "42365",
+      "event_title": "Will the U.S. invade Venezuela by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0005000000000000004,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "43347",
+      "event_title": "Who will Bernie endorse?",
+      "clob_a_q75": 0.0005000000000000004,
+      "large_move_q90": 0.0009999999999999992,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "43352",
+      "event_title": "Who will Trump endorse?",
+      "clob_a_q75": 8.673617379884035e-19,
+      "large_move_q90": 0.0009999999999999974,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "44955",
+      "event_title": "Will Base launch a token by ___ ?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "44989",
+      "event_title": "Will Ostium launch a token by ___ ?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "44993",
+      "event_title": "Will Felix Protocol launch a token by ___ ?",
+      "clob_a_q75": 0.0020000000000000018,
+      "large_move_q90": 0.007500000000000007,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "45915",
+      "event_title": "Brazil Presidential Election",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "45924",
+      "event_title": "Will any presidential candidate win outright in the first round of the Brazil election?",
+      "clob_a_q75": 0.0009999999999999454,
+      "large_move_q90": 0.0020000000000000018,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "45925",
+      "event_title": "Which candidates will advance to Brazil's presidential runoff?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "46724",
+      "event_title": "Will MetaMask launch a token by ___ ?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0024999999999999953,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "48292",
+      "event_title": "OpenAI IPO Closing Market Cap",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "48361",
+      "event_title": "Ballon d'Or Winner 2026",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0007500000000000002,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "48802",
+      "event_title": "US recession by end of 2026?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "48930",
+      "event_title": "NATO x Russia military clash by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "48978",
+      "event_title": "Will Ukraine recapture Crimean territory by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.000499999999999997,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "49286",
+      "event_title": "Will Tesla release Optimus by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0020000000000000018,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "51456",
+      "event_title": "How many Fed rate cuts in 2026?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "52130",
+      "event_title": "Opensea FDV above ___ one day after launch?",
+      "clob_a_q75": 2.6020852139652106e-17,
+      "large_move_q90": 0.00024999999999999675,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "52630",
+      "event_title": "Will the GOP use 'Nuclear Option' to break filibuster by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "53298",
+      "event_title": "Aziz Akhannouch out as Morocco Prime Minister by December 31, 2026?",
+      "clob_a_q75": 0.001999999999999995,
+      "large_move_q90": 0.0015000000000000568,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57057",
+      "event_title": "Israel x Hamas ceasefire cancelled by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0050000000000000044,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57088",
+      "event_title": "Israel x Hamas Ceasefire Phase II by...?",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57096",
+      "event_title": "California Governor Election Winner",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57111",
+      "event_title": "Los Angeles Mayoral Election",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0020000000000000018,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57141",
+      "event_title": "Arizona Governor Election Winner",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57154",
+      "event_title": "Alabama Governor Election Winner",
+      "clob_a_q75": 0.0005000000000000004,
+      "large_move_q90": 0.0020000000000000018,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57155",
+      "event_title": "Arkansas Governor Election Winner",
+      "clob_a_q75": 0.0010000000000000009,
+      "large_move_q90": 0.0005000000000000004,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57156",
+      "event_title": "Colorado Governor Election Winner",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.00024999999999997247,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57159",
+      "event_title": "Connecticut Governor Election Winner",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57160",
+      "event_title": "Florida Governor Election Winner",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57161",
+      "event_title": "Georgia Governor Election Winner",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57162",
+      "event_title": "Hawaii Governor Election Winner",
+      "clob_a_q75": 0.0005000000000000004,
+      "large_move_q90": 0.000500000000000056,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57163",
+      "event_title": "Idaho Governor Election Winner",
+      "clob_a_q75": 0.0014999999999999979,
+      "large_move_q90": 0.0014999999999999736,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57164",
+      "event_title": "Illinois Governor Election Winner",
+      "clob_a_q75": 0.0010000000000000009,
+      "large_move_q90": 0.0027500000000000007,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57169",
+      "event_title": "Iowa Governor Election Winner",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0050000000000000044,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57172",
+      "event_title": "Kansas Governor Election Winner",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57173",
+      "event_title": "Maine Governor Election Winner",
+      "clob_a_q75": 0.0009999999999999992,
+      "large_move_q90": 0.0010000000000000009,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57174",
+      "event_title": "Maryland Governor Election Winner",
+      "clob_a_q75": 0.0014999999999999996,
+      "large_move_q90": 0.0009999999999999974,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57175",
+      "event_title": "Massachusetts Governor Election Winner",
+      "clob_a_q75": 0.0010000000000000009,
+      "large_move_q90": 0.0012499999999999994,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57176",
+      "event_title": "Michigan Governor Election Winner",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57177",
+      "event_title": "Minnesota Governor Election Winner",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0025000000000000022,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57178",
+      "event_title": "Nebraska Governor Election Winner",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57181",
+      "event_title": "Nevada Governor Election Winner",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57182",
+      "event_title": "New Hampshire Governor Election Winner",
+      "clob_a_q75": 0.0005000000000000004,
+      "large_move_q90": 0.002250000000000002,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57183",
+      "event_title": "New Mexico Governor Election Winner",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57184",
+      "event_title": "New York Governor Election Winner",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57185",
+      "event_title": "Ohio Governor Election Winner",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57186",
+      "event_title": "Oklahoma Governor Election Winner",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57187",
+      "event_title": "Oregon Governor Election Winner",
+      "clob_a_q75": 0.0,
+      "large_move_q90": 0.0,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    },
+    {
+      "event_id": "57206",
+      "event_title": "Pennsylvania Governor Election Winner",
+      "clob_a_q75": 0.0014999999999999979,
+      "large_move_q90": 0.0012499999999999734,
+      "clob_a_training_observations": 187,
+      "move_training_observations": 188
+    }
+  ]
+}

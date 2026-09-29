@@ -88,8 +88,25 @@
   "canonical_artifacts": {
     "latest_market_snapshot": "analytics/market_raw.json",
     "latest_clob_snapshot": "analytics/orderbooks.json",
-    "measurement_health": "analytics/system_status.json"
+    "measurement_health": "analytics/system_status.json",
+    "clob_a_v2_frozen_thresholds": "signalatlas_registry/CLOB_A_V2_VALIDATION_THRESHOLDS.json"
   },
   "historical_or_legacy_analytics_present": true,
-  "note": "Presence in analytics/ does not imply canonical or currently active intelligence."
+  "note": "Presence in analytics/ does not imply canonical or currently active intelligence.",
+  "prospective_validations": {
+    "clob_a_v2": {
+      "status": "frozen_prospective_accumulation",
+      "candidate": "CLOB-A",
+      "threshold_artifact": "signalatlas_registry/CLOB_A_V2_VALIDATION_THRESHOLDS.json",
+      "threshold_manifest": "signalatlas_registry/CLOB_A_V2_VALIDATION_THRESHOLDS.sha256",
+      "threshold_artifact_sha256": "544ff5db6ff6be925a6f052068b8e4385050a2e3fa37aef87619a5f8a2fc0785",
+      "threshold_count": 100,
+      "schema_t0": "2026-09-29T17:15:00+00:00",
+      "validation_t0": "2026-09-29T17:30:00+00:00",
+      "validation_end_exclusive": "2026-10-02T17:30:00+00:00",
+      "earliest_final_analysis": "2026-10-02T18:30:00+00:00",
+      "source_scope": "frozen_original_100_event_partial_slice",
+      "brain": "FAIL_CLOSED"
+    }
+  }
 }
