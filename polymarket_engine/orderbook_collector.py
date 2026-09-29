@@ -316,6 +316,8 @@ def init_event_measurements_db(conn):
             clob_imbalance_side_count INTEGER NOT NULL,
             median_clob_abs_imbalance REAL,
 
+            median_clob_spread REAL,
+
             delta_15m_two_sided_fraction REAL,
             delta_30m_two_sided_fraction REAL,
 
@@ -340,12 +342,33 @@ def init_event_measurements_db(conn):
             delta_15m_median_clob_abs_imbalance REAL,
             delta_30m_median_clob_abs_imbalance REAL,
 
+            delta_15m_median_clob_spread REAL,
+            delta_30m_median_clob_spread REAL,
+
             PRIMARY KEY (
                 event_id,
                 observation_bucket
             )
         )
     """)
+
+    existing_columns = {
+        row[1]
+        for row in conn.execute(
+            "PRAGMA table_info(event_measurements)"
+        ).fetchall()
+    }
+
+    for column in (
+        "median_clob_spread",
+        "delta_15m_median_clob_spread",
+        "delta_30m_median_clob_spread",
+    ):
+        if column not in existing_columns:
+            conn.execute(
+                f"ALTER TABLE event_measurements "
+                f"ADD COLUMN {column} REAL"
+            )
 
     conn.execute("""
         CREATE INDEX IF NOT EXISTS idx_event_measurements_bucket
@@ -458,6 +481,8 @@ def write_event_measurements(
         SELECT
             market_id,
             UPPER(outcome_side),
+            quote_state,
+            spread,
             bid_depth_2c_usd,
             ask_depth_2c_usd,
             total_bid_notional_usd,
@@ -474,12 +499,18 @@ def write_event_measurements(
     for (
         market_id,
         outcome_side,
+        quote_state,
+        spread,
         bid_depth_2c_usd,
         ask_depth_2c_usd,
         total_bid_notional_usd,
         total_ask_notional_usd,
     ) in book_rows:
         books[str(market_id)][outcome_side] = {
+            "quote_state":
+                quote_state,
+            "spread":
+                spread,
             "bid_depth_2c_usd":
                 bid_depth_2c_usd,
             "ask_depth_2c_usd":
@@ -504,7 +535,8 @@ def write_event_measurements(
         total_liquidity_usd,
         median_clob_depth_2c_usd,
         median_clob_total_book_notional_usd,
-        median_clob_abs_imbalance
+        median_clob_abs_imbalance,
+        median_clob_spread
     """
 
     for event_id, markets in events.items():
@@ -574,6 +606,7 @@ def write_event_measurements(
         depth2_values = []
         total_book_values = []
         imbalance_values = []
+        clob_spread_values = []
 
         clob_market_count = 0
 
@@ -590,6 +623,19 @@ def write_event_measurements(
                 continue
 
             clob_market_count += 1
+
+            if (
+                yes["quote_state"] == "TWO_SIDED"
+                and no["quote_state"] == "TWO_SIDED"
+                and yes["spread"] is not None
+                and no["spread"] is not None
+            ):
+                clob_spread_values.append(
+                    _event_median([
+                        yes["spread"],
+                        no["spread"],
+                    ])
+                )
 
             depth_parts = [
                 yes["bid_depth_2c_usd"],
@@ -657,6 +703,9 @@ def write_event_measurements(
 
             "median_clob_abs_imbalance":
                 _event_median(imbalance_values),
+
+            "median_clob_spread":
+                _event_median(clob_spread_values),
         }
 
         prior = {}
@@ -697,6 +746,8 @@ def write_event_measurements(
                         prior_row[6],
                     "median_clob_abs_imbalance":
                         prior_row[7],
+                    "median_clob_spread":
+                        prior_row[8],
                 }
 
         def d(minutes, key):
@@ -719,7 +770,7 @@ def write_event_measurements(
                 observed_at,
 
             "schema_version":
-                "canonical_event_measurement_v1",
+                "canonical_event_measurement_v2",
             "source_scope_complete_universe":
                 0,
             "clob_run_status":
@@ -803,6 +854,9 @@ def write_event_measurements(
                     "median_clob_abs_imbalance"
                 ],
 
+            "median_clob_spread":
+                metrics["median_clob_spread"],
+
             "delta_15m_two_sided_fraction":
                 d(15, "two_sided_fraction"),
             "delta_30m_two_sided_fraction":
@@ -866,6 +920,11 @@ def write_event_measurements(
                     30,
                     "median_clob_abs_imbalance",
                 ),
+
+            "delta_15m_median_clob_spread":
+                d(15, "median_clob_spread"),
+            "delta_30m_median_clob_spread":
+                d(30, "median_clob_spread"),
         })
 
     if not rows:
