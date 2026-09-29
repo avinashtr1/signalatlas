@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-09-29T18:53:44.570977+00:00",
-  "count": 138,
+  "timestamp": "2026-09-29T20:05:13.671216+00:00",
+  "count": 139,
   "canonical_measurement_pipeline": [
     "polymarket_engine/market_raw_collector.py",
     "polymarket_engine/orderbook_collector.py",
@@ -690,6 +690,11 @@
       "name": "universe_cleaner",
       "file": "polymarket_engine/universe_cleaner.py",
       "status": "present_unclassified"
+    },
+    {
+      "name": "universe_clob_verifier",
+      "file": "polymarket_engine/universe_clob_verifier.py",
+      "status": "offline_validated_not_scheduled"
     },
     {
       "name": "universe_scanner",

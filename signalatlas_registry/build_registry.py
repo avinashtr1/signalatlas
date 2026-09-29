@@ -21,6 +21,7 @@ COMPONENT_STATUS = {
     "system_monitor": "canonical_measurement",
     "resolution_collector": "canonical_measurement",
     "data_durability": "canonical_durability",
+    "universe_clob_verifier": "offline_validated_not_scheduled",
     "api_server": "canonical_api",
 
     "intelligence_api": "retired_fail_closed",
