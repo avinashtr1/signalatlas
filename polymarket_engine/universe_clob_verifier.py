@@ -248,54 +248,184 @@ def due_count(con, now_iso):
 
 
 def select_due(con, now_iso, limit):
-    # Bootstrap priority:
-    #   0: future <=7d
-    #   1: future 8-90d
-    #   2: future >90d
-    #   3: unknown end
-    #   4: past/due
+    # Production steady-state scheduler.
     #
-    # Inside a priority class: UNVERIFIED first, then most overdue.
-    return con.execute("""
-        SELECT
-            market_id,
-            event_id,
-            clob_token_ids_json,
-            end_date,
-            clob_state,
+    # Capacity reservations are derived dynamically from the
+    # current eligible tier population and canonical cadence.
+    #
+    # Each tier receives guaranteed capacity when overdue. Any unused
+    # reservation spills over to the globally oldest remaining due work.
+    # This prevents HOT backlog from starving slower tiers while keeping
+    # the scheduler work-conserving.
+    # Derive scheduler capacity from the current eligible tier
+    # population and each tier's canonical verification cadence.
+    #
+    # demand(tier) = eligible markets / cadence minutes
+    #
+    # This preserves the cadence-derived service ratio as universe
+    # composition changes instead of freezing today's population mix.
+    tier_counts = {
+        row[0]: int(row[1])
+        for row in con.execute("""
+            SELECT tier, COUNT(*)
+            FROM universe_markets
+            WHERE gamma_eligible = 1
+              AND tier IN ('HOT', 'WARM', 'COLD')
+            GROUP BY tier
+        """)
+    }
+
+    demands = {
+        tier: (
+            tier_counts.get(tier, 0)
+            / CADENCE_MINUTES[tier]
+        )
+        for tier in ("HOT", "WARM", "COLD")
+    }
+
+    total_demand = sum(demands.values())
+
+    if total_demand > 0:
+        shares = tuple(
+            (
+                tier,
+                demands[tier] / total_demand,
+            )
+            for tier in ("HOT", "WARM", "COLD")
+        )
+    else:
+        shares = ()
+
+    selected = []
+    selected_ids = set()
+
+    for tier, share in shares:
+        quota = int(limit * share)
+
+        if quota <= 0:
+            continue
+
+        rows = con.execute("""
+            SELECT
+                market_id,
+                event_id,
+                clob_token_ids_json,
+                end_date,
+                clob_state,
+                tier,
+                clob_good_streak,
+                clob_bad_streak,
+                clob_transport_error_streak,
+                clob_next_check_at
+            FROM universe_markets
+            WHERE gamma_eligible = 1
+              AND tier = ?
+              AND (
+                    clob_next_check_at IS NULL
+                    OR clob_next_check_at <= ?
+                  )
+            ORDER BY
+                CASE
+                    WHEN clob_next_check_at IS NULL THEN 0
+                    ELSE 1
+                END,
+                clob_next_check_at ASC,
+                market_id ASC
+            LIMIT ?
+        """, (
             tier,
-            clob_good_streak,
-            clob_bad_streak,
-            clob_transport_error_streak,
-            clob_next_check_at
-        FROM universe_markets
-        WHERE gamma_eligible = 1
-          AND (
-                clob_next_check_at IS NULL
-                OR clob_next_check_at <= ?
-              )
-        ORDER BY
-            CASE
-                WHEN end_date IS NULL
-                     OR julianday(end_date) IS NULL THEN 3
-                WHEN julianday(end_date) <= julianday(?) THEN 4
-                WHEN julianday(end_date) <=
-                     julianday(?, '+7 days') THEN 0
-                WHEN julianday(end_date) <=
-                     julianday(?, '+90 days') THEN 1
-                ELSE 2
-            END,
-            CASE WHEN clob_state = 'UNVERIFIED' THEN 0 ELSE 1 END,
-            COALESCE(clob_next_check_at, '') ASC,
-            market_id ASC
-        LIMIT ?
-    """, (
-        now_iso,
-        now_iso,
-        now_iso,
-        now_iso,
-        limit,
-    )).fetchall()
+            now_iso,
+            quota,
+        )).fetchall()
+
+        selected.extend(rows)
+        selected_ids.update(
+            str(row["market_id"])
+            for row in rows
+        )
+
+    remaining = limit - len(selected)
+
+    if remaining > 0:
+        if selected_ids:
+            ids = sorted(selected_ids)
+            placeholders = ",".join("?" for _ in ids)
+
+            sql = f"""
+                SELECT
+                    market_id,
+                    event_id,
+                    clob_token_ids_json,
+                    end_date,
+                    clob_state,
+                    tier,
+                    clob_good_streak,
+                    clob_bad_streak,
+                    clob_transport_error_streak,
+                    clob_next_check_at
+                FROM universe_markets
+                WHERE gamma_eligible = 1
+                  AND (
+                        clob_next_check_at IS NULL
+                        OR clob_next_check_at <= ?
+                      )
+                  AND market_id NOT IN ({placeholders})
+                ORDER BY
+                    CASE
+                        WHEN clob_next_check_at IS NULL THEN 0
+                        ELSE 1
+                    END,
+                    clob_next_check_at ASC,
+                    market_id ASC
+                LIMIT ?
+            """
+
+            params = [
+                now_iso,
+                *ids,
+                remaining,
+            ]
+
+            rows = con.execute(
+                sql,
+                params,
+            ).fetchall()
+
+        else:
+            rows = con.execute("""
+                SELECT
+                    market_id,
+                    event_id,
+                    clob_token_ids_json,
+                    end_date,
+                    clob_state,
+                    tier,
+                    clob_good_streak,
+                    clob_bad_streak,
+                    clob_transport_error_streak,
+                    clob_next_check_at
+                FROM universe_markets
+                WHERE gamma_eligible = 1
+                  AND (
+                        clob_next_check_at IS NULL
+                        OR clob_next_check_at <= ?
+                      )
+                ORDER BY
+                    CASE
+                        WHEN clob_next_check_at IS NULL THEN 0
+                        ELSE 1
+                    END,
+                    clob_next_check_at ASC,
+                    market_id ASC
+                LIMIT ?
+            """, (
+                now_iso,
+                remaining,
+            )).fetchall()
+
+        selected.extend(rows)
+
+    return selected
 
 
 def fetch_batch(client, token_ids):
