@@ -21,7 +21,8 @@ COMPONENT_STATUS = {
     "system_monitor": "canonical_measurement",
     "resolution_collector": "canonical_measurement",
     "data_durability": "canonical_durability",
-    "universe_clob_verifier": "offline_validated_not_scheduled",
+    "universe_scanner": "canonical_measurement",
+    "universe_clob_verifier": "canonical_measurement",
     "api_server": "canonical_api",
 
     "intelligence_api": "retired_fail_closed",
@@ -95,6 +96,8 @@ def build_engine_registry():
             "polymarket_engine/outcome_engine.py",
             "polymarket_engine/system_monitor.py",
             "polymarket_engine/resolution_collector.py",
+            "polymarket_engine/universe_scanner.py",
+            "polymarket_engine/universe_clob_verifier.py",
         ],
 
         "canonical_api": "polymarket_engine/api_server.py",

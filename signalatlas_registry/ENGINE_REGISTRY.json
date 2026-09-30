@@ -1,12 +1,14 @@
 {
-  "timestamp": "2026-09-29T20:05:13.671216+00:00",
+  "timestamp": "2026-09-30T10:30:18.347902+00:00",
   "count": 139,
   "canonical_measurement_pipeline": [
     "polymarket_engine/market_raw_collector.py",
     "polymarket_engine/orderbook_collector.py",
     "polymarket_engine/outcome_engine.py",
     "polymarket_engine/system_monitor.py",
-    "polymarket_engine/resolution_collector.py"
+    "polymarket_engine/resolution_collector.py",
+    "polymarket_engine/universe_scanner.py",
+    "polymarket_engine/universe_clob_verifier.py"
   ],
   "canonical_api": "polymarket_engine/api_server.py",
   "legacy_retired": [
@@ -694,12 +696,12 @@
     {
       "name": "universe_clob_verifier",
       "file": "polymarket_engine/universe_clob_verifier.py",
-      "status": "offline_validated_not_scheduled"
+      "status": "canonical_measurement"
     },
     {
       "name": "universe_scanner",
       "file": "polymarket_engine/universe_scanner.py",
-      "status": "present_unclassified"
+      "status": "canonical_measurement"
     },
     {
       "name": "validation_runner",

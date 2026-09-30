@@ -335,25 +335,36 @@ No tuning during accumulation.
 
 ### 1.2 Canonical Universe Expansion
 
-Universe Discovery Audit v1 is complete.
+**PRODUCTION-STABLE / FROZEN — 30 September 2026**
 
-Observed discovery scale already proves the production universe cannot simply CLOB-poll everything.
-
-Future architecture:
+Canonical architecture:
 
 **Gamma Discovery → Canonical Universe Index → Lifecycle / Identity Eligibility → CLOB Verification Scheduler → HOT / WARM / COLD Universes → Measurement**
 
-Important correction:
+Production state:
 
-Gamma `two_sided` must not permanently determine CLOB eligibility.
+- Canonical Universe Index is deployed in `analytics/market_measurements.sqlite3`.
+- Canonical discovery completed across 303,014 unique markets.
+- 230,231 Gamma-eligible markets received initial CLOB verification coverage.
+- CLOB state is established from the CLOB itself rather than Gamma `two_sided`.
+- Canonical CLOB states include `TWO_SIDED`, `PARTIAL`, `DEGRADED`, and `UNAVAILABLE`.
+- Scheduler tiers are `HOT`, `WARM`, and `COLD`.
+- Canonical tier cadences are 30m / 120m / 720m.
+- Production scheduler runs every 5 minutes with a 20,000-market run limit.
+- Capacity allocation is dynamically weighted from current eligible tier population and canonical tier cadence.
+- Unused tier reservation spills into globally oldest due work.
+- Market-state writes use 250-market transaction checkpoints.
+- Interrupted verifier runs are reconciled explicitly.
+- Production steady-state validation showed no HOT or WARM work more than 15 minutes overdue after bootstrap debt cleared.
+- Autonomous production runs completed with selected = processed = committed and zero batch failures during the certification window.
+- The verifier is measurement infrastructure only. It grants no Brain, signal, execution, or capital-allocation permission.
 
-The CLOB itself must establish:
+Canonical modules:
 
-- TWO_SIDED
-- ONE_SIDED
-- NO_BOOK
+- `universe_scanner.py`
+- `universe_clob_verifier.py`
 
-Production universe changes remain frozen until the event experiment checkpoint.
+This component is frozen unless new production evidence requires a scheduler or state-machine change.
 
 ### 1.3 Intelligence Research Families
 
