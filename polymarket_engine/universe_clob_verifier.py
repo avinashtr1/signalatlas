@@ -24,8 +24,8 @@ from polymarket_engine.orderbook_collector import (
 )
 
 SCHEMA_VERSION = "canonical_clob_verification_v1"
-DEFAULT_DB = Path("/tmp/signalatlas_universe_scheduler_test.sqlite3")
-LOCK_PATH = Path("/tmp/signalatlas_universe_verifier.lock")
+DEFAULT_DB = Path("analytics/market_measurements.sqlite3")
+LOCK_PATH = Path("/run/signalatlas_universe_verifier.lock")
 
 CADENCE_MINUTES = {
     "HOT": 30,
@@ -537,8 +537,8 @@ def update_observation(
 def main():
     parser = argparse.ArgumentParser(
         description=(
-            "SignalAtlas offline canonical-universe "
-            "CLOB verifier/scheduler prototype v1"
+            "SignalAtlas canonical-universe "
+            "CLOB verifier/scheduler v1"
         )
     )
     parser.add_argument(
@@ -567,18 +567,6 @@ def main():
     args = parser.parse_args()
 
     db = Path(args.db).resolve()
-
-    canonical = (
-        ROOT
-        / "analytics"
-        / "market_measurements.sqlite3"
-    ).resolve()
-
-    if db == canonical:
-        raise SystemExit(
-            "REFUSING_CANONICAL_DB: offline prototype must not "
-            "touch analytics/market_measurements.sqlite3"
-        )
 
     if not db.exists():
         raise SystemExit(
@@ -966,7 +954,7 @@ def main():
         print(
             "UNIVERSE CLOB VERIFIER/SCHEDULER v1"
         )
-        print("mode: OFFLINE TEST DB / APPLY")
+        print("mode: CANONICAL / APPLY")
         print("db:", db)
         print("run_id:", run_id)
         print(
@@ -1002,7 +990,7 @@ def main():
             round(wall_seconds, 2),
         )
         print(
-            "CANONICAL DB WRITES: 0"
+            "CANONICAL DB WRITES: YES"
         )
 
         con.close()
