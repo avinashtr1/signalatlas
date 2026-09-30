@@ -34,6 +34,7 @@ CADENCE_MINUTES = {
 }
 TRANSPORT_RETRY_MINUTES = 10
 MAX_RETRIES = 3
+UPDATE_COMMIT_CHUNK = 250
 
 
 def utcnow():
@@ -176,6 +177,15 @@ def ensure_schema(con):
         CREATE INDEX IF NOT EXISTS idx_universe_markets_tier_due
         ON universe_markets (tier, clob_next_check_at);
     """)
+
+    add_column_if_missing(
+        con, "universe_clob_verification_runs",
+        "markets_processed", "INTEGER NOT NULL DEFAULT 0"
+    )
+    add_column_if_missing(
+        con, "universe_clob_verification_runs",
+        "markets_committed", "INTEGER NOT NULL DEFAULT 0"
+    )
 
     con.commit()
 
@@ -777,6 +787,9 @@ def main():
         state_counts = Counter()
         tier_counts = Counter()
         transport_errors = 0
+        markets_processed = 0
+        markets_committed = 0
+        pending_updates = 0
 
         for market_id, item in market_map.items():
             row = item["row"]
@@ -806,6 +819,25 @@ def main():
                     latency,
                     error,
                 )
+
+                markets_processed += 1
+                pending_updates += 1
+
+                if pending_updates >= UPDATE_COMMIT_CHUNK:
+                    con.execute("""
+                        UPDATE universe_clob_verification_runs
+                        SET markets_processed = ?,
+                            markets_committed = ?
+                        WHERE run_id = ?
+                    """, (
+                        markets_processed,
+                        markets_processed,
+                        run_id,
+                    ))
+                    con.commit()
+                    markets_committed = markets_processed
+                    pending_updates = 0
+
                 continue
 
             summaries = []
@@ -841,8 +873,38 @@ def main():
             )
 
             state_counts[state] += 1
+            markets_processed += 1
+            pending_updates += 1
 
-        con.commit()
+            if pending_updates >= UPDATE_COMMIT_CHUNK:
+                con.execute("""
+                    UPDATE universe_clob_verification_runs
+                    SET markets_processed = ?,
+                        markets_committed = ?
+                    WHERE run_id = ?
+                """, (
+                    markets_processed,
+                    markets_processed,
+                    run_id,
+                ))
+                con.commit()
+                markets_committed = markets_processed
+                pending_updates = 0
+
+        if pending_updates:
+            con.execute("""
+                UPDATE universe_clob_verification_runs
+                SET markets_processed = ?,
+                    markets_committed = ?
+                WHERE run_id = ?
+            """, (
+                markets_processed,
+                markets_processed,
+                run_id,
+            ))
+            con.commit()
+            markets_committed = markets_processed
+            pending_updates = 0
 
         # Read resulting tiers for this run's selected markets.
         ids = list(market_map.keys())
@@ -871,6 +933,8 @@ def main():
         con.execute("""
             UPDATE universe_clob_verification_runs
             SET completed_at = ?,
+                markets_processed = ?,
+                markets_committed = ?,
                 tokens_requested = ?,
                 batches_total = ?,
                 batches_ok = ?,
@@ -882,6 +946,8 @@ def main():
             WHERE run_id = ?
         """, (
             iso(utcnow()),
+            markets_processed,
+            markets_committed,
             len(token_ids),
             batches_ok + batches_failed,
             batches_ok,
@@ -909,7 +975,9 @@ def main():
         )
         print("due before run:", total_due)
         print("selected:", len(selected))
-        print("markets processed:", len(market_map))
+        print("markets selected:", len(selected))
+        print("markets processed:", markets_processed)
+        print("markets committed:", markets_committed)
         print("tokens:", len(token_ids))
         print(
             "batches:",
