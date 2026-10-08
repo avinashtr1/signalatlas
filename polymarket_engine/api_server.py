@@ -308,6 +308,34 @@ def health():
             detail=f"measurement_health_invalid: {exc}",
         )
 
+    # Phase 7B.65: fail closed on stale health reports.
+    try:
+        generated = datetime.fromisoformat(
+            measurement["generated_at"]
+        )
+        if generated.tzinfo is None:
+            raise ValueError("timezone_missing")
+        age_seconds = (
+            datetime.now(timezone.utc) - generated
+        ).total_seconds()
+    except (KeyError, TypeError, ValueError):
+        raise HTTPException(
+            status_code=503,
+            detail="measurement_health_timestamp_invalid",
+        )
+
+    if age_seconds < -60:
+        raise HTTPException(
+            status_code=503,
+            detail="measurement_health_timestamp_future",
+        )
+
+    if age_seconds > 1800:
+        raise HTTPException(
+            status_code=503,
+            detail="measurement_health_stale",
+        )
+
     return {
         "service": "SignalAtlas Measurement API",
         "api_version": API_VERSION,
