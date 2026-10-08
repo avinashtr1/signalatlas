@@ -620,6 +620,10 @@ def write_event_measurements(
             no = sides.get("NO")
 
             if yes is None or no is None:
+                yes = sides.get("OUTCOME_0")
+                no = sides.get("OUTCOME_1")
+
+            if yes is None or no is None:
                 continue
 
             clob_market_count += 1
@@ -1015,8 +1019,6 @@ def main():
         markets = [
             r for r in raw.get("rows", [])
             if r.get("tradable_top_of_book")
-            and r.get("yes_token_id")
-            and r.get("no_token_id")
         ]
 
         if not markets:
@@ -1026,20 +1028,55 @@ def main():
 
         meta = {}
         token_ids = []
+        seen_tokens = set()
 
         for market in markets:
-            for side, token in (
-                ("YES", market["yes_token_id"]),
-                ("NO", market["no_token_id"]),
+            outcomes = market.get("outcomes")
+            tokens = market.get("clob_token_ids")
+
+            if (
+                not isinstance(outcomes, list)
+                or not isinstance(tokens, list)
+                or len(outcomes) != 2
+                or len(tokens) != 2
+                or not all(str(t).strip() for t in tokens)
+                or str(tokens[0]) == str(tokens[1])
+            ):
+                raise RuntimeError(
+                    "INVALID_BINARY_TOKEN_MAPPING "
+                    f"market={market.get('market_id')}"
+                )
+
+            labels = [
+                str(x).strip().lower()
+                for x in outcomes
+            ]
+
+            sides = (
+                ("YES", "NO")
+                if labels == ["yes", "no"]
+                else ("OUTCOME_0", "OUTCOME_1")
+            )
+
+            for i, (side, token) in enumerate(
+                zip(sides, tokens)
             ):
                 token = str(token)
 
+                if token in seen_tokens:
+                    raise RuntimeError(
+                        "DUPLICATE_CLOB_TOKEN "
+                        f"token={token}"
+                    )
+
+                seen_tokens.add(token)
                 token_ids.append(token)
 
                 meta[token] = {
                     "market_id": str(market["market_id"]),
                     "market_name": market["market_name"],
                     "outcome_side": side,
+                    "outcome_label": str(outcomes[i]),
                 }
 
         client = ClobClient(HOST)
@@ -1242,9 +1279,14 @@ def main():
                 },
             )
 
+            output_row = dict(row)
+            output_row["outcome_label"] = meta[
+                row["token_id"]
+            ]["outcome_label"]
+
             by_market[row["market_id"]][
                 row["outcome_side"].lower()
-            ] = row
+            ] = output_row
 
         market_rows = list(by_market.values())
 
