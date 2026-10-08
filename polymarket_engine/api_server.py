@@ -462,6 +462,8 @@ def orderbook(market_id: str):
                 detail="market_not_found",
             )
 
+        latest_gamma_bucket = latest_snapshot_bucket(conn)
+
         bucket_row = conn.execute("""
             SELECT MAX(observation_bucket)
             FROM clob_books
@@ -494,6 +496,14 @@ def orderbook(market_id: str):
     return {
         "market_id": market_id,
         "observation_bucket": bucket,
+        "latest_gamma_bucket": latest_gamma_bucket,
+        "book_observation_bucket": bucket,
+        "is_current_bucket": bucket == latest_gamma_bucket,
+        "freshness_status": (
+            "CURRENT"
+            if bucket == latest_gamma_bucket
+            else "STALE"
+        ),
         "token_books": [
             row_dict(r)
             for r in rows
