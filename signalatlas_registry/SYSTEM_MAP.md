@@ -74,6 +74,18 @@ Do not interpret the current dataset as complete Polymarket coverage.
 
 ---
 
+### Phase 7B.64 — CLOB Collection Freshness
+
+- Canonical collector: `polymarket_engine/orderbook_collector.py`.
+- Gamma publishes `analytics/market_raw.json` atomically.
+- Gamma collection runs at :01/:16/:31/:46 UTC.
+- CLOB collection runs at :02/:17/:32/:47 UTC.
+- CLOB waits up to 90 seconds for the current 15-minute Gamma bucket.
+- Stale or future buckets fail closed without collecting CLOB books.
+- Historical gap: 2026-10-07 02:00 UTC, 515 markets / 1,030 CLOB rows missing.
+- H8 primary validation remains INCONCLUSIVE/BLOCKED.
+- No historical reconstruction, Brain permission, or execution authorization.
+
 ## Measurement Schedule
 
 Gamma snapshots:

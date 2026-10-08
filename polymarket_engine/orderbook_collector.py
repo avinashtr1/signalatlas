@@ -947,26 +947,46 @@ def write_event_measurements(
     return conn.total_changes - before
 
 
+def wait_for_current_raw_bucket(expected, timeout_s=90, poll_s=2):
+    """Wait for Gamma's atomic publication of the expected bucket."""
+    deadline = time.monotonic() + timeout_s
+    last_seen = "MISSING"
+
+    while True:
+        if RAW.exists():
+            try:
+                raw = json.loads(RAW.read_text(encoding="utf-8"))
+                bucket = raw.get("observation_bucket")
+                last_seen = str(bucket)
+
+                if bucket == expected:
+                    return raw
+
+                if bucket:
+                    source_dt = datetime.fromisoformat(bucket)
+                    expected_dt = datetime.fromisoformat(expected)
+
+                    if source_dt > expected_dt:
+                        raise SystemExit(
+                            f"FUTURE_RAW_BUCKET expected={expected} "
+                            f"actual={bucket}"
+                        )
+            except (OSError, ValueError) as exc:
+                last_seen = f"READ_ERROR:{type(exc).__name__}"
+
+        remaining = deadline - time.monotonic()
+
+        if remaining <= 0:
+            raise SystemExit(
+                f"STALE_RAW_BUCKET expected={expected} "
+                f"actual={last_seen}"
+            )
+
+        time.sleep(min(poll_s, remaining))
+
+
 def main():
-    if not RAW.exists():
-        raise SystemExit("MARKET_RAW_MISSING")
-
-    raw = json.loads(RAW.read_text())
-    bucket = raw.get("observation_bucket")
-
-    if not bucket:
-        raise SystemExit("OBSERVATION_BUCKET_MISSING")
-
-    markets = [
-        r for r in raw.get("rows", [])
-        if r.get("tradable_top_of_book")
-        and r.get("yes_token_id")
-        and r.get("no_token_id")
-    ]
-
-    if not markets:
-        raise SystemExit("NO_TRADABLE_MARKETS")
-
+    # Source freshness is checked under the collector lock.
     LOCK.parent.mkdir(parents=True, exist_ok=True)
 
     with LOCK.open("w") as lock_fp:
@@ -981,6 +1001,27 @@ def main():
             )
 
         started = datetime.now(timezone.utc)
+
+        expected_dt = started.replace(
+            minute=(started.minute // 15) * 15,
+            second=0,
+            microsecond=0,
+        )
+        expected_bucket = expected_dt.isoformat()
+
+        raw = wait_for_current_raw_bucket(expected_bucket)
+        bucket = raw["observation_bucket"]
+
+        markets = [
+            r for r in raw.get("rows", [])
+            if r.get("tradable_top_of_book")
+            and r.get("yes_token_id")
+            and r.get("no_token_id")
+        ]
+
+        if not markets:
+            raise SystemExit("NO_TRADABLE_MARKETS")
+
         run_id = uuid.uuid4().hex
 
         meta = {}
