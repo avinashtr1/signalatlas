@@ -593,6 +593,40 @@ def meta():
     with connect() as conn:
         snapshot_bucket = latest_snapshot_bucket(conn)
 
+        coverage = conn.execute("""
+            SELECT
+                COUNT(*) AS gamma_observed,
+                COALESCE(SUM(s.tradable_top_of_book), 0)
+                    AS gamma_tradable,
+                COUNT(DISTINCT c.market_id)
+                    AS clob_measured,
+                COUNT(DISTINCT CASE
+                    WHEN s.tradable_top_of_book = 1
+                    THEN c.market_id
+                END) AS tradable_with_clob
+            FROM snapshots s
+            LEFT JOIN clob_books c
+              ON c.market_id = s.market_id
+             AND c.observation_bucket = s.observation_bucket
+             AND c.collection_status = 'OK'
+            WHERE s.observation_bucket = ?
+        """, (snapshot_bucket,)).fetchone()
+
+        clob_run = conn.execute("""
+            SELECT status, completed_at
+            FROM clob_collection_runs
+            WHERE observation_bucket = ?
+            ORDER BY completed_at DESC
+            LIMIT 1
+        """, (snapshot_bucket,)).fetchone()
+
+        collection_state = (
+            "PENDING" if clob_run is None
+            or clob_run["completed_at"] is None
+            else "COMPLETE" if clob_run["status"] == "OK"
+            else "FAILED"
+        )
+
         watch = conn.execute("""
             SELECT
                 COUNT(*) AS total,
@@ -650,6 +684,32 @@ def meta():
         ),
         "source_scope": source_scope(),
         "resolution_scope": resolution_scope(),
+        "measurement_coverage": {
+            "observation_bucket": snapshot_bucket,
+            "complete_universe": False,
+            "collection_state": collection_state,
+            "collection_run_status": (
+                clob_run["status"] if clob_run else None
+            ),
+            "collection_completed_at": (
+                clob_run["completed_at"] if clob_run else None
+            ),
+            "gamma_observed_markets": coverage["gamma_observed"],
+            "gamma_tradable_markets": coverage["gamma_tradable"],
+            "clob_measured_markets": coverage["clob_measured"],
+            "tradable_with_clob": coverage["tradable_with_clob"],
+            "tradable_clob_coverage_fraction": (
+                coverage["tradable_with_clob"]
+                / coverage["gamma_tradable"]
+                if (
+                    collection_state == "COMPLETE"
+                    and coverage["gamma_tradable"]
+                )
+                else None
+            ),
+            "denominator": "gamma_tradable_markets",
+            "scope": "latest_collected_gamma_slice",
+        },
         "freshness": {
             "latest_snapshot_bucket": snapshot_bucket,
             "resolution_watch_updated_at": (
