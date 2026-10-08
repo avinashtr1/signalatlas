@@ -595,9 +595,12 @@ def meta():
 
         coverage = conn.execute("""
             SELECT
-                COUNT(*) AS gamma_observed,
-                COALESCE(SUM(s.tradable_top_of_book), 0)
-                    AS gamma_tradable,
+                COUNT(DISTINCT s.market_id)
+                    AS gamma_observed,
+                COUNT(DISTINCT CASE
+                    WHEN s.tradable_top_of_book = 1
+                    THEN s.market_id
+                END) AS gamma_tradable,
                 COUNT(DISTINCT c.market_id)
                     AS clob_measured,
                 COUNT(DISTINCT CASE
