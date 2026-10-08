@@ -56,6 +56,105 @@ def expected_buckets(first_raw, last_raw):
     return out
 
 
+
+def evaluate_reliability(now, gamma_bucket, clob_bucket,
+                         gamma_tradable, clob_markets,
+                         clob_token_rows, latest_run,
+                         gamma_observed_at, clob_observed_at):
+    """Current-bucket reliability; historical gaps remain separate."""
+    current = now.replace(
+        minute=(now.minute // BUCKET_MINUTES) * BUCKET_MINUTES,
+        second=0,
+        microsecond=0,
+    )
+    expected = current.isoformat()
+    elapsed = (now - current).total_seconds()
+    grace_seconds = 360
+    reasons = []
+
+    gamma_dt = parse_ts(gamma_bucket)
+    clob_dt = parse_ts(clob_bucket)
+
+    if gamma_dt and gamma_dt > current:
+        reasons.append("FUTURE_GAMMA_BUCKET")
+    if clob_dt and clob_dt > current:
+        reasons.append("FUTURE_CLOB_BUCKET")
+
+    if not gamma_dt or gamma_dt < current:
+        reasons.append("GAMMA_CURRENT_BUCKET_MISSING")
+
+    if not clob_dt or clob_dt < current:
+        reasons.append("CLOB_CURRENT_BUCKET_MISSING")
+
+    if gamma_bucket != clob_bucket:
+        reasons.append("GAMMA_CLOB_BUCKET_MISMATCH")
+
+    run = latest_run or {}
+    if run.get("observation_bucket") != expected:
+        reasons.append("CURRENT_CLOB_RUN_MISSING")
+    else:
+        if run.get("status") != "OK":
+            reasons.append("CLOB_RUN_NOT_OK")
+        requested = run.get("tokens_requested")
+        returned = run.get("books_returned")
+        if (not isinstance(requested, int)
+                or requested <= 0
+                or returned != requested
+                or run.get("batch_failures") != 0
+                or run.get("missing_tokens") != 0):
+            reasons.append("CLOB_TOKEN_INCOMPLETE")
+        if clob_token_rows != requested:
+            reasons.append("CLOB_PERSISTED_TOKEN_MISMATCH")
+
+    if gamma_bucket == expected and clob_bucket == expected:
+        if gamma_tradable is None or gamma_tradable <= 0:
+            reasons.append("GAMMA_TRADABLE_COUNT_INVALID")
+        elif clob_markets != gamma_tradable:
+            reasons.append("CLOB_MARKET_COVERAGE_INCOMPLETE")
+
+    for name, ts in (
+        ("GAMMA", gamma_observed_at),
+        ("CLOB", clob_observed_at),
+    ):
+        dt = parse_ts(ts)
+        if dt is None or dt.tzinfo is None:
+            reasons.append(name + "_OBSERVATION_MISSING")
+        elif dt > now + timedelta(seconds=60):
+            reasons.append(name + "_OBSERVATION_FUTURE")
+        elif (now - dt).total_seconds() > 1800:
+            reasons.append(name + "_OBSERVATION_STALE")
+
+    # Only missing/current-bucket synchronization can be pending.
+    pending_reasons = {
+        "GAMMA_CURRENT_BUCKET_MISSING",
+        "CLOB_CURRENT_BUCKET_MISSING",
+        "GAMMA_CLOB_BUCKET_MISMATCH",
+        "CURRENT_CLOB_RUN_MISSING",
+    }
+
+    if not reasons:
+        state = "HEALTHY"
+    elif elapsed < grace_seconds and set(reasons) <= pending_reasons:
+        state = "PENDING"
+    else:
+        state = "DEGRADED"
+
+    return {
+        "state": state,
+        "expected_bucket": expected,
+        "grace_seconds": grace_seconds,
+        "reasons": reasons,
+        "gamma_tradable_markets": gamma_tradable,
+        "clob_measured_markets": clob_markets,
+        "tradable_clob_coverage_fraction": (
+            round(clob_markets / gamma_tradable, 6)
+            if gamma_tradable and gamma_bucket == clob_bucket
+            else None
+        ),
+        "coverage_scope": "latest_collected_gamma_slice",
+    }
+
+
 def main():
     now = datetime.now(timezone.utc)
 
@@ -315,7 +414,30 @@ def main():
                 FROM forward_outcomes
             """).fetchone()[0]
 
+    gamma_tradable = None
+    if latest_gamma_bucket:
+        with sqlite3.connect(uri, uri=True) as conn:
+            gamma_tradable = conn.execute("""
+                SELECT COUNT(DISTINCT market_id)
+                FROM snapshots
+                WHERE observation_bucket = ?
+                  AND tradable_top_of_book = 1
+            """, (latest_gamma_bucket,)).fetchone()[0]
+
+    reliability = evaluate_reliability(
+        now,
+        latest_gamma_bucket,
+        clob["latest_bucket"],
+        gamma_tradable,
+        clob["latest_markets"],
+        clob["latest_token_rows"],
+        clob["latest_run"],
+        latest_gamma_observed_at,
+        clob["latest_observed_at"],
+    )
+
     out = {
+        "reliability": reliability,
         "schema_version": "signalatlas_measurement_health_v1",
         "generated_at": now.isoformat(),
 
