@@ -81,6 +81,10 @@ export async function getMarkets(limit = 100) {
   );
 }
 
+export async function getReliabilityHistory() {
+  return getJson(`${SIGNALATLAS_API}/api/reliability-history?limit=50`);
+}
+
 export async function getVelocityHealth() {
   return getJson(`${VELOCITY_API}/health`);
 }

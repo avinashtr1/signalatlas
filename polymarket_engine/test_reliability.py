@@ -151,3 +151,34 @@ class ReliabilityHistoryTests(unittest.TestCase):
                 record_transition(path, "2026-10-09T10:00:00Z", "UNKNOWN", [])
 
             self.assertFalse(path.exists())
+
+
+class ReliabilityHistoryApiTests(unittest.TestCase):
+    def test_history_endpoint(self):
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            history = root / "analytics" / "reliability_incidents.jsonl"
+            history.parent.mkdir()
+
+            with patch.object(api_server, "ROOT", root):
+                empty = api_server.reliability_history(limit=50)
+                self.assertEqual(empty["events"], [])
+                self.assertIsNone(empty["uptime_percent"])
+                self.assertEqual(empty["uptime_status"], "INSUFFICIENT_DATA")
+
+                records = [
+                    {"observed_at": "2026-10-09T04:00:00Z", "state": "HEALTHY"},
+                    {"observed_at": "2026-10-09T04:15:00Z", "state": "DEGRADED"},
+                    {"observed_at": "2026-10-09T04:30:00Z", "state": "HEALTHY"},
+                ]
+                history.write_text(
+                    "".join(json.dumps(x) + "\n" for x in records)
+                )
+
+                result = api_server.reliability_history(limit=2)
+                self.assertEqual(result["count"], 2)
+                self.assertEqual(
+                    [x["state"] for x in result["events"]],
+                    ["HEALTHY", "DEGRADED"],
+                )
+                self.assertIsNone(result["uptime_percent"])

@@ -1,5 +1,6 @@
 import {
   getSignalStatus,
+  getReliabilityHistory,
   getVelocityHealth,
   safe,
   type JsonObject,
@@ -8,9 +9,10 @@ import {
 export const dynamic = "force-dynamic";
 
 export default async function OpsPage() {
-  const [signalStatus, velocity] = await Promise.all([
+  const [signalStatus, velocity, history] = await Promise.all([
     getSignalStatus(),
     safe(getVelocityHealth),
+    safe(getReliabilityHistory),
   ]);
   const reliability = signalStatus.reliability;
   const signal = signalStatus.data
@@ -47,6 +49,43 @@ export default async function OpsPage() {
           data={velocity.ok ? velocity.data : null}
           error={velocity.ok ? null : velocity.error}
         />
+      </section>
+
+      <section className="panel">
+        <div className="panel-title">Reliability Incident Timeline</div>
+        <div className="metric-row">
+          <span>Observed uptime</span>
+          <strong>INSUFFICIENT DATA</strong>
+        </div>
+        {!history.ok ? (
+          <div className="error-box">
+            Incident history unavailable: {history.error}
+          </div>
+        ) : (
+          <>
+            {Array.isArray(history.data.events) &&
+            history.data.events.length > 0 ? (
+              history.data.events.map((item, index) => {
+                if (!item || typeof item !== "object" || Array.isArray(item))
+                  return null;
+                const event = item as JsonObject;
+                return (
+                  <div className="metric-row" key={index}>
+                    <span>
+                      {String(event.observed_at ?? "Unknown time")}
+                    </span>
+                    <strong>
+                      {String(event.event ?? "TRANSITION")} ·{" "}
+                      {String(event.state ?? "UNKNOWN")}
+                    </strong>
+                  </div>
+                );
+              })
+            ) : (
+              <p className="muted">No recorded transitions yet.</p>
+            )}
+          </>
+        )}
       </section>
 
       <section className="panel">

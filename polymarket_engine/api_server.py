@@ -935,6 +935,38 @@ def resolutions(
     }
 
 
+# Phase 7B.65T — Observed reliability transition history.
+@app.get("/api/reliability-history")
+def reliability_history(limit: int = Query(50, ge=1, le=500)):
+    history = ROOT / "analytics" / "reliability_incidents.jsonl"
+
+    if not history.exists():
+        return {
+            "events": [],
+            "count": 0,
+            "uptime_percent": None,
+            "uptime_status": "INSUFFICIENT_DATA",
+        }
+
+    from collections import deque
+
+    with history.open("r", encoding="utf-8") as stream:
+        lines = deque(
+            (line for line in stream if line.strip()),
+            maxlen=limit,
+        )
+
+    events = [json.loads(line) for line in lines]
+    events.reverse()
+
+    return {
+        "events": events,
+        "count": len(events),
+        "uptime_percent": None,
+        "uptime_status": "INSUFFICIENT_DATA",
+    }
+
+
 if __name__ == "__main__":
     uvicorn.run(
         app,
