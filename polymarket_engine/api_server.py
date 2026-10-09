@@ -336,6 +336,29 @@ def health():
             detail="measurement_health_stale",
         )
 
+    # Phase 7B.65O: enforce canonical measurement reliability.
+    reliability = measurement.get("reliability")
+    state = (
+        reliability.get("state")
+        if isinstance(reliability, dict)
+        else None
+    )
+
+    if state not in ("HEALTHY", "PENDING", "DEGRADED"):
+        raise HTTPException(
+            status_code=503,
+            detail="measurement_reliability_invalid",
+        )
+
+    if state == "DEGRADED":
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "reason": "measurement_reliability_degraded",
+                "reliability": reliability,
+            },
+        )
+
     return {
         "service": "SignalAtlas Measurement API",
         "api_version": API_VERSION,
