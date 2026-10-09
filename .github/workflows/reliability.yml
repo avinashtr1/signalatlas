@@ -1,0 +1,62 @@
+name: SignalAtlas Reliability Gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Python Reliability Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-api.txt
+
+      - name: Install API dependencies
+        run: python -m pip install -r requirements-api.txt
+
+      - name: Run reliability regression tests
+        run: python -m unittest polymarket_engine/test_reliability.py -v
+
+  frontend:
+    name: EdgeAtlas Reliability and Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    defaults:
+      run:
+        working-directory: edgeatlas_web
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: edgeatlas_web/package-lock.json
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Run reliability regression tests
+        run: node --test lib/api.reliability.test.mjs
+
+      - name: Validate TypeScript
+        run: npx tsc --noEmit
+
+      - name: Build EdgeAtlas
+        run: npm run build
