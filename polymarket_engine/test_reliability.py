@@ -254,3 +254,90 @@ class ReliabilityHistoryHardeningTests(unittest.TestCase):
                 ["DEGRADED", "HEALTHY"],
             )
             self.assertIsNone(result["uptime_percent"])
+
+
+class ReliabilityLifecycleTests(unittest.TestCase):
+    def test_pending_degraded_recovered_lifecycle(self):
+        from reliability_history import record_transition, read_events
+
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            health_file = root / "health.json"
+            history = root / "incidents.jsonl"
+
+            bucket = datetime(2026, 10, 9, 12, 0, tzinfo=timezone.utc)
+            run = {
+                "observation_bucket": bucket.isoformat(),
+                "status": "OK",
+                "tokens_requested": 4,
+                "books_returned": 4,
+                "batch_failures": 0,
+                "missing_tokens": 0,
+            }
+
+            def observe(moment, available):
+                expected = bucket.isoformat() if available else None
+                result = system_monitor.evaluate_reliability(
+                    moment,
+                    expected,
+                    expected,
+                    2,
+                    2,
+                    4,
+                    run if available else None,
+                    moment.isoformat(),
+                    moment.isoformat(),
+                )
+                record_transition(
+                    history,
+                    moment.isoformat(),
+                    result["state"],
+                    result["reasons"],
+                )
+                health_file.write_text(json.dumps({
+                    "generated_at": datetime.now(timezone.utc).isoformat(),
+                    "reliability": result,
+                }))
+                return result
+
+            with patch.object(api_server, "HEALTH", health_file):
+                healthy = observe(bucket + timedelta(minutes=1), True)
+                self.assertEqual(healthy["state"], "HEALTHY")
+                self.assertEqual(
+                    api_server.health()["measurement"]["reliability"]["state"],
+                    "HEALTHY",
+                )
+
+                pending = observe(bucket + timedelta(minutes=2), False)
+                self.assertEqual(pending["state"], "PENDING")
+                self.assertEqual(
+                    api_server.health()["measurement"]["reliability"]["state"],
+                    "PENDING",
+                )
+
+                degraded = observe(bucket + timedelta(minutes=7), False)
+                self.assertEqual(degraded["state"], "DEGRADED")
+                with self.assertRaises(HTTPException) as caught:
+                    api_server.health()
+                self.assertEqual(caught.exception.status_code, 503)
+
+                recovered = observe(bucket + timedelta(minutes=8), True)
+                self.assertEqual(recovered["state"], "HEALTHY")
+                self.assertEqual(
+                    api_server.health()["measurement"]["reliability"]["state"],
+                    "HEALTHY",
+                )
+
+            events = read_events(history)
+            self.assertEqual(
+                [event["state"] for event in events],
+                ["HEALTHY", "PENDING", "DEGRADED", "HEALTHY"],
+            )
+            self.assertEqual(
+                [event["event"] for event in events],
+                ["BASELINE", "TRANSITION", "TRANSITION", "RECOVERED"],
+            )
+            self.assertEqual(
+                events[-1]["previous_state"],
+                "DEGRADED",
+            )
