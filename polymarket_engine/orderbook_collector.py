@@ -725,9 +725,11 @@ def write_event_measurements(
                 FROM event_measurements
                 WHERE event_id = ?
                   AND observation_bucket = ?
+                  AND schema_version = ?
             """, (
                 event_id,
                 prior_bucket,
+                "canonical_event_measurement_v2",
             )).fetchone()
 
             if prior_row is None:
