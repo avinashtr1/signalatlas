@@ -1,7 +1,7 @@
 import {
   formatNumber,
   getMarkets,
-  getSignalHealth,
+  getSignalStatus,
   getVelocityHealth,
   numberValue,
   objectValue,
@@ -13,19 +13,19 @@ import {
 export const dynamic = "force-dynamic";
 
 export default async function TerminalPage() {
-  const [signalResult, marketsResult, velocityResult] = await Promise.all([
-    safe(getSignalHealth),
+  const [signalStatus, marketsResult, velocityResult] = await Promise.all([
+    getSignalStatus(),
     safe(() => getMarkets(100)),
     safe(getVelocityHealth),
   ]);
+  const reliability = signalStatus.reliability;
+
 
   const markets = marketsResult.ok
     ? rowsFromResponse(marketsResult.data)
     : [];
 
-  const signal = signalResult.ok
-    ? signalResult.data
-    : null;
+  const signal = signalStatus.data;
 
   const measurement = objectValue(
     signal,
@@ -67,8 +67,8 @@ export default async function TerminalPage() {
         </div>
 
         <div className="status-line">
-          <StatusDot ok={signalResult.ok} />
-          SignalAtlas
+          <StatusDot ok={reliability === "HEALTHY"} />
+          SignalAtlas ({reliability})
           <StatusDot ok={velocityResult.ok} />
           VelocityAtlas
         </div>
@@ -105,8 +105,8 @@ export default async function TerminalPage() {
         <Panel title="Intelligence State">
           <Row
             label="Measurement API"
-            value={signalResult.ok ? "ONLINE" : "UNAVAILABLE"}
-            tone={signalResult.ok ? "good" : "bad"}
+            value={reliability}
+            tone={reliability === "HEALTHY" ? "good" : reliability === "PENDING" ? "warn" : "bad"}
           />
           <Row label="Universe coverage" value="PARTIAL EVENT SLICE" />
           <Row label="Brain" value="FAIL-CLOSED" tone="warn" />

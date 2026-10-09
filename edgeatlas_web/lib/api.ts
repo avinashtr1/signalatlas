@@ -29,6 +29,52 @@ export async function getSignalHealth() {
   return getJson(`${SIGNALATLAS_API}/api/health`);
 }
 
+export type SignalReliability =
+  "HEALTHY" | "PENDING" | "DEGRADED" | "UNAVAILABLE";
+
+export async function getSignalStatus(): Promise<{
+  reliability: SignalReliability;
+  data: JsonObject | null;
+  error: string | null;
+}> {
+  try {
+    const response = await fetch(`${SIGNALATLAS_API}/api/health`, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(5000),
+    });
+
+    const body: unknown = await response.json();
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return { reliability: "UNAVAILABLE", data: null, error: "Invalid health response" };
+    }
+
+    const payload = body as JsonObject;
+    const measurement = objectValue(payload, "measurement");
+    const reliability = objectValue(measurement, "reliability");
+    const state = reliability?.state;
+
+    if (response.ok && (state === "HEALTHY" || state === "PENDING")) {
+      return { reliability: state, data: payload, error: null };
+    }
+
+    const detail = objectValue(payload, "detail");
+    if (
+      response.status === 503 &&
+      detail?.reason === "measurement_reliability_degraded"
+    ) {
+      return { reliability: "DEGRADED", data: null, error: "Measurement reliability degraded" };
+    }
+
+    return { reliability: "UNAVAILABLE", data: null, error: `HTTP ${response.status}` };
+  } catch (error) {
+    return {
+      reliability: "UNAVAILABLE",
+      data: null,
+      error: error instanceof Error ? error.message : "Health request failed",
+    };
+  }
+}
+
 export async function getMarkets(limit = 100) {
   return getJson(
     `${SIGNALATLAS_API}/api/markets?limit=${Math.max(1, Math.min(limit, 500))}`

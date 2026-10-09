@@ -1,5 +1,5 @@
 import {
-  getSignalHealth,
+  getSignalStatus,
   getVelocityHealth,
   safe,
   type JsonObject,
@@ -8,10 +8,14 @@ import {
 export const dynamic = "force-dynamic";
 
 export default async function OpsPage() {
-  const [signal, velocity] = await Promise.all([
-    safe(getSignalHealth),
+  const [signalStatus, velocity] = await Promise.all([
+    getSignalStatus(),
     safe(getVelocityHealth),
   ]);
+  const reliability = signalStatus.reliability;
+  const signal = signalStatus.data
+    ? { ok: true as const, data: signalStatus.data }
+    : { ok: false as const, error: signalStatus.error || "Health unavailable" };
 
   return (
     <div className="page">
@@ -30,6 +34,7 @@ export default async function OpsPage() {
         <HealthPanel
           title="SignalAtlas"
           subtitle="Measurement / outcomes / CLOB"
+          reliability={reliability}
           ok={signal.ok}
           data={signal.ok ? signal.data : null}
           error={signal.ok ? null : signal.error}
@@ -82,12 +87,14 @@ function HealthPanel({
   ok,
   data,
   error,
+  reliability,
 }: {
   title: string;
   subtitle: string;
   ok: boolean;
   data: JsonObject | null;
   error: string | null;
+  reliability?: "HEALTHY" | "PENDING" | "DEGRADED" | "UNAVAILABLE";
 }) {
   const rows = data ? flatten(data).slice(0, 30) : [];
 
@@ -99,8 +106,8 @@ function HealthPanel({
           <div className="muted">{subtitle}</div>
         </div>
 
-        <span className={`badge ${ok ? "badge-good" : "badge-bad"}`}>
-          {ok ? "ONLINE" : "UNAVAILABLE"}
+        <span className={`badge ${reliability === "HEALTHY" ? "badge-good" : reliability === "PENDING" ? "badge-warn" : ok && !reliability ? "badge-good" : "badge-bad"}`}>
+          {reliability || (ok ? "ONLINE" : "UNAVAILABLE")}
         </span>
       </div>
 
