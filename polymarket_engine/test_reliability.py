@@ -182,3 +182,75 @@ class ReliabilityHistoryApiTests(unittest.TestCase):
                     ["HEALTHY", "DEGRADED"],
                 )
                 self.assertIsNone(result["uptime_percent"])
+
+
+class ReliabilityHistoryHardeningTests(unittest.TestCase):
+    def test_malformed_records_and_state_continuity(self):
+        from reliability_history import read_events, record_transition
+
+        with TemporaryDirectory() as tmp:
+            path = Path(tmp) / "history.jsonl"
+            path.write_text(
+                '{"observed_at":"2026-10-09T01:00:00Z","state":"DEGRADED"}\n'
+                'not-json\n'
+                '{"state":"UNKNOWN","observed_at":"2026-10-09T02:00:00Z"}\n'
+                '{"state":"HEALTHY"}\n'
+            )
+
+            self.assertEqual(len(read_events(path)), 1)
+
+            event = record_transition(
+                path, "2026-10-09T03:00:00Z", "HEALTHY", []
+            )
+            self.assertEqual(event["event"], "RECOVERED")
+            self.assertEqual(event["previous_state"], "DEGRADED")
+
+            self.assertIsNone(
+                record_transition(
+                    path, "2026-10-09T04:00:00Z", "HEALTHY", []
+                )
+            )
+
+            self.assertEqual(len(read_events(path)), 2)
+
+    def test_retention_preserves_latest_events(self):
+        from unittest.mock import patch as mock_patch
+        import reliability_history as rh
+
+        with TemporaryDirectory() as tmp:
+            path = Path(tmp) / "history.jsonl"
+
+            with mock_patch.object(rh, "MAX_EVENTS", 3):
+                for i, state in enumerate(
+                    ["HEALTHY", "PENDING", "DEGRADED", "HEALTHY", "PENDING"]
+                ):
+                    rh.record_transition(path, str(i), state, [])
+
+            events = rh.read_events(path)
+            self.assertEqual(len(events), 3)
+            self.assertEqual(
+                [e["state"] for e in events],
+                ["DEGRADED", "HEALTHY", "PENDING"],
+            )
+            self.assertEqual(len(path.read_text().splitlines()), 3)
+
+    def test_api_skips_corrupted_history(self):
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            history = root / "analytics" / "reliability_incidents.jsonl"
+            history.parent.mkdir()
+            history.write_text(
+                '{"observed_at":"2026-10-09T01:00:00Z","state":"HEALTHY"}\n'
+                'broken-json\n'
+                '{"observed_at":"2026-10-09T02:00:00Z","state":"DEGRADED"}\n'
+            )
+
+            with patch.object(api_server, "ROOT", root):
+                result = api_server.reliability_history(limit=50)
+
+            self.assertEqual(result["count"], 2)
+            self.assertEqual(
+                [e["state"] for e in result["events"]],
+                ["DEGRADED", "HEALTHY"],
+            )
+            self.assertIsNone(result["uptime_percent"])

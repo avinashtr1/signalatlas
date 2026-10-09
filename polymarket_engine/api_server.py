@@ -948,16 +948,9 @@ def reliability_history(limit: int = Query(50, ge=1, le=500)):
             "uptime_status": "INSUFFICIENT_DATA",
         }
 
-    from collections import deque
+    from polymarket_engine.reliability_history import read_events
 
-    with history.open("r", encoding="utf-8") as stream:
-        lines = deque(
-            (line for line in stream if line.strip()),
-            maxlen=limit,
-        )
-
-    events = [json.loads(line) for line in lines]
-    events.reverse()
+    events = list(reversed(read_events(history, limit=limit)))
 
     return {
         "events": events,
