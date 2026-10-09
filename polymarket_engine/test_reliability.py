@@ -9,7 +9,7 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import api_server
-import system_monitor
+from polymarket_engine import system_monitor
 from fastapi import HTTPException
 
 
@@ -102,3 +102,52 @@ class ReliabilityTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ReliabilityHistoryTests(unittest.TestCase):
+    def test_transitions_and_recovery(self):
+        from reliability_history import record_transition
+
+        with TemporaryDirectory() as tmp:
+            path = Path(tmp) / "history.jsonl"
+            t = "2026-10-09T10:00:00+00:00"
+
+            baseline = record_transition(path, t, "HEALTHY", [])
+            self.assertEqual(baseline["event"], "BASELINE")
+            self.assertIsNone(baseline["previous_state"])
+
+            self.assertIsNone(
+                record_transition(path, t, "HEALTHY", [])
+            )
+
+            pending = record_transition(
+                path, t, "PENDING", ["CLOB_CURRENT_BUCKET_MISSING"]
+            )
+            self.assertEqual(pending["event"], "TRANSITION")
+
+            degraded = record_transition(
+                path, t, "DEGRADED", ["CLOB_CURRENT_BUCKET_MISSING"]
+            )
+            self.assertEqual(degraded["previous_state"], "PENDING")
+
+            recovered = record_transition(path, t, "HEALTHY", [])
+            self.assertEqual(recovered["event"], "RECOVERED")
+            self.assertEqual(recovered["previous_state"], "DEGRADED")
+
+            events = [
+                json.loads(line)
+                for line in path.read_text().splitlines()
+            ]
+            self.assertEqual(len(events), 4)
+
+    def test_invalid_state_and_missing_history(self):
+        from reliability_history import record_transition
+
+        with TemporaryDirectory() as tmp:
+            path = Path(tmp) / "history.jsonl"
+            self.assertFalse(path.exists())
+
+            with self.assertRaises(ValueError):
+                record_transition(path, "2026-10-09T10:00:00Z", "UNKNOWN", [])
+
+            self.assertFalse(path.exists())

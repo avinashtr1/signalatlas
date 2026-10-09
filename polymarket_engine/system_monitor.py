@@ -3,6 +3,8 @@ import sqlite3
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
 
+from .reliability_history import record_transition
+
 
 DB = Path("analytics/market_measurements.sqlite3")
 OUT = Path("analytics/system_status.json")
@@ -568,6 +570,16 @@ def main():
         encoding="utf-8",
     )
     tmp.replace(OUT)
+
+    try:
+        record_transition(
+            OUT.parent / "reliability_incidents.jsonl",
+            out["generated_at"],
+            reliability["state"],
+            reliability["reasons"],
+        )
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        print(f"[RELIABILITY_HISTORY_ERROR] {exc}")
 
     print("SIGNALATLAS MEASUREMENT HEALTH")
     print("gamma_latest =", latest_gamma_bucket)
